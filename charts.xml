@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<charts>
+  <chart caption="Chart 1" type="font" numkey="1" fontfamily="Sloan" startsize="0.1">
+    <row size="0.05">VHCNO</row>
+    <row size="0.067">SVHCZ</row>
+    <row size="0.08">OZDVK</row>
+    <row size="0.1">NCKZO</row>
+    <row size="0.125">RHSDK</row>
+    <row size="0.16">DOVHR</row>
+    <row size="0.2">CZRHS</row>
+    <row size="0.25">ONHRC</row>
+    <row size="0.32">DKSNV</row>
+    <row size="0.4">ZSOKN</row>
+    <row size="0.5">CKDNR</row>
+    <row size="0.63">SRZKD</row>
+    <row size="0.8">HZOVC</row>
+    <row size="1.0">NVDOK</row>
+    <row size="1.25">VHCNO</row>
+    <row size="1.6">SVHCZ</row>
+    <row size="2.0">OZDVK</row>
+  </chart>
+  <chart caption="Chart 2" type="font" numkey="1" fontfamily="Sloan" startsize="0.1">
+    <row size="0.05">ODHKR</row>
+    <row size="0.067">ZKCSN</row>
+    <row size="0.08">CRHDV</row>
+    <row size="0.1">DSRKN</row>
+    <row size="0.125">CKZOH</row>
+    <row size="0.16">ONRKD</row>
+    <row size="0.2">KZVDC</row>
+    <row size="0.25">VSHZO</row>
+    <row size="0.32">HDKCR</row>
+    <row size="0.4">CSRHN</row>
+    <row size="0.5">SVZDK</row>
+    <row size="0.63">NCVOZ</row>
+    <row size="0.8">RHSDV</row>
+    <row size="1.0">SNROH</row>
+    <row size="1.25">ODHKR</row>
+    <row size="1.6">ZKCSN</row>
+    <row size="2.0">CRHDV</row>
+  </chart>
+  <chart caption="Chart R" type="font" numkey="1" fontfamily="Sloan" startsize="0.1">
+    <row size="0.05">SZRDN</row>
+    <row size="0.067">HCDRO</row>
+    <row size="0.08">RDOSN</row>
+    <row size="0.1">HVZDS</row>
+    <row size="0.125">NCVKD</row>
+    <row size="0.16">CZSHN</row>
+    <row size="0.2">ONVSR</row>
+    <row size="0.25">KDNRO</row>
+    <row size="0.32">ZKCSV</row>
+    <row size="0.4">DVOHC</row>
+    <row size="0.5">OHVCK</row>
+    <row size="0.63">HZCKO</row>
+    <row size="0.8">NCKHD</row>
+    <row size="1.0">ZHCSR</row>
+    <row size="1.25">SZRDN</row>
+    <row size="1.6">HCDRO</row>
+    <row size="2.0">RDOSN</row>
+  </chart>
+  <chart caption="Chart E" type="font" numkey="2" fontfamily="Directions" startsize="0.1">
+    <row size="0.05">cdbab</row>
+    <row size="0.067">bacdc</row>
+    <row size="0.08">ababd</row>
+    <row size="0.1">cdcab</row>
+    <row size="0.125">acbda</row>
+    <row size="0.16">bdacb</row>
+    <row size="0.2">abcbd</row>
+    <row size="0.25">cadcb</row>
+    <row size="0.32">dbcba</row>
+    <row size="0.4">cadab</row>
+    <row size="0.5">abada</row>
+    <row size="0.63">badcd</row>
+    <row size="0.8">dcadc</row>
+    <row size="1.0">cdbab</row>
+    <row size="1.25">bacbd</row>
+    <row size="1.6">cdbac</row>
+    <row size="2.0">badcb</row>
+  </chart>
+  <chart caption="Chart C" type="font" numkey="2" fontfamily="Directions" startsize="0.1">
+    <row size="0.05">gjifl</row>
+    <row size="0.067">ilgke</row>
+    <row size="0.08">fijlk</row>
+    <row size="0.1">ijkfe</row>
+    <row size="0.125">lgeik</row>
+    <row size="0.16">hkifl</row>
+    <row size="0.2">jlkef</row>
+    <row size="0.25">eighj</row>
+    <row size="0.32">lhegi</row>
+    <row size="0.4">jlkef</row>
+    <row size="0.5">eghjk</row>
+    <row size="0.63">hekij</row>
+    <row size="0.8">jkgef</row>
+    <row size="1.0">elkjh</row>
+    <row size="1.25">jkeif</row>
+    <row size="1.6">fgjhe</row>
+    <row size="2.0">ejlih</row>
+  </chart>
+  <chart caption="Numbers" type="font" numkey="3" fontfamily="Numbers" startsize="0.1">
+    <row size="0.05">25639</row>
+    <row size="0.067">97502</row>
+    <row size="0.08">38426</row>
+    <row size="0.1">85309</row>
+    <row size="0.125">63574</row>
+    <row size="0.16">04925</row>
+    <row size="0.2">79683</row>
+    <row size="0.25">56390</row>
+    <row size="0.32">24976</row>
+    <row size="0.4">42083</row>
+    <row size="0.5">69750</row>
+    <row size="0.63">57384</row>
+    <row size="0.8">89635</row>
+    <row size="1.0">27968</row>
+    <row size="1.25">56390</row>
+    <row size="1.6">83049</row>
+    <row size="2.0">38426</row>
+  </chart>
+  <chart caption="Oesterberg fixed" type="font" numkey="4" fontfamily="Oesterberg fixed" startsize="0.1">
+    <row size="0.05">IALGJ</row>
+    <row size="0.067">JDFEA</row>
+    <row size="0.08">BCDAL</row>
+    <row size="0.1">IALGJ</row>
+    <row size="0.125">GCEHF</row>
+    <row size="0.16">HBFCD</row>
+    <row size="0.2">BFEKI</row>
+    <row size="0.25">KDACJ</row>
+    <row size="0.32">LHCGA</row>
+    <row size="0.4">DACKH</row>
+    <row size="0.5">BFEKI</row>
+    <row size="0.63">CDALH</row>
+    <row size="0.8">IALGJ</row>
+    <row size="1.0">CEHFA</row>
+    <row size="1.25">IALGJ</row>
+    <row size="1.6">JDFEA</row>
+    <row size="2.0">BCDAL</row>
+  </chart>
+  <chart caption="Astigmatism dots" type="svg" source="svg/astigmatism_dots.svg" numkey="5" scale="true">
+    <layer id="dots"/>
+    <layer id="mask"/>
+  </chart>
+  <chart caption="RG" type="svg" source="svg/redgreen_mirrored.svg" numkey="6" bgcolor="black" scale="false"/>
+  <chart caption="Worth four dots" type="svg" source="svg/worth_four_dots.svg" numkey="6" bgcolor="black" scale="true">
+    <layer id="layer1"/>
+  </chart>
+  <chart caption="Coincidence" type="svg" source="svg/coincidence.svg" numkey="6" bgcolor="black" scale="true">
+    <layer id="horizontal"/>
+    <layer id="vertical"/>
+  </chart>
+</charts>

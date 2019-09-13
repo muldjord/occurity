@@ -1,0 +1,14 @@
+AUTHORS
+charts.xml
+COPYING
+icon.icns
+icon.ico
+README.md
+remote_guide_danish.odt
+VERSION
+VisuTest
+visutest_da_DK.qm
+svg/
+icons/
+fonts/
+scripts/
