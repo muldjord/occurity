@@ -301,15 +301,18 @@ void MainWindow::updateFromConfig()
     spawnPreferences();
   }
 
+  if(!config->contains("sizeResetTime")) {
+    config->setValue("sizeResetTime", 240);
+  }
   if(!config->contains("hibernateTime")) {
-    config->setValue("hibernateTime", "120");
+    config->setValue("hibernateTime", 120);
   }
   
-  mainSettings->sizeResetTime = config->value("sizeResetTime").toInt() * 1000;
-  mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60;
+  mainSettings->sizeResetTime = config->value("sizeResetTime").toInt() * 1000; // Seconds
+  mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
-  mainSettings->physDistance = config->value("physDistance").toDouble();
-  mainSettings->physHeight = config->value("physHeight").toDouble();
+  mainSettings->physDistance = config->value("physDistance").toDouble(); // Cm
+  mainSettings->physHeight = config->value("physHeight").toDouble(); // Mm
 
   mainSettings->distanceFactor = mainSettings->physDistance / 600.0;
   mainSettings->pixelsPerMm = (double)mainSettings->height / mainSettings->physHeight;
