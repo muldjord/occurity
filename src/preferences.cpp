@@ -109,16 +109,3 @@ bool Preferences::eventFilter(QObject *, QEvent *event)
   }
   return false;
 }
-/*
-void Preferences::keyPressEvent(QKeyEvent *event)
-{
-  if(event->key() == Qt::Key_Up) {
-    focusPreviousChild();
-  } else if(event->key() == Qt::Key_Down) {
-    focusNextChild();
-  } else if(event->key() == Qt::Key_R) {
-    accept();
-  }
-  event->ignore();
-}
-*/
