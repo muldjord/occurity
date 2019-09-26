@@ -117,17 +117,26 @@ This node tells the xml format. Don't change it.
 ```
 This node is the parent node containing all charts. Don't change or remove it.
 
+#### 'group' node
+```
+<group numkey="1">
+  ...
+</group>
+```
+This groups several charts together on the same number key. It supports the following attributes, some of which are required:
+* numkey="1" (required) <-- The number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the defined charts
+
 #### 'chart' nodes
 ```
-<chart name="Chart 1" type="font" numkey="1" fontfamily="Sloan" bgcolor="white">
+<chart name="Chart 1" type="font" fontfamily="Sloan" bgcolor="white" sizelock="true">
   ...
 </chart>
 ```
 Must be nedsted in the 'charts' node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
 * caption="Caption" <-- The caption that is shown on-screen in VisuTest
 * type="font" (required) <-- The chart type. Currently supports 'font' and 'svg'
-* numkey="1" (required) <-- Which number key activates the chart. Several charts can have the same number key assigned, it will then switch between them
 * bgcolor="white" <-- Sets the background color of the chart (can be 'black', 'white' or hex as '#AABBCC')
+* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes
 
 ##### 'font' chart type specific
 * fontfamily="Sloan" (required) <-- Which font family is used by this chart
@@ -167,9 +176,10 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
 
-#### Version 0.5.7 (In progress, unreleased)
+#### Version 0.6.0 (26sep2019)
 * Added auto-hibernation after x minutes of inactivity
 * Improved hibernation handling overall
+* Now supports size locking between charts on same number key
 
 #### Version 0.5.6 (04jul2019)
 * Added splash screen
