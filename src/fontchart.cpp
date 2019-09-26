@@ -177,6 +177,16 @@ QString FontChart::getFontFamily()
   return family;
 }
 
+void FontChart::setSizeLocked(const bool &sizeLocked)
+{
+  this->sizeLocked = sizeLocked;
+}
+
+bool FontChart::isSizeLocked()
+{
+  return sizeLocked;
+}
+
 void FontChart::addRowString(QString size, QString row)
 {
   rowStrings.append(QPair<QString, QString> (size, row));
@@ -258,4 +268,16 @@ void FontChart::resetSize()
   printf("Resetting size!\n");
   size->setSize(startSize);
   updateAll();
+}
+
+void FontChart::setSize(const QString &sizeStr)
+{
+  printf("Setting size!\n");
+  size->setSize(sizeStr);
+  updateAll();
+}
+
+QString FontChart::getSize()
+{
+  return size->getSizeStr();
 }

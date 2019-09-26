@@ -116,68 +116,87 @@ bool MainWindow::loadCharts(QString chartsXml)
     return false;
   }
   
-  QDomNodeList xmlCharts = xmlDoc.documentElement().elementsByTagName("chart");
-  for(int a = 0; a < xmlCharts.count(); ++a) {
-    AbstractChart *chart = NULL;
-    QDomElement xmlChart = xmlCharts.at(a).toElement();
-    QString chartType = xmlChart.attribute("type");
-    if(chartType == "font") {
-      chart = new FontChart(mainSettings, this);
-    } else if(chartType == "svg") {
-      chart = new SvgChart(mainSettings, this);
+  QDomNodeList groupNodes = xmlDoc.documentElement().elementsByTagName("group");
+  for(int a = 0; a < groupNodes.count(); ++a) {
+    QDomElement xmlGroup = groupNodes.at(a).toElement();
+    int numKey = -1;
+    if(xmlGroup.hasAttribute("numkey")) {
+      bool isInt = false;
+      int tmpNumKey = xmlGroup.attribute("numkey").toInt(&isInt);
+      if(isInt) {
+        numKey = tmpNumKey;
+      }
     }
-    chart->installEventFilter(this);
-    chart->setType(xmlChart.attribute("type"));
-    connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateAll);
-
-    chart->setObjectName(xmlChart.attribute("caption"));
-    // 48 is the Qt::Key equivalent of Qt::Key_0
-    chart->setNumKey((Qt::Key)(xmlChart.attribute("numkey").toInt() + 48));
-    chart->setBgColor(xmlChart.attribute("bgcolor"));
-    printf("Parsing chart: '%s' with type '%s', key '%d':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str(), chart->getNumKey() - 48);
-    
-    QMap<QString, int> rowSizeMap;
-    if(chart->getType() == "font") {
-      chart->setFontFamily(xmlChart.attribute("fontfamily"));
-      printf("  Font family: '%s'\n", chart->getFontFamily().toStdString().c_str());
-      QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
-      for(int b = 0; b < xmlRows.count(); ++b) {
-        QDomElement xmlRow = xmlRows.at(b).toElement();
-        QString rowSize = xmlRow.attribute("size");
-        chart->addRowString(rowSize, xmlRow.text());
-        rowSizeMap[rowSize] = 0;
-        printf("  Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
+    printf("Parsing group: Key '%d':\n", numKey);
+    QDomNodeList chartNodes = xmlGroup.toElement().elementsByTagName("chart");
+    for(int b = 0; b < chartNodes.count(); ++b) {
+      QDomElement xmlChart = chartNodes.at(b).toElement();
+      AbstractChart *chart = nullptr;
+      QString chartType = xmlChart.attribute("type");
+      if(chartType == "font") {
+        chart = new FontChart(mainSettings, this);
+      } else if(chartType == "svg") {
+        chart = new SvgChart(mainSettings, this);
       }
-      QList<QString> rowSizeStrings;
-      for(auto str : rowSizeMap.keys()) {
-        rowSizeStrings.append(str);
+      if(chart == nullptr) {
+        printf("PARSE ERROR: Chart type '%s' was not recognized, skipping...\n",
+               chartType.toStdString().c_str());
+        continue;
       }
-      chart->setRowSizes(rowSizeStrings);
-      if(xmlChart.hasAttribute("startsize")) {
-        chart->setStartSize(xmlChart.attribute("startsize"));
-      }
-    } else if(chart->getType() == "svg") {
-      chart->setSource(xmlChart.attribute("source"));
-      // Check if scaling enabled, then set accordingly. It is 'false' by default
-      if(xmlChart.attribute("scale") == "true") {
-        printf("  Scaling: true\n");
-        chart->setScale(true);
-      } else {
-        printf("  Scaling: false\n");
-      }
-      QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
-      for(int b = 0; b < xmlSvgLayers.count(); ++b) {
-        QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
-        QString svgLayerId = xmlSvgLayer.attribute("id");
-        if(!chart->addSvgLayer(svgLayerId)) {
-          printf("Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
+      chart->installEventFilter(this);
+      chart->setType(chartType);
+      connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateAll);
+      chart->setObjectName(xmlChart.attribute("caption"));
+      // 48 is the Qt::Key equivalent of Qt::Key_0
+      chart->setNumKey((Qt::Key)(numKey + 48));
+      chart->setBgColor(xmlChart.attribute("bgcolor"));
+      printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
+      QMap<QString, int> rowSizeMap;
+      if(chart->getType() == "font") {
+        if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
+          chart->setSizeLocked(true);
+        }
+        chart->setFontFamily(xmlChart.attribute("fontfamily"));
+        printf("    Font family: '%s'\n", chart->getFontFamily().toStdString().c_str());
+        QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
+        for(int b = 0; b < xmlRows.count(); ++b) {
+          QDomElement xmlRow = xmlRows.at(b).toElement();
+          QString rowSize = xmlRow.attribute("size");
+          chart->addRowString(rowSize, xmlRow.text());
+          rowSizeMap[rowSize] = 0;
+          printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
+        }
+        QList<QString> rowSizeStrings;
+        for(auto str : rowSizeMap.keys()) {
+          rowSizeStrings.append(str);
+        }
+        chart->setRowSizes(rowSizeStrings);
+        if(xmlChart.hasAttribute("startsize")) {
+          chart->setStartSize(xmlChart.attribute("startsize"));
+        }
+      } else if(chart->getType() == "svg") {
+        chart->setSource(xmlChart.attribute("source"));
+        // Check if scaling enabled, then set accordingly. It is 'false' by default
+        if(xmlChart.attribute("scale") == "true") {
+          printf("    Scaling: true\n");
+          chart->setScale(true);
         } else {
-          printf("  SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
+          printf("    Scaling: false\n");
+        }
+        QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
+        for(int b = 0; b < xmlSvgLayers.count(); ++b) {
+          QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
+          QString svgLayerId = xmlSvgLayer.attribute("id");
+          if(!chart->addSvgLayer(svgLayerId)) {
+            printf("  Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
+          } else {
+            printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
+          }
         }
       }
+      chart->init();
+      charts.append(chart);
     }
-    chart->init();
-    charts.append(chart);
   }
   printf("\n");
 
@@ -211,9 +230,13 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     }
     
     QList<int> chartPool;
+    AbstractChart *currentChart = nullptr;
     for(int a = 0; a < charts.length(); ++a) {
       if(keyEvent->key() == charts.at(a)->getNumKey()) {
         chartPool.append(a);
+        if(charts.at(a) == scene()) {
+          currentChart = charts.at(a);
+        }
       }
     }
     if(!chartPool.isEmpty()) {
@@ -227,6 +250,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
           }
         }
+      }
+      if(charts.at(chosen)->getType() == "font" && currentChart != nullptr &&
+         charts.at(chosen)->isSizeLocked() && currentChart->isSizeLocked()) {
+        charts.at(chosen)->setSize(currentChart->getSize());
       }
       setScene(charts.at(chosen));
       printf("Chart '%s' activated!\n", charts.at(chosen)->objectName().toStdString().c_str());

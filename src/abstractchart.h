@@ -50,8 +50,12 @@ public:
   void setType(QString type);
   QString getType();
   void setNumKey(Qt::Key numKey);
-  void setBgColor(QString color);
   Qt::Key getNumKey();
+  void setBgColor(QString color);
+  virtual void setSizeLocked(const bool &){};
+  virtual bool isSizeLocked(){return false;};
+  virtual void setSize(const QString &){};
+  virtual QString getSize(){return QString();};
   virtual void setFontFamily(QString){};
   virtual QString getFontFamily();
   virtual void setSource(const QString){};

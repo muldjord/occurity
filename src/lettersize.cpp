@@ -44,14 +44,16 @@ LetterSize::~LetterSize()
 {
 }
 
-void LetterSize::setSize(QString size)
+bool LetterSize::setSize(QString size)
 {
   for(int a = 0; a < this->sizes.length(); ++a) {
     if(sizes.at(a) == size) {
       sizeIdx = a;
+      return true;
       break;
     }
   }
+  return false;
 }
 
 void LetterSize::increaseSize()

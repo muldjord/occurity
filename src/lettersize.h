@@ -43,11 +43,10 @@ public:
   double getDecimalSize();
   double getLogMARSize();
   int getPixelSize();
-  void setSize(QString size);
+  bool setSize(QString size);
   void increaseSize();
   void decreaseSize();
   QString getSizeStr();
-  void setDecimalSizes(QString filename);
 
 signals:
   void refresh();

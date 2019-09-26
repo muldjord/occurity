@@ -44,6 +44,10 @@ public:
   void init() override;
   void setFontFamily(QString family) override;
   QString getFontFamily() override;
+  void setSizeLocked(const bool &sizeLocked) override;
+  bool isSizeLocked() override;
+  void setSize(const QString &sizeStr) override;
+  QString getSize() override;
                                                        
 public slots:
   void updateAll() override;
@@ -60,6 +64,7 @@ private slots:
 
 private:
   QString family = "";
+  bool sizeLocked = false;
   QList<QPair<QString, QString> > rowStrings;
   QList<QString> rowSizes;
   
