@@ -88,7 +88,9 @@ int main(int argc, char *argv[])
   QPixmap pixmap(":splash.png");
   QSplashScreen *splash = new QSplashScreen(pixmap);
   splash->show();
-  splash->showMessage("Running VisuTest v." VERSION);
+  splash->showMessage("Running VisuTest v." VERSION,
+                      Qt::AlignLeft,
+                      Qt::white);
   app.processEvents();
 
   QEventLoop q;
