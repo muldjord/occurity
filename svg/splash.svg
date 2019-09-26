@@ -10,8 +10,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="10.895154cm"
-   height="9.7922697cm"
+   width="411.78534"
+   height="370.10153"
    viewBox="0 0 108.95154 97.922693"
    version="1.1"
    id="svg8"
@@ -52,12 +52,12 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.3610906"
-     inkscape:cx="227.18655"
-     inkscape:cy="143.33394"
+     inkscape:cx="226.76302"
+     inkscape:cy="182.29898"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="g1501"
      showgrid="false"
-     units="cm"
+     units="px"
      inkscape:snap-grids="true"
      inkscape:snap-to-guides="false"
      inkscape:snap-others="true"
@@ -90,7 +90,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -109,7 +109,7 @@
        y="-12.47313"
        ry="0.13452607" />
     <rect
-       style="opacity:1;fill:#8c94be;fill-opacity:1;stroke:#49527d;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="opacity:1;fill:#616ca6;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        id="rect866"
        width="108.95155"
        height="13.229167"
@@ -117,7 +117,7 @@
        y="-12.47313"
        ry="0.11885745" />
     <rect
-       style="opacity:1;fill:#8c94be;fill-opacity:1;stroke:#49527d;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="opacity:1;fill:#616ca6;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        id="rect868"
        width="108.95154"
        height="7.9374914"
@@ -158,7 +158,7 @@
     <path
        id="path905"
        d="m 48.027165,226.7157 c -0.350968,0.001 -0.701067,0.009 -1.050245,0.0215 -20.950685,0.76241 -38.397888,21.5206 -38.397888,21.5206 l -0.6342766,0.74189 0.559604,0.79855 c 0,0 12.7003196,18.35233 32.4926166,21.22016 23.049814,3.33983 39.333053,-8.91764 40.192222,-9.5774 0.309308,-0.0287 2.327818,-0.20616 4.723251,-0.70061 1.286116,-0.26547 2.591232,-0.60084 3.68882,-1.07396 0.548793,-0.23657 1.050169,-0.50349 1.490814,-0.87675 0.440643,-0.37325 0.863205,-0.91108 0.944385,-1.63005 0.137472,-1.21749 -0.588669,-1.93138 -1.261524,-2.56829 -0.672854,-0.63691 -1.498418,-1.21217 -2.319238,-1.72845 -1.477867,-0.92955 -2.672172,-1.49642 -2.951758,-1.63181 -0.562813,-0.9337 -13.659579,-22.3533 -34.295296,-24.36782 -1.067792,-0.10424 -2.128581,-0.15182 -3.181487,-0.14759 z m 0.01055,2.52613 c 0.971453,-0.007 1.947868,0.0345 2.92672,0.13002 13.434355,1.3115 23.893684,12.06808 29.053726,18.55346 -1.671734,-1.63619 -3.767604,-3.56149 -6.180243,-5.51126 -6.288331,-5.0819 -14.712582,-10.34101 -23.339971,-10.94698 -8.642456,-0.60704 -18.755444,3.80324 -26.741958,8.33213 -3.372688,1.91253 -6.354641,3.8453 -8.683088,5.44449 6.080101,-5.70716 18.348771,-15.41494 31.994946,-15.97814 0.32264,-0.0133 0.646045,-0.0212 0.969864,-0.0237 z m -7.035902,6.35506 a 1.6701352,3.0897505 64.985061 0 1 0.490203,0.0351 1.6701352,3.0897505 64.985061 0 1 4.5e-4,0 1.6701352,3.0897505 64.985061 0 1 1.045415,0.65756 1.6701352,3.0897505 64.985061 0 1 -2.093463,2.81998 1.6701352,3.0897505 64.985061 0 1 -3.506093,-0.20688 1.6701352,3.0897505 64.985061 0 1 2.093466,-2.81999 1.6701352,3.0897505 64.985061 0 1 0.475706,-0.19414 c 0.400319,-0.0979 0.799914,-0.18882 1.199151,-0.27585 a 1.6701352,3.0897505 64.985061 0 1 0.295176,-0.0158 z m -3.919424,0.94615 a 19.057285,17.419124 7.736383 0 0 -7.231806,11.46793 19.057285,17.419124 7.736383 0 0 16.539066,19.82553 19.057285,17.419124 7.736383 0 0 21.228939,-14.6951 19.057285,17.419124 7.736383 0 0 -6.40558,-15.44182 c 4.329733,1.82725 8.407805,4.2696 11.866329,6.67177 6.268879,4.35414 10.480301,8.53356 10.567471,8.62027 l 0.102343,0.17043 0.342177,0.16252 c 0,0 1.537806,0.73768 3.022917,1.67179 0.742554,0.46704 1.467495,0.98746 1.929183,1.42448 0.210995,0.19973 0.317007,0.37032 0.38083,0.47571 0.01185,-0.009 0.02883,-0.0203 0.03909,-0.029 0.145545,-0.12331 0.08486,-0.1234 0.06984,0.01 -0.01963,0.17393 -0.0331,0.14455 -0.108933,0.0193 -0.156271,0.12271 -0.443119,0.29439 -0.820958,0.45726 -0.812982,0.35044 -2.005661,0.67309 -3.200811,0.91979 -1.474235,0.30429 -2.880903,0.49244 -3.795997,0.60045 0.01316,-2.10519 1.563289,-4.86161 1.563289,-4.86161 0,0 -3.624509,3.31116 -4.248421,5.97028 -3.814346,2.61185 -18.259624,11.33926 -37.564194,8.54209 -17.089964,-2.47631 -28.520839,-17.18084 -30.147022,-19.36872 0.002,-0.002 0.0068,-0.007 0.0088,-0.01 1.702331,-1.14165 6.516528,-4.26362 12.849371,-7.39301 3.970939,-1.96225 8.472715,-3.87639 13.01409,-5.21038 z m -0.777037,2.72906 a 0.50625788,0.93657709 43.151097 0 1 0.0593,0.004 0.50625788,0.93657709 43.151097 0 1 0.177456,0.0791 0.50625788,0.93657709 43.151097 0 1 -0.271015,1.0296 0.50625788,0.93657709 43.151097 0 1 -1.010275,0.33735 0.50625788,0.93657709 43.151097 0 1 0.271895,-1.03005 0.50625788,0.93657709 43.151097 0 1 0.772641,-0.41947 z m 12.132075,3.00051 a 8.3089235,8.3089235 0 0 1 1.415701,0.0703 8.3089235,8.3089235 0 0 1 7.114528,9.35163 8.3089235,8.3089235 0 0 1 -9.351625,7.11496 8.3089235,8.3089235 0 0 1 -7.114528,-9.35162 8.3089235,8.3089235 0 0 1 7.935924,-7.18525 z"
-       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#19374f;fill-opacity:0.74509805;fill-rule:evenodd;stroke:none;stroke-width:2.51936269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#19374f;fill-opacity:0.74509804;fill-rule:evenodd;stroke:none;stroke-width:2.51936269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
        inkscape:connector-curvature="0" />
   </g>
   <g
@@ -206,7 +206,7 @@
      inkscape:label="Logo">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        x="34.572594"
        y="9.8097591"
        id="text931"><tspan
@@ -214,7 +214,7 @@
          id="tspan929"
          x="34.572594"
          y="9.8097591"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill">VisuTest</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill">VisuTest</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -222,25 +222,25 @@
      inkscape:label="License text">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        x="14.476143"
        y="93.238655"
        id="text931-7"><tspan
          sodipodi:role="line"
          x="14.476143"
          y="93.238655"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666679px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666679px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
          id="tspan981">VisuTest is free software released under the GNU General Public License v3 (GPLv3)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        x="12.703633"
        y="95.894562"
        id="text931-7-4"><tspan
          sodipodi:role="line"
          x="12.703633"
          y="95.894562"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666703px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:#49527d;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666703px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
          id="tspan981-1">Copyright (c) 2019 by Lars Bisballe, Klinik for Øjensygdomme, Aarhus University Hospital</tspan></text>
   </g>
 </svg>
