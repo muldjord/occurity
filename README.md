@@ -124,7 +124,7 @@ This node is the parent node containing all charts. Don't change or remove it.
 </group>
 ```
 This groups several charts together on the same number key. It supports the following attributes, some of which are required:
-* numkey="1" (required) <-- The number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the defined charts
+* numkey="1" (required) <-- This is the number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the defined charts
 
 #### 'chart' nodes
 ```
@@ -132,7 +132,7 @@ This groups several charts together on the same number key. It supports the foll
   ...
 </chart>
 ```
-Must be nedsted in the 'charts' node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
+Must be nested in the 'charts' node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
 * caption="Caption" <-- The caption that is shown on-screen in VisuTest
 * type="font" (required) <-- The chart type. Currently supports 'font' and 'svg'
 * bgcolor="white" <-- Sets the background color of the chart (can be 'black', 'white' or hex as '#AABBCC')
