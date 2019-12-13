@@ -98,7 +98,7 @@ $ make
 ```
 
 ### Fonts
-For licensing reasons VisuTest is provided without fonts. You need to license these yourself.
+For licensing reasons VisuTest is provided without fonts. You need to create or license these yourself.
 
 ### charts.xml
 All of the charts displayed in the VisuTest software are customizable. Edit the '/home/pi/visutest/charts.xml' file in any basic text/xml editor. The format is as follows:
