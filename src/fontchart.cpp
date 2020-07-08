@@ -131,7 +131,7 @@ void FontChart::shuffleRow(LetterRow *row)
 
 void FontChart::shuffleAllRows()
 {
-  foreach(LetterRow *letterRow, letterRows) {
+  for(const auto letterRow: letterRows) {
     letterRow->shuffleLetters();
   }
 }
@@ -199,7 +199,7 @@ void FontChart::setRowSizes(QList<QString> rowSizes)
 
 void FontChart::updateAll()
 {
-  foreach(QGraphicsItem *item, items()) {
+  for(const auto item: items()) {
     removeItem(item);
   }
 
@@ -212,13 +212,13 @@ void FontChart::updateAll()
   double spaceWidth = spaceChar.boundingRect().width();
   double spaceHeight = spaceChar.boundingRect().height();
 
-  foreach(LetterRow *letterRow, letterRows) {
+  for(const auto letterRow: letterRows) {
     letterRow->setPixelSize(spaceWidth);
     int letters = letterRow->letters.length();
     int centerIdx = letters / 2;
     QList<int> xSpaces;
-    for(int a = 0; a < letters; ++a) {
-      xSpaces.append(letterRow->letters.at(a)->boundingRect().width());
+    for(const auto letter: letterRow->letters) {
+      xSpaces.append(letter->boundingRect().width());
     }
 
     int currentX = mainSettings->width / 2;
