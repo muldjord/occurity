@@ -115,7 +115,7 @@ void SvgChart::updateAll()
   else
     svgItem->setElementId("");
 
-  foreach(QGraphicsItem *item, items()) {
+  for(const auto item: items()) {
     removeItem(item);
   }
 
