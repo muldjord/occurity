@@ -176,6 +176,10 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
 
+#### Version 0.6.1 (in progress, unreleased)
+* Now remembers size for all charts on same button even when switching between back and forth between charts on different buttons
+* Fixed bug where chart resize would use letterrow from old size instead of switching to letters from size inherited from other chart on same button
+
 #### Version 0.6.0 (26sep2019)
 * Added auto-hibernation after x minutes of inactivity
 * Improved hibernation handling overall
