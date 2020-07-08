@@ -49,6 +49,7 @@ bool LetterSize::setSize(QString size)
   for(int a = 0; a < this->sizes.length(); ++a) {
     if(sizes.at(a) == size) {
       sizeIdx = a;
+      emit refresh();
       return true;
       break;
     }
