@@ -154,7 +154,10 @@ bool MainWindow::loadCharts(QString chartsXml)
       QMap<QString, int> rowSizeMap;
       if(chart->getType() == "font") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
+          printf("    Size lock: true\n");
           chart->setSizeLocked(true);
+        } else {
+          printf("    Size lock: false\n");
         }
         chart->setFontFamily(xmlChart.attribute("fontfamily"));
         printf("    Font family: '%s'\n", chart->getFontFamily().toStdString().c_str());
@@ -234,9 +237,19 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     for(int a = 0; a < charts.length(); ++a) {
       if(keyEvent->key() == charts.at(a)->getNumKey()) {
         chartPool.append(a);
-        if(charts.at(a) == scene()) {
-          currentChart = charts.at(a);
-        }
+      }
+      if(charts.at(a) == scene()) {
+        currentChart = charts.at(a);
+      }
+    }
+    // Set size for all other charts on same button if sizeLock is set
+    for(int a = 0; a < charts.length(); ++a) {
+      if(currentChart != nullptr && currentChart != charts.at(a) &&
+         charts.at(a)->getType() == "font" &&
+         charts.at(a)->isSizeLocked() &&
+         currentChart->isSizeLocked() &&
+         currentChart->getNumKey() == charts.at(a)->getNumKey()) {
+        charts.at(a)->setSize(currentChart->getSize());
       }
     }
     if(!chartPool.isEmpty()) {
@@ -250,10 +263,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             }
           }
         }
-      }
-      if(charts.at(chosen)->getType() == "font" && currentChart != nullptr &&
-         charts.at(chosen)->isSizeLocked() && currentChart->isSizeLocked()) {
-        charts.at(chosen)->setSize(currentChart->getSize());
       }
       setScene(charts.at(chosen));
       printf("Chart '%s' activated!\n", charts.at(chosen)->objectName().toStdString().c_str());
@@ -278,7 +287,7 @@ void MainWindow::loadFonts(QString dirStr)
   printf("Loading fonts from folder: '%s'\n", dirStr.toStdString().c_str());
   QDir fontDir(dirStr, "*.ttf *.otf", QDir::Name, QDir::NoDotAndDotDot | QDir::Files);
   QList<QFileInfo> fontFiles = fontDir.entryInfoList();
-  foreach(QFileInfo fontFile, fontFiles) {
+  for(const auto fontFile: fontFiles) {
     printf("  Loading '%s'... ", fontFile.fileName().toStdString().c_str());
     if(QFontDatabase::addApplicationFont(fontFile.absoluteFilePath()) != -1) {
       printf("Success!\n");
