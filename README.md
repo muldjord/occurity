@@ -44,7 +44,7 @@ DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the 
 In theory most remote controls you might have lying around should work with the disclaimer that there are some remotes that use dual-output signals which makes them hard to use with the flirc interface. Only way to know is to just try.
 
 ### Operating system
-* Latest Raspbian (https://www.raspberrypi.org/downloads/raspbian/)
+* [Latest Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os)
 Install it on your Pi SD card and plug it into your Pi.
 
 ### Software prerequisites
