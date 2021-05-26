@@ -157,4 +157,44 @@
       <layer id="vertical"/>
     </chart>
   </group>
+  <group numkey="7">
+    <chart caption="Chart 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+      <row size="0.05">OHVTV</row>
+      <row size="0.067">VTOHO</row>
+      <row size="0.08">TOTVH</row>
+      <row size="0.1">VOTHO</row>
+      <row size="0.125">HTVOT</row>
+      <row size="0.16">OHOTV</row>
+      <row size="0.2">TVHOH</row>
+      <row size="0.25">VOVHT</row>
+      <row size="0.32">OHTOV</row>
+      <row size="0.4">TOVHO</row>
+      <row size="0.5">HVTOT</row>
+      <row size="0.63">OTHVH</row>
+      <row size="0.8">VOTHT</row>
+      <row size="1.0">HVOTV</row>
+      <row size="1.25">TOTVH</row>
+      <row size="1.6">VTOHO</row>
+      <row size="2.0">OHVTV</row>
+    </chart>
+    <chart caption="Chart 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+      <row size="0.05">HVTOV</row>
+      <row size="0.067">OTVHT</row>
+      <row size="0.08">THOVH</row>
+      <row size="0.1">HOTVO</row>
+      <row size="0.125">VTHOV</row>
+      <row size="0.16">TOVHO</row>
+      <row size="0.2">VHOHT</row>
+      <row size="0.25">OTHVT</row>
+      <row size="0.32">HOVTV</row>
+      <row size="0.4">TVHOH</row>
+      <row size="0.5">VHOTV</row>
+      <row size="0.63">OTHVT</row>
+      <row size="0.8">HOTHV</row>
+      <row size="1.0">THOVH</row>
+      <row size="1.25">HVTOV</row>
+      <row size="1.6">OTVHT</row>
+      <row size="2.0">HOTVO</row>
+    </chart>
+  </group>
 </charts>
