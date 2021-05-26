@@ -176,6 +176,11 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
 
+#### Version 0.6.2 (26may2021)
+* Added 'T' to Sloan font
+* Added 'HOTV' charts to 'charts.xml' on numkey 7
+* Updated deprecated Qt5 functions
+
 #### Version 0.6.1 (08jul2020)
 * Now remembers size for all charts on same button even when switching between back and forth between charts on different buttons
 * Fixed bug where chart resize would use letterrow from old size instead of switching to letters from size inherited from other chart on same button
