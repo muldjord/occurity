@@ -27,6 +27,8 @@
 
 #include "letterrow.h"
 
+#include <QRandomGenerator>
+
 LetterRow::LetterRow(QList<QPair<QString, QString> > *rowStrings, QString family)
 {
   this->rowStrings = rowStrings;
@@ -54,7 +56,7 @@ QString LetterRow::setLetters(int chars, QString decimalStr)
     }
   }
 
-  currentRow = fittingRows.at(qrand() % fittingRows.size());
+  currentRow = fittingRows.at(QRandomGenerator::global()->bounded(fittingRows.size()));
   qDeleteAll(letters);
   letters.clear();
 
@@ -87,7 +89,7 @@ void LetterRow::shuffleLetters(bool lockCurrent)
   letters.clear();
 
   while(chars--) {
-    int chosenLetter = qrand() % tmpRow.length();
+    int chosenLetter = QRandomGenerator::global()->bounded(tmpRow.length());
     letters.append(new Letter(tmpRow.at(chosenLetter), family));
     tmpRow.remove(chosenLetter, 1);
   }

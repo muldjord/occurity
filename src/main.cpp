@@ -101,8 +101,6 @@ int main(int argc, char *argv[])
   translator.load("visutest_" + QLocale::system().name());
   app.installTranslator(&translator);
 
-  qsrand(42);
-  
   MainWindow mainWindow;
   mainWindow.show();
   splash->finish(&mainWindow);

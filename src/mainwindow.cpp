@@ -50,7 +50,6 @@ MainWindow::MainWindow()
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  qsrand(42);
   showFullScreen();
   qApp->processEvents();
 
@@ -224,7 +223,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         secretState = 3;
       } else if(keyEvent->key() == Qt::Key_8 && secretState == 3) {
         printf("Shutdown requested by user, initiating shutdown...\n");
-        QProcess::execute("sh ./scripts/shutdown.sh");
+        QProcess::execute("bash", QStringList({"./scripts/shutdown.sh"}));
       } else {
         secretState = 0;
       }
@@ -360,13 +359,13 @@ void MainWindow::hibernate()
 
 void MainWindow::flipHibernate(bool forceHibernate)
 {
-  int exitState = QProcess::execute("bash ./scripts/displaystate.sh");
+  int exitState = QProcess::execute("bash", QStringList({"./scripts/displaystate.sh"}));
   // On error exitState is -1 or -2. If display is on it is 42. All other cases it is 0.
   if(exitState >= 0) {
     if(exitState == 42) {
-      QProcess::execute("bash ./scripts/hibernate.sh");
+      QProcess::execute("bash", QStringList({"./scripts/hibernate.sh"}));
     } else if(!forceHibernate) {
-      QProcess::execute("bash ./scripts/wakeup.sh");
+      QProcess::execute("bash", QStringList({"./scripts/wakeup.sh"}));
     }
   }
   // Disallow new hibernation for a while, as it queue's each time allowing for some
