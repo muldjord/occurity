@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <charts>
   <group numkey="1">
-    <chart caption="Chart 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
       <row size="0.05">VHCNO</row>
       <row size="0.067">SVHCZ</row>
       <row size="0.08">OZDVK</row>
@@ -20,7 +20,7 @@
       <row size="1.6">SVHCZ</row>
       <row size="2.0">OZDVK</row>
     </chart>
-    <chart caption="Chart 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
       <row size="0.05">ODHKR</row>
       <row size="0.067">ZKCSN</row>
       <row size="0.08">CRHDV</row>
@@ -39,7 +39,7 @@
       <row size="1.6">ZKCSN</row>
       <row size="2.0">CRHDV</row>
     </chart>
-    <chart caption="Chart R" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan R" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
       <row size="0.05">SZRDN</row>
       <row size="0.067">HCDRO</row>
       <row size="0.08">RDOSN</row>
@@ -60,7 +60,7 @@
     </chart>
   </group>
   <group numkey="2">
-    <chart caption="Chart E" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
+    <chart caption="E chart" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
       <row size="0.05">cdbab</row>
       <row size="0.067">bacdc</row>
       <row size="0.08">ababd</row>
@@ -79,7 +79,7 @@
       <row size="1.6">cdbac</row>
       <row size="2.0">badcb</row>
     </chart>
-    <chart caption="Chart C" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
+    <chart caption="C chart" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
       <row size="0.05">gjifl</row>
       <row size="0.067">ilgke</row>
       <row size="0.08">fijlk</row>
@@ -121,7 +121,7 @@
     </chart>
   </group>
   <group numkey="4">
-    <chart caption="Oesterberg fixed" type="font" fontfamily="Oesterberg fixed" startsize="0.1">
+    <chart caption="Oesterberg" type="font" fontfamily="Oesterberg fixed" startsize="0.1">
       <row size="0.05">IALGJ</row>
       <row size="0.067">JDFEA</row>
       <row size="0.08">BCDAL</row>
@@ -158,7 +158,7 @@
     </chart>
   </group>
   <group numkey="7">
-    <chart caption="Chart 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="HOTV 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
       <row size="0.05">OHVTV</row>
       <row size="0.067">VTOHO</row>
       <row size="0.08">TOTVH</row>
@@ -177,7 +177,7 @@
       <row size="1.6">VTOHO</row>
       <row size="2.0">OHVTV</row>
     </chart>
-    <chart caption="Chart 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="HOTV 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
       <row size="0.05">HVTOV</row>
       <row size="0.067">OTVHT</row>
       <row size="0.08">THOVH</row>
@@ -195,6 +195,46 @@
       <row size="1.25">HVTOV</row>
       <row size="1.6">OTVHT</row>
       <row size="2.0">HOTVO</row>
+    </chart>
+  </group>
+  <group numkey="8">
+    <chart caption="Kay 1" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
+      <row size="0.05">BADCE</row>
+      <row size="0.067">CBAED</row>
+      <row size="0.08">FDEBC</row>
+      <row size="0.1">ACBFE</row>
+      <row size="0.125">ABCDE</row>
+      <row size="0.16">CBDAE</row>
+      <row size="0.2">FAECB</row>
+      <row size="0.25">BEADC</row>
+      <row size="0.32">EFBDC</row>
+      <row size="0.4">FBECD</row>
+      <row size="0.5">EFABC</row>
+      <row size="0.63">AFDCE</row>
+      <row size="0.8">BEDAC</row>
+      <row size="1.0">DAFCB</row>
+      <row size="1.25">BFDCA</row>
+      <row size="1.6">EDCBA</row>
+      <row size="2.0">DFECA</row>
+    </chart>
+    <chart caption="Kay 2" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
+      <row size="0.05">DFECA</row>
+      <row size="0.067">EDCBA</row>
+      <row size="0.08">BFDCA</row>
+      <row size="0.1">DAFCB</row>
+      <row size="0.125">BEDAC</row>
+      <row size="0.16">AFBCE</row>
+      <row size="0.2">EFABC</row>
+      <row size="0.25">FBECD</row>
+      <row size="0.32">FADCB</row>
+      <row size="0.4">BEADC</row>
+      <row size="0.5">FAECB</row>
+      <row size="0.63">CBDAE</row>
+      <row size="0.8">ABCDE</row>
+      <row size="1.0">ACBFE</row>
+      <row size="1.25">FDEBC</row>
+      <row size="1.6">CBAED</row>
+      <row size="2.0">BADCE</row>
     </chart>
   </group>
 </charts>
