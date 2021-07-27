@@ -65,6 +65,7 @@ private slots:
 private:
   QString family = "";
   bool sizeLocked = false;
+  bool crowding = false;
   QList<QPair<QString, QString> > rowStrings;
   QList<QString> rowSizes;
   

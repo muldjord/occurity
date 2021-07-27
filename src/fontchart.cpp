@@ -84,6 +84,8 @@ void FontChart::keyPressEvent(QKeyEvent *event)
     if(letterRows.length() > 1) {
       shuffleRow(letterRows.last());
     }
+  } else if(event->key() == Qt::Key_C) {
+    crowding = !crowding;
   } else if(event->key() == Qt::Key_Comma) {
     removeRow();
   } else if(event->key() == Qt::Key_M) {
@@ -212,7 +214,16 @@ void FontChart::updateAll()
   double spaceWidth = spaceChar.boundingRect().width();
   double spaceHeight = spaceChar.boundingRect().height();
 
+  QPen crowdingPen;
+  crowdingPen.setWidth(spaceWidth / 5.0);
+  crowdingPen.setColor(QColor(0, 0, 0));
+  crowdingPen.setCapStyle(Qt::FlatCap);
+  crowdingPen.setJoinStyle(Qt::MiterJoin);
+  
   for(const auto letterRow: letterRows) {
+    QPoint upperLeft(mainSettings->width, mainSettings->height); // Is adjusted later
+    QPoint lowerRight(0, 0); // Is adjusted later
+
     letterRow->setPixelSize(spaceWidth);
     int letters = letterRow->letters.length();
     int centerIdx = letters / 2;
@@ -232,8 +243,32 @@ void FontChart::updateAll()
         addItem(letterRow->letters.at(a));
         letterRow->letters.at(a)->setX(currentX);
         letterRow->letters.at(a)->setY(y - (spaceHeight / 2));
+        // Prepare coordinates for crowding
+        QRectF letterRect = letterRow->letters.at(a)->boundingRect();
+        if(upperLeft.x() > (currentX - ((spaceHeight / 5.0) * 1.5))) {
+          upperLeft.setX(currentX - ((spaceHeight / 5.0) * 1.5));
+        }
+        upperLeft.setY(y - (letterRect.width() / 2.0) - ((spaceHeight / 5.0) * 1.5));
+        if(lowerRight.x() < currentX + letterRect.width() + ((spaceHeight / 5.0) * 1.5)) {
+          lowerRight.setX(currentX + letterRect.width() + ((spaceHeight / 5.0) * 1.5));
+        }
+        lowerRight.setY(letterRect.width() + (spaceHeight / 5.0) * 3.0);
+    /*
+        if(a == 0) {
+          printf("HERE!\n");
+          upperLeft = new QPoint(currentX - ((spaceHeight / 5.0) * 1.5),
+          y - (letterRect.width() / 2.0) - ((spaceHeight / 5.0) * 1.5));
+        } else if(a == letters - 1) {
+          printf("HERE2!\n");
+          lowerRight = new QPoint(letterRect.width() + (spaceHeight / 5.0) * 3.0,
+          letterRect.width() + (spaceHeight / 5.0) * 3.0);
+        }
+    */
       }
       currentX += xSpaces.at(a) + spaceWidth;
+    }
+    if(crowding) {
+      addRect(upperLeft.x(), upperLeft.y(), lowerRight.x() - upperLeft.x(), lowerRight.y(), crowdingPen);
     }
   }
 
