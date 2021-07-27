@@ -219,7 +219,7 @@ void FontChart::updateAll()
   crowdingPen.setColor(QColor(0, 0, 0));
   crowdingPen.setCapStyle(Qt::FlatCap);
   crowdingPen.setJoinStyle(Qt::MiterJoin);
-  
+
   for(const auto letterRow: letterRows) {
     QPoint upperLeft(mainSettings->width, mainSettings->height); // Is adjusted later
     QPoint lowerRight(0, 0); // Is adjusted later
