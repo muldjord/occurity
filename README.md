@@ -176,6 +176,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
 
+#### Version 0.6.3 (In progress, unreleased)
+* Added crowding rectangle for all font charts using 'c' key
+
 #### Version 0.6.2 (26may2021)
 * Added 'T' to Sloan font
 * Added 'HOTV' charts to 'charts.xml' on numkey 7
