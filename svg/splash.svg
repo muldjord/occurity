@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -15,9 +13,9 @@
    viewBox="0 0 108.95154 97.922693"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="splash.svg"
-   inkscape:export-filename="/home/muldjord/private/programming/visutest/icons/splash.png"
+   inkscape:export-filename="/home/muldjord/programming/visutest/icons/splash.png"
    inkscape:export-xdpi="186.5"
    inkscape:export-ydpi="186.5">
   <defs
@@ -52,19 +50,19 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.3610906"
-     inkscape:cx="226.76302"
+     inkscape:cx="214.48056"
      inkscape:cy="182.29898"
      inkscape:document-units="mm"
-     inkscape:current-layer="g1501"
+     inkscape:current-layer="layer2"
      showgrid="false"
      units="px"
      inkscape:snap-grids="true"
      inkscape:snap-to-guides="false"
      inkscape:snap-others="true"
      inkscape:snap-nodes="true"
-     inkscape:window-width="1853"
-     inkscape:window-height="1145"
-     inkscape:window-x="67"
+     inkscape:window-width="1848"
+     inkscape:window-height="1136"
+     inkscape:window-x="72"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="1.5"
@@ -77,7 +75,8 @@
      inkscape:snap-page="true"
      inkscape:bbox-paths="true"
      inkscape:bbox-nodes="true"
-     inkscape:snap-bbox-edge-midpoints="true">
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid852" />
@@ -90,7 +89,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -199,7 +198,8 @@
            height="41.927635"
            x="80.261475"
            y="3.5341978" /></flowRegion><flowPara
-         id="flowPara927">VisuTest</flowPara></flowRoot>  </g>
+         id="flowPara927">VisuTest</flowPara></flowRoot>
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
@@ -233,14 +233,14 @@
          id="tspan981">VisuTest is free software released under the GNU General Public License v3 (GPLv3)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:1.25;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';letter-spacing:0px;word-spacing:0px;display:inline;fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        x="12.703633"
        y="95.894562"
        id="text931-7-4"><tspan
          sodipodi:role="line"
          x="12.703633"
          y="95.894562"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666703px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-         id="tspan981-1">Copyright (c) 2019 by Lars Bisballe, Klinik for Øjensygdomme, Aarhus University Hospital</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11667px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#fdfdfd;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+         id="tspan981-1">Copyright (c) 2021 by Lars Bisballe, Klinik for Øjensygdomme, Aarhus University Hospital</tspan></text>
   </g>
 </svg>
