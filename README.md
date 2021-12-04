@@ -51,7 +51,7 @@ Install it on your Pi SD card and plug it into your Pi.
 Run the following commands in a terminal on the Pi to install the prerequisites.
 ```
 $ sudo apt update
-$ sudo apt install qt5-default libqt5svg5-dev
+$ sudo apt install qtbase5-dev libqt5svg5-dev
 ```
 
 ### System configurations
