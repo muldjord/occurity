@@ -218,7 +218,7 @@
       <row size="2.0">DFECB</row>
     </chart>
     <chart caption="Kay 2" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
-      <row size="0.05" >DFEAC</row>
+      <row size="0.05">DFEAC</row>
       <row size="0.067">EDCFA</row>
       <row size="0.08">BFDAC</row>
       <row size="0.1">DAFCB</row>
