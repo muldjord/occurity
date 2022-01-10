@@ -286,7 +286,7 @@ void MainWindow::loadFonts(QString dirStr)
   printf("Loading fonts from folder: '%s'\n", dirStr.toStdString().c_str());
   QDir fontDir(dirStr, "*.ttf *.otf", QDir::Name, QDir::NoDotAndDotDot | QDir::Files);
   QList<QFileInfo> fontFiles = fontDir.entryInfoList();
-  for(const auto fontFile: fontFiles) {
+  for(const auto &fontFile: fontFiles) {
     printf("  Loading '%s'... ", fontFile.fileName().toStdString().c_str());
     if(QFontDatabase::addApplicationFont(fontFile.absoluteFilePath()) != -1) {
       printf("Success!\n");
