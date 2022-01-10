@@ -199,42 +199,42 @@
   </group>
   <group numkey="8">
     <chart caption="Kay 1" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
-      <row size="0.05">BADCE</row>
+      <row size="0.05">BADFE</row>
       <row size="0.067">CBAED</row>
-      <row size="0.08">FDEBC</row>
+      <row size="0.08">FDEAC</row>
       <row size="0.1">ACBFE</row>
-      <row size="0.125">ABCDE</row>
+      <row size="0.125">BACDF</row>
       <row size="0.16">CBDAE</row>
       <row size="0.2">FAECB</row>
-      <row size="0.25">BEADC</row>
+      <row size="0.25">BEAFD</row>
       <row size="0.32">EFBDC</row>
       <row size="0.4">FBECD</row>
       <row size="0.5">EFABC</row>
-      <row size="0.63">AFDCE</row>
+      <row size="0.63">ADFCE</row>
       <row size="0.8">BEDAC</row>
       <row size="1.0">DAFCB</row>
-      <row size="1.25">BFDCA</row>
-      <row size="1.6">EDCBA</row>
-      <row size="2.0">DFECA</row>
+      <row size="1.25">AFDCE</row>
+      <row size="1.6">EDFBA</row>
+      <row size="2.0">DFECB</row>
     </chart>
     <chart caption="Kay 2" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
-      <row size="0.05">DFECA</row>
-      <row size="0.067">EDCBA</row>
-      <row size="0.08">BFDCA</row>
+      <row size="0.05" >DFEAC</row>
+      <row size="0.067">EDCFA</row>
+      <row size="0.08">BFDAC</row>
       <row size="0.1">DAFCB</row>
       <row size="0.125">BEDAC</row>
-      <row size="0.16">AFBCE</row>
-      <row size="0.2">EFABC</row>
-      <row size="0.25">FBECD</row>
-      <row size="0.32">FADCB</row>
-      <row size="0.4">BEADC</row>
+      <row size="0.16">AFBDE</row>
+      <row size="0.2">EAFBC</row>
+      <row size="0.25">FBCED</row>
+      <row size="0.32">AFDCB</row>
+      <row size="0.4">BEADF</row>
       <row size="0.5">FAECB</row>
-      <row size="0.63">CBDAE</row>
-      <row size="0.8">ABCDE</row>
+      <row size="0.63">CFDAE</row>
+      <row size="0.8">BACED</row>
       <row size="1.0">ACBFE</row>
       <row size="1.25">FDEBC</row>
       <row size="1.6">CBAED</row>
-      <row size="2.0">BADCE</row>
+      <row size="2.0">BADFE</row>
     </chart>
   </group>
 </charts>
