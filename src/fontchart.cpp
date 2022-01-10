@@ -298,7 +298,6 @@ void FontChart::resetSize()
 
 void FontChart::setSize(const QString &sizeStr)
 {
-  printf("Setting size!\n");
   size->setSize(sizeStr);
   updateAll();
 }
