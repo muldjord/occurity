@@ -237,4 +237,25 @@
       <row size="2.0">BADFE</row>
     </chart>
   </group>
+  <group numkey="9">
+    <chart caption="Sloan SVG" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
+      <row size="0.05">VHCNO</row>
+      <row size="0.067">SVHCZ</row>
+      <row size="0.08">OZDVK</row>
+      <row size="0.1">NCKZO</row>
+      <row size="0.125">RHSDK</row>
+      <row size="0.16">DOVHR</row>
+      <row size="0.2">CZRHS</row>
+      <row size="0.25">ONHRC</row>
+      <row size="0.32">DKSNV</row>
+      <row size="0.4">ZSOKN</row>
+      <row size="0.5">CKDNR</row>
+      <row size="0.63">SRZKD</row>
+      <row size="0.8">HZOVC</row>
+      <row size="1.0">NVDOK</row>
+      <row size="1.25">VHCNO</row>
+      <row size="1.6">SVHCZ</row>
+      <row size="2.0">OZDVK</row>
+    </chart>
+  </group>
 </charts>

@@ -56,6 +56,8 @@ void AbstractChart::setType(QString type)
     this->type = FONTCHART;
   } else if(type == "svg") {
     this->type = SVGCHART;
+  } else if(type == "optotype") {
+    this->type = OPTOTYPECHART;
   }
 }
 
@@ -65,6 +67,8 @@ QString AbstractChart::getType()
     return QString("font");
   } else if(type == SVGCHART) {
     return QString("svg");
+  } else if(type == OPTOTYPECHART) {
+    return QString("optotype");
   }
 
   return QString("Invalid type");
@@ -80,7 +84,7 @@ Qt::Key AbstractChart::getNumKey()
   return numKey;
 }
 
-QString AbstractChart::getFontFamily()
+QString AbstractChart::getOptotype()
 {
   return QString("None");
 }

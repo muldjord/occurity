@@ -1,9 +1,9 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            fontchart.cpp
+ *            optotypechart.cpp
  *
- *  Tue Mar 13 17:00:00 UTC+1 2018
- *  Copyright 2018 Lars Bisballe
+ *  Tue Jan 11 14:32:00 UTC+1 2021
+ *  Copyright 2021 Lars Bisballe
  *  larsbjensen@gmail.com
  ****************************************************************************/
 
@@ -25,28 +25,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "fontchart.h"
+#include "optotypechart.h"
 
 #include <stdio.h>
 #include <math.h>
 #include <QKeyEvent>
 
-FontChart::FontChart(MainSettings *mainSettings, QObject *parent) :
+OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
 {
   sizeResetTimer.setInterval(mainSettings->sizeResetTime);
   sizeResetTimer.setSingleShot(true);
-  connect(&sizeResetTimer, &QTimer::timeout, this, &FontChart::resetSize);
+  connect(&sizeResetTimer, &QTimer::timeout, this, &OptotypeChart::resetSize);
 }
 
-FontChart::~FontChart()
+OptotypeChart::~OptotypeChart()
 {
 }
 
-void FontChart::init()
+void OptotypeChart::init()
 {
   size = new LetterSize(mainSettings, rowSizes, startSize);
-  connect(size, &LetterSize::refresh, this, &FontChart::refreshAllRows);
+  connect(size, &LetterSize::refresh, this, &OptotypeChart::refreshAllRows);
 
   sizeItem = new QGraphicsSimpleTextItem("0.0");
   QFont font;
@@ -61,7 +61,7 @@ void FontChart::init()
   updateAll();
 }
 
-void FontChart::keyPressEvent(QKeyEvent *event)
+void OptotypeChart::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_Up) {
     size->increaseSize();
@@ -116,7 +116,7 @@ void FontChart::keyPressEvent(QKeyEvent *event)
   updateAll();
 }
 
-void FontChart::refreshAllRows()
+void OptotypeChart::refreshAllRows()
 {
   int rows = letterRows.length();
   qDeleteAll(letterRows);
@@ -126,19 +126,19 @@ void FontChart::refreshAllRows()
   }
 }
 
-void FontChart::shuffleRow(LetterRow *row)
+void OptotypeChart::shuffleRow(LetterRow *row)
 {
   row->shuffleLetters();
 }
 
-void FontChart::shuffleAllRows()
+void OptotypeChart::shuffleAllRows()
 {
   for(const auto letterRow: letterRows) {
     letterRow->shuffleLetters();
   }
 }
 
-void FontChart::addRow()
+void OptotypeChart::addRow()
 {
   if(letterRows.length() < 2) {
     LetterRow *tmpRow = new LetterRow(&rowStrings, family);
@@ -160,7 +160,7 @@ void FontChart::addRow()
   }
 }
 
-void FontChart::removeRow()
+void OptotypeChart::removeRow()
 {
   if(letterRows.length() > 1) {
     // FIXME: Delete pointer also?
@@ -169,37 +169,37 @@ void FontChart::removeRow()
   }
 }
 
-void FontChart::setOptotype(QString family)
+void OptotypeChart::setOptotype(QString family)
 {
   this->family = family;
 }
 
-QString FontChart::getOptotype()
+QString OptotypeChart::getOptotype()
 {
   return family;
 }
 
-void FontChart::setSizeLocked(const bool &sizeLocked)
+void OptotypeChart::setSizeLocked(const bool &sizeLocked)
 {
   this->sizeLocked = sizeLocked;
 }
 
-bool FontChart::isSizeLocked()
+bool OptotypeChart::isSizeLocked()
 {
   return sizeLocked;
 }
 
-void FontChart::addRowString(QString size, QString row)
+void OptotypeChart::addRowString(QString size, QString row)
 {
   rowStrings.append(QPair<QString, QString> (size, row));
 }
 
-void FontChart::setRowSizes(QList<QString> rowSizes)
+void OptotypeChart::setRowSizes(QList<QString> rowSizes)
 {
   this->rowSizes = rowSizes;
 }
 
-void FontChart::updateAll()
+void OptotypeChart::updateAll()
 {
   for(const auto item: items()) {
     removeItem(item);
@@ -284,25 +284,25 @@ void FontChart::updateAll()
   update(0, 0, mainSettings->width, mainSettings->height);
 }
 
-void FontChart::setStartSize(const QString startSize)
+void OptotypeChart::setStartSize(const QString startSize)
 {
   this->startSize = startSize;
 }
 
-void FontChart::resetSize()
+void OptotypeChart::resetSize()
 {
   printf("Resetting size!\n");
   size->setSize(startSize);
   updateAll();
 }
 
-void FontChart::setSize(const QString &sizeStr)
+void OptotypeChart::setSize(const QString &sizeStr)
 {
   size->setSize(sizeStr);
   updateAll();
 }
 
-QString FontChart::getSize()
+QString OptotypeChart::getSize()
 {
   return size->getSizeStr();
 }

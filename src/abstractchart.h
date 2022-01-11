@@ -35,8 +35,9 @@
 #include <QKeyEvent>
 #include <QGraphicsSimpleTextItem>
 
-#define FONTCHART 0
-#define SVGCHART 1
+constexpr int FONTCHART = 0;
+constexpr int SVGCHART = 1;
+constexpr int OPTOTYPECHART = 2;
 
 class AbstractChart : public QGraphicsScene
 {
@@ -56,8 +57,8 @@ public:
   virtual bool isSizeLocked(){return false;};
   virtual void setSize(const QString &){};
   virtual QString getSize(){return QString();};
-  virtual void setFontFamily(QString){};
-  virtual QString getFontFamily();
+  virtual void setOptotype(QString){};
+  virtual QString getOptotype();
   virtual void setSource(const QString){};
   virtual void addRowString(QString, QString);
   virtual void setRowSizes(QList<QString>){};

@@ -19,6 +19,7 @@ HEADERS += src/mainwindow.h \
            src/abstractchart.h \
            src/fontchart.h \
            src/svgchart.h \
+           src/optotypechart.h \
            src/lettersize.h \
            src/letterrow.h \
            src/letter.h
@@ -32,6 +33,7 @@ SOURCES += src/main.cpp \
            src/abstractchart.cpp \
            src/fontchart.cpp \
            src/svgchart.cpp \
+           src/optotypechart.cpp \
            src/lettersize.cpp \
            src/letterrow.cpp \
            src/letter.cpp

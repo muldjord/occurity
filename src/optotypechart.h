@@ -1,9 +1,9 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            fontchart.h
+ *            optotypechart.h
  *
- *  Tue Mar 13 17:00:00 UTC+1 2018
- *  Copyright 2018 Lars Bisballe
+ *  Tue Jan 11 14:32:00 UTC+1 2021
+ *  Copyright 2021 Lars Bisballe
  *  larsbjensen@gmail.com
  ****************************************************************************/
 
@@ -24,8 +24,8 @@
  *  along with VisuTest; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
-#ifndef __VISUTEST_FONTCHART_H__
-#define __VISUTEST_FONTCHART_H__
+#ifndef __VISUTEST_OPTOTYPECHART_H__
+#define __VISUTEST_OPTOTYPECHART_H__
 
 #include "letterrow.h"
 #include "lettersize.h"
@@ -34,13 +34,13 @@
 
 #include <QTimer>
 
-class FontChart : public AbstractChart
+class OptotypeChart : public AbstractChart
 {
   Q_OBJECT
     
 public:
-  FontChart(MainSettings *mainSettings, QObject *parent);
-  ~FontChart();
+  OptotypeChart(MainSettings *mainSettings, QObject *parent);
+  ~OptotypeChart();
   void init() override;
   void setOptotype(QString family) override;
   QString getOptotype() override;
@@ -86,4 +86,4 @@ private:
   QTimer sizeResetTimer;
   
 };
-#endif/*__VISUTEST_FONTCHART_H__*/
+#endif/*__VISUTEST_OPTOTYPECHART_H__*/

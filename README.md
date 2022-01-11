@@ -175,9 +175,12 @@ You can configure several options of VisuTest to fit your needs. The first time 
 #### Version x.x.x (unimplemented)
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
+* Change all fonts to SVG's. Render each row into a graphicsItem so all letters are moved together as a layer. Create a "QList<QPair<QString, QGraphicsItem> >" where QString is the row size and each QGraphicsItem is a parent item holding all letters (QGraphicsSvgItem) in a row. Now changing size is as simple as hiding and showing items from that list. We can find a specific size by looking up the size from the QStrings. Or we can move up or down in size by simply looking at the next item in the list up / down.
 
-#### Version 0.6.3 (In progress, unreleased)
+#### Version 0.7.0 (In progress, unreleased)
+* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font
 * Added crowding rectangle for all font charts using 'c' key
+* Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio
 
 #### Version 0.6.2 (26may2021)
 * Added 'T' to Sloan font
