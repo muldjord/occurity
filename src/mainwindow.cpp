@@ -136,6 +136,8 @@ bool MainWindow::loadCharts(QString chartsXml)
         chart = new FontChart(mainSettings, this);
       } else if(chartType == "svg") {
         chart = new SvgChart(mainSettings, this);
+      } else if(chartType == "optotype") {
+        chart = new OptotypeChart(mainSettings, this);
       }
       if(chart == nullptr) {
         printf("PARSE ERROR: Chart type '%s' was not recognized, skipping...\n",
@@ -150,7 +152,6 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->setNumKey((Qt::Key)(numKey + 48));
       chart->setBgColor(xmlChart.attribute("bgcolor"));
       printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
-      QMap<QString, int> rowSizeMap;
       if(chart->getType() == "font") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
           printf("    Size lock: true\n");
@@ -158,9 +159,10 @@ bool MainWindow::loadCharts(QString chartsXml)
         } else {
           printf("    Size lock: false\n");
         }
-        chart->setFontFamily(xmlChart.attribute("fontfamily"));
-        printf("    Font family: '%s'\n", chart->getFontFamily().toStdString().c_str());
+        chart->setOptotype(xmlChart.attribute("fontfamily"));
+        printf("    Font family: '%s'\n", chart->getOptotype().toStdString().c_str());
         QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
+        QMap<QString, int> rowSizeMap;
         for(int b = 0; b < xmlRows.count(); ++b) {
           QDomElement xmlRow = xmlRows.at(b).toElement();
           QString rowSize = xmlRow.attribute("size");
@@ -194,6 +196,32 @@ bool MainWindow::loadCharts(QString chartsXml)
           } else {
             printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
           }
+        }
+      } else if(chart->getType() == "optotype") {
+        if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
+          printf("    Size lock: true\n");
+          chart->setSizeLocked(true);
+        } else {
+          printf("    Size lock: false\n");
+        }
+        chart->setOptotype(xmlChart.attribute("optotype"));
+        printf("    Optotype: '%s'\n", chart->getOptotype().toStdString().c_str());
+        QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
+        QMap<QString, int> rowSizeMap;
+        for(int b = 0; b < xmlRows.count(); ++b) {
+          QDomElement xmlRow = xmlRows.at(b).toElement();
+          QString rowSize = xmlRow.attribute("size");
+          chart->addRowString(rowSize, xmlRow.text());
+          rowSizeMap[rowSize] = 0;
+          printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
+        }
+        QList<QString> rowSizeStrings;
+        for(auto str : rowSizeMap.keys()) {
+          rowSizeStrings.append(str);
+        }
+        chart->setRowSizes(rowSizeStrings);
+        if(xmlChart.hasAttribute("startsize")) {
+          chart->setStartSize(xmlChart.attribute("startsize"));
         }
       }
       chart->init();
@@ -299,7 +327,11 @@ void MainWindow::loadFonts(QString dirStr)
 
 void MainWindow::updateFromConfig()
 {
-  while(!config->contains("physHeight")) {
+  while(!config->contains("rulerWidth")) {
+    if(config->contains("physHeight")) {
+      config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
+      config->remove("physHeight");
+    }
     if(!config->contains("chartsXml")) {
       config->setValue("chartsXml", "charts.xml");
     }
@@ -309,6 +341,12 @@ void MainWindow::updateFromConfig()
     spawnPreferences();
   }
 
+  // Convert obsolete 'physDistance' variable to 'patientDistance'
+  if(config->contains("physDistance")) {
+    config->setValue("patientDistance", config->value("physDistance").toInt());
+    config->remove("physDistance");
+  }
+  
   if(!config->contains("sizeResetTime")) {
     config->setValue("sizeResetTime", 240);
   }
@@ -319,12 +357,12 @@ void MainWindow::updateFromConfig()
   mainSettings->sizeResetTime = config->value("sizeResetTime").toInt() * 1000; // Seconds
   mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
-  mainSettings->physDistance = config->value("physDistance").toDouble(); // Cm
-  mainSettings->physHeight = config->value("physHeight").toDouble(); // Mm
+  mainSettings->patientDistance = config->value("patientDistance").toDouble(); // Cm
+  mainSettings->rulerWidth = config->value("rulerWidth").toDouble(); // Mm
 
-  mainSettings->distanceFactor = mainSettings->physDistance / 600.0;
-  mainSettings->pixelsPerMm = (double)mainSettings->height / mainSettings->physHeight;
-  // At 6 m distance, a letter should be 8.73 mm tall on screen (5 arc minutes)
+  mainSettings->distanceFactor = mainSettings->patientDistance / 600.0;
+  mainSettings->pixelsPerMm = 500.0 / mainSettings->rulerWidth;
+  // At 6 m distance and size 0.1 a letter should be 8.73 mm tall on screen (5 arc minutes)
   mainSettings->fiveArcMinutes = 8.73 * mainSettings->pixelsPerMm;
   mainSettings->hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
   mainSettings->hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";

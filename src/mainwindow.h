@@ -30,6 +30,7 @@
 #include "abstractchart.h"
 #include "fontchart.h"
 #include "svgchart.h"
+#include "optotypechart.h"
 #include "mainsettings.h"
 
 #include <QGraphicsView>

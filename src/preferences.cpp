@@ -43,7 +43,7 @@ Preferences::Preferences(QSettings *config, QWidget *parent) : QDialog(parent)
 {
   this->config = config;
 
-  setFixedSize(900, 400);
+  setFixedSize(1200, 400);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("VisuTest v" VERSION);
 
@@ -52,12 +52,14 @@ Preferences::Preferences(QSettings *config, QWidget *parent) : QDialog(parent)
   About *tabWidget = new About(this);
   tabWidget->setMinimumWidth(600);
 
-  QLabel *physHeightLabel = new QLabel(tr("Physical height of screen area (mm):"), this);
-  Slider *physHeight = new Slider(config, "", "physHeight", 50, 800, 300, 1, this);
-  physHeight->setFocus();
-  QLabel *physDistanceLabel = new QLabel(tr("Patient distance to monitor (cm):"), this);
-  Slider *physDistance = new Slider(config, "", "physDistance", 50, 1000, 600, 10, this);
-  QLabel *sizeResetTimeLabel = new QLabel(tr("Size reset time (seconds):"), this);
+  QLabel *rulerWidthLabel = new QLabel(tr("Physical length of ruler (mm):"), this);
+  Slider *rulerWidth = new Slider(config, "", "rulerWidth", 50, 800, 137, 1, this);
+  rulerWidth->setFocus();
+  QLabel *rulerLabel = new QLabel(this);
+  rulerLabel->setPixmap(QPixmap(":ruler.png"));
+  QLabel *patientDistanceLabel = new QLabel(tr("Patient distance to monitor (cm):"), this);
+  Slider *patientDistance = new Slider(config, "", "patientDistance", 50, 1000, 600, 10, this);
+  QLabel *sizeResetTimeLabel = new QLabel(tr("Idle time before size reset (seconds):"), this);
   Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", 10, 3600, 240, 10, this);
   QLabel *hexRedLabel = new QLabel(tr("Red color value:"), this);
   Slider *hexRed = new Slider(config, "", "redValue", 0, 255, 210, 1, this);
@@ -67,10 +69,11 @@ Preferences::Preferences(QSettings *config, QWidget *parent) : QDialog(parent)
   connect(saveButton, &QPushButton::clicked, this, &QDialog::accept);
 
   QVBoxLayout *configLayout = new QVBoxLayout;
-  configLayout->addWidget(physHeightLabel);
-  configLayout->addWidget(physHeight);
-  configLayout->addWidget(physDistanceLabel);
-  configLayout->addWidget(physDistance);
+  configLayout->addWidget(rulerWidthLabel);
+  configLayout->addWidget(rulerWidth);
+  configLayout->addWidget(rulerLabel);
+  configLayout->addWidget(patientDistanceLabel);
+  configLayout->addWidget(patientDistance);
   configLayout->addWidget(sizeResetTimeLabel);
   configLayout->addWidget(sizeResetTime);
   configLayout->addWidget(hexRedLabel);

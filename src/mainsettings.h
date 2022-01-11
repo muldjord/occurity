@@ -34,9 +34,9 @@ struct MainSettings {
   int sizeResetTime = 240000; // 4 minutes
   int width = 1920;
   int height = 1080;
-  double physDistance = 600.0;
+  double patientDistance = 600.0;
   double distanceFactor = 1.0;
-  double physHeight = 300.0;
+  double rulerWidth = 137.0;
   double pixelsPerMm = 42.0;
   //QString startSize = "1.0";
   double fiveArcMinutes = 0.0;
