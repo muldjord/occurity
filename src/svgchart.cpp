@@ -107,7 +107,7 @@ bool SvgChart::addSvgLayer(const QString svgLayerId)
 void SvgChart::updateAll()
 {
   setRedGreen(mainSettings->hexRed, mainSettings->hexGreen);
-  
+
   svgItem->renderer()->load(svgXml);
 
   if(!layers.isEmpty() && svgIdx <= layers.size())

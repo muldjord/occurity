@@ -34,7 +34,7 @@
 class Preferences : public QDialog
 {
   Q_OBJECT
-    
+
 public:
   Preferences(QSettings *config, QWidget *parent);
   ~Preferences();
@@ -42,7 +42,7 @@ public:
 protected:
   bool eventFilter(QObject *, QEvent *event) override;
   //void keyPressEvent(QKeyEvent *event) override;
-  
+
 private:
   QSettings *config;
 

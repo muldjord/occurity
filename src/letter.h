@@ -39,6 +39,6 @@ public:
 
 private:
   QString family;
-  
+
 };
 #endif/*__VISUTEST_LETTER_H__*/

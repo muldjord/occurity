@@ -112,7 +112,7 @@ void FontChart::keyPressEvent(QKeyEvent *event)
   // Update reset interval in case it has changed
   sizeResetTimer.setInterval(mainSettings->sizeResetTime);
   sizeResetTimer.start();
-  
+
   updateAll();
 }
 
@@ -221,7 +221,7 @@ void FontChart::updateAll()
   crowdingPen.setJoinStyle(Qt::MiterJoin);
 
   double crowdingSpan = (spaceHeight / 5.0) * 1.5;
-  
+
   for(const auto letterRow: letterRows) {
     QPoint upperLeft(mainSettings->width, mainSettings->height); // Is adjusted later
     QPoint lowerRight(0, 0); // Is adjusted later

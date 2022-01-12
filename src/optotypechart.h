@@ -37,18 +37,18 @@
 class OptotypeChart : public AbstractChart
 {
   Q_OBJECT
-    
+
 public:
   OptotypeChart(MainSettings *mainSettings, QObject *parent);
   ~OptotypeChart();
   void init() override;
-  void setOptotype(QString family) override;
+  void setOptotype(QString optotype) override;
   QString getOptotype() override;
   void setSizeLocked(const bool &sizeLocked) override;
   bool isSizeLocked() override;
   void setSize(const QString &sizeStr) override;
   QString getSize() override;
-                                                       
+
 public slots:
   void updateAll() override;
 
@@ -63,12 +63,12 @@ private slots:
   void resetSize();
 
 private:
-  QString family = "";
+  QString optotype = "";
   bool sizeLocked = false;
   bool crowding = false;
   QList<QPair<QString, QString> > rowStrings;
   QList<QString> rowSizes;
-  
+
   LetterSize *size;
 
   int perRow = 5;
@@ -84,6 +84,9 @@ private:
   QGraphicsSimpleTextItem *sizeItem;
 
   QTimer sizeResetTimer;
-  
+
+  int currentRowIdx = -1;
+  QList<QPair<QString, QGraphicsItem *> > rows;
+
 };
 #endif/*__VISUTEST_OPTOTYPECHART_H__*/

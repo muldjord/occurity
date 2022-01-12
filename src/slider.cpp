@@ -38,7 +38,7 @@ Slider::Slider(QSettings *config, QString group, QString name,
   this->group = group;
   this->name = name;
   this->defaultValue = stdValue;
-  
+
   QHBoxLayout *layout = new QHBoxLayout(this);
   valueSlider = new QSlider(Qt::Horizontal, this);
   valueSlider->installEventFilter(parent);

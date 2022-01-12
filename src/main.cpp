@@ -61,7 +61,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
     abort();
   }
   printf("%s", txt.toStdString().c_str());
- 
+
   // Set debug file
   /*
   QFile outFile("debug.log");

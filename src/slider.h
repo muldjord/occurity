@@ -35,7 +35,7 @@
 class Slider : public QWidget
 {
   Q_OBJECT
-    
+
 public:
   Slider(QSettings *config, QString group, QString name,
 	 int minValue, int maxValue, int stdValue, int step = 10, QWidget *parent = nullptr);

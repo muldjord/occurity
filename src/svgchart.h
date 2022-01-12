@@ -36,13 +36,13 @@
 class SvgChart : public AbstractChart
 {
   Q_OBJECT
-    
+
 public:
   SvgChart(MainSettings *mainSettings, QObject *parent);
   ~SvgChart();
   void init() override;
   void setRedGreen(const QString hexRed, const QString hexGreen);
-                                                       
+
 public slots:
   void updateAll() override;
 
@@ -59,6 +59,6 @@ private:
   QList<QString> layers;
   int svgIdx = 0;
   QGraphicsSvgItem *svgItem;
-  
+
 };
 #endif/*__VISUTEST_SVGCHART_H__*/

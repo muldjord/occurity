@@ -60,7 +60,7 @@ MainWindow::MainWindow()
   updateFromConfig();
 
   loadFonts(config->value("fontDir", "./fonts").toString());
-  
+
   if(loadCharts(config->value("chartsXml", "charts.xml").toString())) {
     printf("Charts xml loaded successfully!\n");
   } else {
@@ -73,7 +73,7 @@ MainWindow::MainWindow()
   secretTimer.setInterval(400);
   secretTimer.setSingleShot(true);
   connect(&secretTimer, &QTimer::timeout, this, &MainWindow::enableSecret);
-  
+
   hiberCooldownTimer.setInterval(10000);
   hiberCooldownTimer.setSingleShot(true);
   connect(&hiberCooldownTimer, &QTimer::timeout, this, &MainWindow::enableHibernate);
@@ -82,7 +82,7 @@ MainWindow::MainWindow()
   hiberTimer.setSingleShot(true);
   connect(&hiberTimer, &QTimer::timeout, this, &MainWindow::hibernate);
   hiberTimer.start();
-  
+
   QTimer::singleShot(0, this, &MainWindow::init);
 }
 
@@ -109,12 +109,12 @@ bool MainWindow::loadCharts(QString chartsXml)
   } else {
     return false;
   }
-  
+
   QDomDocument xmlDoc;
   if(!xmlDoc.setContent(xmlData)) {
     return false;
   }
-  
+
   QDomNodeList groupNodes = xmlDoc.documentElement().elementsByTagName("group");
   for(int a = 0; a < groupNodes.count(); ++a) {
     QDomElement xmlGroup = groupNodes.at(a).toElement();
@@ -216,7 +216,7 @@ bool MainWindow::loadCharts(QString chartsXml)
           printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
         }
         QList<QString> rowSizeStrings;
-        for(auto str : rowSizeMap.keys()) {
+        for(auto &str : rowSizeMap.keys()) {
           rowSizeStrings.append(str);
         }
         chart->setRowSizes(rowSizeStrings);
@@ -238,7 +238,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
   if(event->type() == QEvent::KeyPress) {
     // Reset hibernation inactivity timer
     hiberTimer.start();
-    
+
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
     // Check for secret "2018" shutdown sequence check
@@ -258,7 +258,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       allowSecret = false;
       secretTimer.start();
     }
-    
+
     QList<int> chartPool;
     AbstractChart *currentChart = nullptr;
     for(int a = 0; a < charts.length(); ++a) {
@@ -346,14 +346,14 @@ void MainWindow::updateFromConfig()
     config->setValue("patientDistance", config->value("physDistance").toInt());
     config->remove("physDistance");
   }
-  
+
   if(!config->contains("sizeResetTime")) {
     config->setValue("sizeResetTime", 240);
   }
   if(!config->contains("hibernateTime")) {
     config->setValue("hibernateTime", 120);
   }
-  
+
   mainSettings->sizeResetTime = config->value("sizeResetTime").toInt() * 1000; // Seconds
   mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
@@ -366,7 +366,7 @@ void MainWindow::updateFromConfig()
   mainSettings->fiveArcMinutes = 8.73 * mainSettings->pixelsPerMm;
   mainSettings->hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
   mainSettings->hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
-  
+
   printf("  pixelsPerMm: %f\n", mainSettings->pixelsPerMm);
   printf("\n");
   emit configUpdated();

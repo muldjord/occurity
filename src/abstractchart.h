@@ -42,7 +42,7 @@ constexpr int OPTOTYPECHART = 2;
 class AbstractChart : public QGraphicsScene
 {
   Q_OBJECT
-    
+
 public:
   AbstractChart(MainSettings *mainSettings, QObject *parent);
   ~AbstractChart();
@@ -73,7 +73,7 @@ protected:
 
 public slots:
   virtual void updateAll(){};
-  
+
 private:
   int type = 0;
   Qt::Key numKey = Qt::Key_0;

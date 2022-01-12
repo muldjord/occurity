@@ -43,7 +43,7 @@ LetterRow::~LetterRow()
 QString LetterRow::setLetters(int chars, QString decimalStr)
 {
   currentRow.clear();
-  
+
   if(rowStrings->isEmpty()) {
     return QString("No rows!");
   }
@@ -63,7 +63,7 @@ QString LetterRow::setLetters(int chars, QString decimalStr)
   for(int a = 0; a < chars; ++a) {
     letters.append(new Letter(currentRow.at(a), family));
   }
-  
+
   return currentRow;
 }
 
@@ -84,7 +84,7 @@ void LetterRow::shuffleLetters(bool lockCurrent)
   if(!lockCurrent) {
     tmpRow = currentRow;
   }
-  
+
   qDeleteAll(letters);
   letters.clear();
 

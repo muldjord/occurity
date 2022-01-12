@@ -37,7 +37,7 @@
 class FontChart : public AbstractChart
 {
   Q_OBJECT
-    
+
 public:
   FontChart(MainSettings *mainSettings, QObject *parent);
   ~FontChart();
@@ -48,7 +48,7 @@ public:
   bool isSizeLocked() override;
   void setSize(const QString &sizeStr) override;
   QString getSize() override;
-                                                       
+
 public slots:
   void updateAll() override;
 
@@ -68,7 +68,7 @@ private:
   bool crowding = false;
   QList<QPair<QString, QString> > rowStrings;
   QList<QString> rowSizes;
-  
+
   LetterSize *size;
 
   int perRow = 5;
@@ -84,6 +84,6 @@ private:
   QGraphicsSimpleTextItem *sizeItem;
 
   QTimer sizeResetTimer;
-  
+
 };
 #endif/*__VISUTEST_FONTCHART_H__*/

@@ -41,7 +41,7 @@
 class MainWindow : public QGraphicsView
 {
   Q_OBJECT
-    
+
 public:
   MainWindow();
   ~MainWindow();
@@ -57,7 +57,7 @@ private slots:
   void enableHibernate();
   void enableSecret();
   void hibernate();
-  
+
 private:
   void flipHibernate(bool forceHibernate = false);
 
@@ -79,6 +79,6 @@ private:
   QTimer secretTimer;
   bool allowSecret = true;
   int secretState = 0;
-  
+
 };
 #endif/*__VISUTEST_MAINWINDOW_H__*/

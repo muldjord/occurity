@@ -32,7 +32,7 @@
 class About : public QTabWidget
 {
   Q_OBJECT
-    
+
 public:
   About(QWidget *parent);
   ~About();

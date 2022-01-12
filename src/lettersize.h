@@ -34,7 +34,7 @@
 class LetterSize : public QObject
 {
   Q_OBJECT
-    
+
 public:
   LetterSize(MainSettings *mainSettings, const QList<QString> sizes, const QString startSize);
   ~LetterSize();
@@ -50,11 +50,11 @@ public:
 
 signals:
   void refresh();
-  
+
 private:
   MainSettings *mainSettings;
   QList<QString> sizes;
   int sizeIdx = -1;
-  
+
 };
 #endif/*__VISUTEST_LETTERSIZE_H__*/

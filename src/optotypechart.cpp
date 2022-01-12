@@ -98,7 +98,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     int rows = letterRows.length();
     letterRows.clear();
     for(int a = 0; a < rows; ++a) {
-      LetterRow *tmpRow = new LetterRow(&rowStrings, family);
+      LetterRow *tmpRow = new LetterRow(&rowStrings, optotype);
       tmpRow->setLetters(perRow, size->getSizeStr());
       letterRows.append(tmpRow);
     }
@@ -112,7 +112,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   // Update reset interval in case it has changed
   sizeResetTimer.setInterval(mainSettings->sizeResetTime);
   sizeResetTimer.start();
-  
+
   updateAll();
 }
 
@@ -141,7 +141,7 @@ void OptotypeChart::shuffleAllRows()
 void OptotypeChart::addRow()
 {
   if(letterRows.length() < 2) {
-    LetterRow *tmpRow = new LetterRow(&rowStrings, family);
+    LetterRow *tmpRow = new LetterRow(&rowStrings, optotype);
     /*
     bool rowExists;
     do {
@@ -169,14 +169,14 @@ void OptotypeChart::removeRow()
   }
 }
 
-void OptotypeChart::setOptotype(QString family)
+void OptotypeChart::setOptotype(QString optotype)
 {
-  this->family = family;
+  this->optotype = optotype;
 }
 
 QString OptotypeChart::getOptotype()
 {
-  return family;
+  return optotype;
 }
 
 void OptotypeChart::setSizeLocked(const bool &sizeLocked)
@@ -209,7 +209,7 @@ void OptotypeChart::updateAll()
   int ySpacing = mainSettings->height / (rows + 1);
   int y = 0;
 
-  Letter spaceChar(" ", family);
+  Letter spaceChar(" ", optotype);
   spaceChar.setPixelSize(size->getPixelSize());
   double spaceWidth = spaceChar.boundingRect().width();
   double spaceHeight = spaceChar.boundingRect().height();
@@ -221,7 +221,7 @@ void OptotypeChart::updateAll()
   crowdingPen.setJoinStyle(Qt::MiterJoin);
 
   double crowdingSpan = (spaceHeight / 5.0) * 1.5;
-  
+
   for(const auto letterRow: letterRows) {
     QPoint upperLeft(mainSettings->width, mainSettings->height); // Is adjusted later
     QPoint lowerRight(0, 0); // Is adjusted later
