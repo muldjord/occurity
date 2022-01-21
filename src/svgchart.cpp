@@ -121,9 +121,9 @@ void SvgChart::updateAll()
 
   addItem(svgItem);
   if(scale) {
-    svgItem->setScale(1.0 * mainSettings->distanceFactor);
+    svgItem->setScale((mainSettings->width / svgItem->renderer()->defaultSize().width()) * mainSettings->distanceFactor);
   } else {
-    svgItem->setScale(1.0);
+    svgItem->setScale(mainSettings->width / svgItem->renderer()->defaultSize().width());
   }
   svgItem->setX((mainSettings->width / 2.0) - (svgItem->boundingRect().width() * svgItem->scale()) / 2.0);
   svgItem->setY((mainSettings->height / 2.0) - (svgItem->boundingRect().height() * svgItem->scale()) / 2.0);
@@ -131,7 +131,7 @@ void SvgChart::updateAll()
   // Re-add title
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->fiveArcMinutes * mainSettings->distanceFactor * 3.0);
+  font.setPixelSize(mainSettings->pxPerArcMin * mainSettings->distanceFactor * 1.5);
   titleItem->setFont(font);
   addItem(titleItem);
   titleItem->setX(mainSettings->width - titleItem->boundingRect().width() - 10);
