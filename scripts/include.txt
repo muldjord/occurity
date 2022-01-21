@@ -10,5 +10,5 @@ VisuTest
 visutest_da_DK.qm
 svg/
 icons/
-fonts/
+optotypes/
 scripts/
