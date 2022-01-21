@@ -60,6 +60,7 @@ public:
   virtual void setOptotype(QString){};
   virtual QString getOptotype();
   virtual void setSource(const QString){};
+  virtual void addRow(QString, QString);
   virtual void addRowString(QString, QString);
   virtual void setRowSizes(QList<QString>){};
   virtual void setStartSize(const QString){};

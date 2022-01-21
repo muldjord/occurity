@@ -38,7 +38,7 @@ AbstractChart::AbstractChart(MainSettings *mainSettings, QObject *parent) :
   titleItem = new QGraphicsSimpleTextItem();
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->fiveArcMinutes * mainSettings->distanceFactor * 2.0);
+  font.setPixelSize((mainSettings->pxPerArcMin * 5.0) * mainSettings->distanceFactor * 2.0);
   titleItem->setFont(font);
 }
 
@@ -107,6 +107,10 @@ void AbstractChart::setBgColor(QString color)
   } else if(color == "white") {
     setBackgroundBrush(Qt::white);
   }
+}
+
+void AbstractChart::addRow(QString, QString)
+{
 }
 
 void AbstractChart::addRowString(QString, QString)

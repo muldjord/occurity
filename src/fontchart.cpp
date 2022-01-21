@@ -51,7 +51,7 @@ void FontChart::init()
   sizeItem = new QGraphicsSimpleTextItem("0.0");
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->fiveArcMinutes * mainSettings->distanceFactor * 2.0);
+  font.setPixelSize((mainSettings->pxPerArcMin * 5.0) * mainSettings->distanceFactor * 0.2);
   sizeItem->setFont(font);
 
   titleItem->setText(objectName());
@@ -265,7 +265,7 @@ void FontChart::updateAll()
 
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->fiveArcMinutes * mainSettings->distanceFactor * 3.0);
+  font.setPixelSize(mainSettings->pxPerArcMin * mainSettings->distanceFactor * 1.5);
 
   // Add the letter size visual help
   sizeItem->setText(size->getSizeStr());

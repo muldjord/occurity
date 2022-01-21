@@ -86,6 +86,6 @@ int LetterSize::getPixelSize()
   double decimalSize = sizes.at(sizeIdx).toDouble();
   // The fiveArcMinutes value is the pixel height of 1 letter at the 6 meter standard distance
   // https://en.wikipedia.org/wiki/LogMAR_chart
-  return round(((1.0 / decimalSize) * mainSettings->fiveArcMinutes) *
+  return round(((mainSettings->pxPerArcMin * 5.0) / (10.0 * decimalSize)) *
                mainSettings->distanceFactor);
 }

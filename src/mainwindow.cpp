@@ -122,7 +122,7 @@ bool MainWindow::loadCharts(QString chartsXml)
     if(xmlGroup.hasAttribute("numkey")) {
       bool isInt = false;
       int tmpNumKey = xmlGroup.attribute("numkey").toInt(&isInt);
-      if(isInt) {
+      if(isInt && tmpNumKey >= 0 && tmpNumKey <= 9) {
         numKey = tmpNumKey;
       }
     }
@@ -148,8 +148,10 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->setType(chartType);
       connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateAll);
       chart->setObjectName(xmlChart.attribute("caption"));
-      // 48 is the Qt::Key equivalent of Qt::Key_0
-      chart->setNumKey((Qt::Key)(numKey + 48));
+      if(numKey) {
+        // 48 is the Qt::Key equivalent of Qt::Key_0 ascending from there to Qt::Key_9
+        chart->setNumKey((Qt::Key)(numKey + 48));
+      }
       chart->setBgColor(xmlChart.attribute("bgcolor"));
       printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
       if(chart->getType() == "font") {
@@ -211,8 +213,8 @@ bool MainWindow::loadCharts(QString chartsXml)
         for(int b = 0; b < xmlRows.count(); ++b) {
           QDomElement xmlRow = xmlRows.at(b).toElement();
           QString rowSize = xmlRow.attribute("size");
-          chart->addRowString(rowSize, xmlRow.text());
-          rowSizeMap[rowSize] = 0;
+          QString rowChars = xmlRow.text();
+          chart->addRow(rowSize, rowChars);
           printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
         }
         QList<QString> rowSizeStrings;
@@ -272,7 +274,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     // Set size for all other charts on same button if sizeLock is set
     for(int a = 0; a < charts.length(); ++a) {
       if(currentChart != nullptr && currentChart != charts.at(a) &&
-         charts.at(a)->getType() == "font" &&
+         (charts.at(a)->getType() == "font" || charts.at(a)->getType() == "optotype") &&
          charts.at(a)->isSizeLocked() &&
          currentChart->isSizeLocked() &&
          currentChart->getNumKey() == charts.at(a)->getNumKey()) {
@@ -332,12 +334,6 @@ void MainWindow::updateFromConfig()
       config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
       config->remove("physHeight");
     }
-    if(!config->contains("chartsXml")) {
-      config->setValue("chartsXml", "charts.xml");
-    }
-    if(!config->contains("fontDir")) {
-      config->setValue("fontDir", "./fonts");
-    }
     spawnPreferences();
   }
 
@@ -347,6 +343,15 @@ void MainWindow::updateFromConfig()
     config->remove("physDistance");
   }
 
+  if(!config->contains("chartsXml")) {
+    config->setValue("chartsXml", "charts.xml");
+  }
+  if(!config->contains("fontDir")) {
+      config->setValue("fontDir", "./fonts");
+  }
+  if(!config->contains("optotypesDir")) {
+    config->setValue("optotypesDir", "./optotypes");
+  }
   if(!config->contains("sizeResetTime")) {
     config->setValue("sizeResetTime", 240);
   }
@@ -361,13 +366,16 @@ void MainWindow::updateFromConfig()
   mainSettings->rulerWidth = config->value("rulerWidth").toDouble(); // Mm
 
   mainSettings->distanceFactor = mainSettings->patientDistance / 600.0;
-  mainSettings->pixelsPerMm = 500.0 / mainSettings->rulerWidth;
-  // At 6 m distance and size 0.1 a letter should be 8.73 mm tall on screen (5 arc minutes)
-  mainSettings->fiveArcMinutes = 8.73 * mainSettings->pixelsPerMm;
+  mainSettings->pxPerMm = 500.0 / mainSettings->rulerWidth;
+  // At 6 m distance (size 0.1) a letter should be 87.3 mm tall on screen (5 arc minutes)
+  mainSettings->pxPerArcMin = (87.3 / 5.0) * mainSettings->pxPerMm;
   mainSettings->hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
   mainSettings->hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
 
-  printf("  pixelsPerMm: %f\n", mainSettings->pixelsPerMm);
+  mainSettings->optotypesDir = config->value("optotypesDir").toString();
+
+  printf("  Pixels per mm: %f\n", mainSettings->pxPerMm);
+  printf("  Pixels per arc minute: %f\n", mainSettings->pxPerArcMin);
   printf("\n");
   emit configUpdated();
 }

@@ -37,9 +37,10 @@ struct MainSettings {
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
   double rulerWidth = 137.0;
-  double pixelsPerMm = 42.0;
+  double pxPerMm = 42.0;
   //QString startSize = "1.0";
-  double fiveArcMinutes = 0.0;
+  double pxPerArcMin = 0.0;
+  QString optotypesDir = "./optotypes";
   QString sizeFormat = "decimal";
   QString hexRed = "#d20000";
   QString hexGreen = "#00d200";

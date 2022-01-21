@@ -54,39 +54,32 @@ public slots:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  void addRowString(QString size, QString row) override;
-  void setRowSizes(QList<QString> rowSizeStrings) override;
+  void addRow(QString size, QString row) override;
   void setStartSize(const QString startSize) override;
 
 private slots:
-  void refreshAllRows();
   void resetSize();
 
 private:
   QString optotype = "";
   bool sizeLocked = false;
   bool crowding = false;
-  QList<QPair<QString, QString> > rowStrings;
-  QList<QString> rowSizes;
 
-  LetterSize *size;
-
-  int perRow = 5;
   int skew = 0;
-
-  void shuffleRow(LetterRow *row);
-  void shuffleAllRows();
+  bool single = false;
+  double spaceWidth = 0.0;
+  
   void addRow();
-  void removeRow();
-  void setLogMARSize(double value);
+  //void setLogMARSize(double value);
   //void loadRowStrings(QString filename);
-  QList<LetterRow *> letterRows;
+  QList<QPair<QString, QGraphicsItemGroup *> > rows;
+  int currentRowIdx = 0;
   QGraphicsSimpleTextItem *sizeItem;
-
+  QGraphicsSimpleTextItem *copyrightItem;
+  QGraphicsRectItem *crowdRect;
+  
   QTimer sizeResetTimer;
 
-  int currentRowIdx = -1;
-  QList<QPair<QString, QGraphicsItem *> > rows;
 
 };
 #endif/*__VISUTEST_OPTOTYPECHART_H__*/

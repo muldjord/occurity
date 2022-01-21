@@ -97,8 +97,8 @@ $ qmake
 $ make
 ```
 
-### Fonts
-For licensing reasons VisuTest is provided without fonts. You need to create or license these yourself.
+### Optotypes
+VisuTest comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the 'optotypes` subdirectories.
 
 ### charts.xml
 All of the charts displayed in the VisuTest software are customizable. Edit the '/home/pi/visutest/charts.xml' file in any basic text/xml editor. The format is as follows:
@@ -128,26 +128,31 @@ This groups several charts together on the same number key. It supports the foll
 
 #### 'chart' nodes
 ```
-<chart name="Chart 1" type="font" fontfamily="Sloan" bgcolor="white" sizelock="true">
+<chart name="Chart 1" type="optotype" optotype="sloan" bgcolor="white" sizelock="true">
   ...
 </chart>
 ```
 Must be nested in the 'charts' node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
 * caption="Caption" <-- The caption that is shown on-screen in VisuTest
-* type="font" (required) <-- The chart type. Currently supports 'font' and 'svg'
+* type="optotype" (required) <-- The chart type. Currently supports 'optotype' and 'svg'
 * bgcolor="white" <-- Sets the background color of the chart (can be 'black', 'white' or hex as '#AABBCC')
-* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes
+* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between size and chart changes
 
-##### 'font' chart type specific
-* fontfamily="Sloan" (required) <-- Which font family is used by this chart
-* startsize="0.1" <-- Sets font size on initialization. Size must match with a size from a 'row' below.
+##### 'optotype' chart type specific
+* optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`
+* startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a 'row' below
 
 ###### 'row' node
 Must be nested inside a 'chart' node. A single 'row' node defines a row in the chart. It has the following format:
 ```
 <row size="0.1">NCKZO</row>
+<row size="0.1">one;two;three</row>
 ```
-Size tells which size is needed for the row (required). This is defined as 1.0 being equal to 5 arc-minutes at a distance of 6 meters. The text of the node are which letters are to be used by the row. You can use as many or few as you'd like.
+Size tells which size is needed for the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
+
+You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg` and so on.
+
+The second way is by using semicolons to separate the optotype signs, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second examples this would require files to be names `one.svg` and so on.
 
 ##### 'svg' chart type specific
 * source="filename.svg" <-- The filename containing the SVG you want to use
@@ -164,7 +169,7 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * physDistance=310 <-- The distance from the monitor to the patient in centimeters.
 * physHeight=281 <-- The physical height of the actual screen area in millimeters. Be aware that this is ONLY the area where actual pixels are present on the screen. You should NOT include the plastic bezel.
 * chartsXml="charts.xml" <-- Allows you to override the default xml file that defines the charts. Default is 'charts.xml'.
-* fontDir="your/font/folder" <-- Defines the font folder to load chart fonts from. Defaults is './fonts'
+* optotypesDir="your/optotypes/folder" <-- Defines the optotypes folder to load chart optotypes from. Default is './optotypes'
 * redValue=210 <-- Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be '#d20000'.
 * greenValue=210 <-- Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be '#00d200'.
 * sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the initial size as set in charts.xml.
@@ -175,12 +180,15 @@ You can configure several options of VisuTest to fit your needs. The first time 
 #### Version x.x.x (unimplemented)
 * Add 'startingChart' to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
-* Change all fonts to SVG's. Render each row into a graphicsItem so all letters are moved together as a layer. Create a "QList<QPair<QString, QGraphicsItem> >" where QString is the row size and each QGraphicsItem is a parent item holding all letters (QGraphicsSvgItem) in a row. Now changing size is as simple as hiding and showing items from that list. We can find a specific size by looking up the size from the QStrings. Or we can move up or down in size by simply looking at the next item in the list up / down.
 
 #### Version 0.7.0 (In progress, unreleased)
-* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font
-* Added crowding rectangle for all font charts using 'c' key
+* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute
+* Added crowding rectangle for all optotype charts using 'c' key
 * Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio
+
+##### Known issues
+* 'svgchart' type doesn't scale in a meaningful manner. Considering changing 'scale' attribute to a 'mode' attribute that can be set as 'fittowidth', 'static', 'scaled' and perhaps a few others. 'static' should just place the SVG at whatever pixel size it has been made with. 'scaled' should scale according to patient distance (otherwise similar to 'static')
+* SVG optotype files has to be named as single letter filenames to work wellwith the current XML row design. This hould probably be expanded to allow any filename where the XML could split them using ';'
 
 #### Version 0.6.2 (26may2021)
 * Added 'T' to Sloan font
