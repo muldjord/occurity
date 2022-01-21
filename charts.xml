@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <charts>
   <group numkey="1">
-    <chart caption="Sloan 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">VHCNO</row>
       <row size="0.067">SVHCZ</row>
       <row size="0.08">OZDVK</row>
@@ -20,7 +20,7 @@
       <row size="1.6">SVHCZ</row>
       <row size="2.0">OZDVK</row>
     </chart>
-    <chart caption="Sloan 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan 2" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">ODHKR</row>
       <row size="0.067">ZKCSN</row>
       <row size="0.08">CRHDV</row>
@@ -39,7 +39,7 @@
       <row size="1.6">ZKCSN</row>
       <row size="2.0">CRHDV</row>
     </chart>
-    <chart caption="Sloan R" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan R" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">SZRDN</row>
       <row size="0.067">HCDRO</row>
       <row size="0.08">RDOSN</row>
@@ -60,47 +60,47 @@
     </chart>
   </group>
   <group numkey="2">
-    <chart caption="E chart" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
-      <row size="0.05">cdbab</row>
-      <row size="0.067">bacdc</row>
-      <row size="0.08">ababd</row>
-      <row size="0.1">cdcab</row>
-      <row size="0.125">acbda</row>
-      <row size="0.16">bdacb</row>
-      <row size="0.2">abcbd</row>
-      <row size="0.25">cadcb</row>
-      <row size="0.32">dbcba</row>
-      <row size="0.4">cadab</row>
-      <row size="0.5">abada</row>
-      <row size="0.63">badcd</row>
-      <row size="0.8">dcadc</row>
-      <row size="1.0">cdbab</row>
-      <row size="1.25">bacbd</row>
-      <row size="1.6">cdbac</row>
-      <row size="2.0">badcb</row>
+    <chart caption="Tumbling E" type="optotype" optotype="tumblinge" startsize="0.1" sizelock="true">
+      <row size="0.05">Ew;En;Es;Ee;Es</row>
+      <row size="0.067">Es;Ee;Ew;En;Ew</row>
+      <row size="0.08">Ee;Es;Ee;Es;En</row>
+      <row size="0.1">Ew;En;Ew;Ee;Es</row>
+      <row size="0.125">Ee;Ew;Es;En;Ee</row>
+      <row size="0.16">Es;En;Ee;Ew;Es</row>
+      <row size="0.2">Ee;Es;Ew;Es;En</row>
+      <row size="0.25">Ew;Ee;En;Ew;Es</row>
+      <row size="0.32">En;Es;Ew;Es;Ee</row>
+      <row size="0.4">Ew;Ee;En;Ee;Es</row>
+      <row size="0.5">Ee;Es;Ee;En;Ee</row>
+      <row size="0.63">Es;Ee;En;Ew;En</row>
+      <row size="0.8">En;Ew;Ee;En;Ew</row>
+      <row size="1.0">Ew;En;Es;Ee;Es</row>
+      <row size="1.25">Es;Ee;Ew;Es;En</row>
+      <row size="1.6">Ew;En;Es;Ee;Ew</row>
+      <row size="2.0">Es;Ee;En;Ew;Es</row>
     </chart>
-    <chart caption="C chart" type="font" fontfamily="Directions" startsize="0.1" sizelock="true">
-      <row size="0.05">gjifl</row>
-      <row size="0.067">ilgke</row>
-      <row size="0.08">fijlk</row>
-      <row size="0.1">ijkfe</row>
-      <row size="0.125">lgeik</row>
-      <row size="0.16">hkifl</row>
-      <row size="0.2">jlkef</row>
-      <row size="0.25">eighj</row>
-      <row size="0.32">lhegi</row>
-      <row size="0.4">jlkef</row>
-      <row size="0.5">eghjk</row>
-      <row size="0.63">hekij</row>
-      <row size="0.8">jkgef</row>
-      <row size="1.0">elkjh</row>
-      <row size="1.25">jkeif</row>
-      <row size="1.6">fgjhe</row>
-      <row size="2.0">ejlih</row>
+    <chart caption="Landolt C" type="optotype" optotype="landoltc" startsize="0.1" sizelock="true">
+      <row size="0.05">Cs;Cnw;Cw;Cse;Cne</row>
+      <row size="0.067">Cw;Cne;Cs;Cn;Ce</row>
+      <row size="0.08">Cse;Cw;Cnw;Cne;Cn</row>
+      <row size="0.1">Cw;Cnw;Cn;Cse;Ce</row>
+      <row size="0.125">Cne;Cs;Ce;Cw;Cn</row>
+      <row size="0.16">Csw;Cn;Cw;Cse;Cne</row>
+      <row size="0.2">Cnw;Cne;Cn;Ce;Cse</row>
+      <row size="0.25">Ce;Cw;Cs;Csw;Cnw</row>
+      <row size="0.32">Cne;Csw;Ce;Cs;Cw</row>
+      <row size="0.4">Cnw;Cne;Cn;Ce;Cse</row>
+      <row size="0.5">Ce;Cs;Csw;Cnw;Cn</row>
+      <row size="0.63">Csw;Ce;Cn;Cw;Cnw</row>
+      <row size="0.8">Cnw;Cn;Cs;Ce;Cse</row>
+      <row size="1.0">Ce;Cne;Cn;Cnw;Csw</row>
+      <row size="1.25">Cnw;Cn;Ce;Cw;Cse</row>
+      <row size="1.6">Cse;Cs;Cnw;Csw;Ce</row>
+      <row size="2.0">Ce;Cnw;Cne;Cw;Csw</row>
     </chart>
   </group>
   <group numkey="3">
-    <chart caption="Numbers" type="font" fontfamily="Numbers" startsize="0.1">
+    <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1">
       <row size="0.05">25639</row>
       <row size="0.067">97502</row>
       <row size="0.08">38426</row>
@@ -121,24 +121,43 @@
     </chart>
   </group>
   <group numkey="4">
-    <chart caption="Oesterberg" type="font" fontfamily="Oesterberg fixed" startsize="0.1">
-      <row size="0.05">IALGJ</row>
-      <row size="0.067">JDFEA</row>
-      <row size="0.08">BCDAL</row>
-      <row size="0.1">IALGJ</row>
-      <row size="0.125">GCEHF</row>
-      <row size="0.16">HBFCD</row>
-      <row size="0.2">BFEKI</row>
-      <row size="0.25">KDACJ</row>
-      <row size="0.32">LHCGA</row>
-      <row size="0.4">DACKH</row>
-      <row size="0.5">BFEKI</row>
-      <row size="0.63">CDALH</row>
-      <row size="0.8">IALGJ</row>
-      <row size="1.0">CEHFA</row>
-      <row size="1.25">IALGJ</row>
-      <row size="1.6">JDFEA</row>
-      <row size="2.0">BCDAL</row>
+    <chart caption="Kay 1" type="optotype" optotype="kay" startsize="0.1" sizelock="true">
+     <row size="0.05">boot;apple;duck;star;house</row>
+      <row size="0.067">car;boot;apple;house;duck</row>
+      <row size="0.08">star;duck;house;apple;car</row>
+      <row size="0.1">apple;car;boot;star;house</row>
+      <row size="0.125">boot;apple;car;duck;star</row>
+      <row size="0.16">car;boot;duck;apple;house</row>
+      <row size="0.2">star;apple;house;car;boot</row>
+      <row size="0.25">boot;house;apple;star;duck</row>
+      <row size="0.32">house;star;boot;duck;car</row>
+      <row size="0.4">star;boot;house;car;duck</row>
+      <row size="0.5">house;star;apple;boot;car</row>
+      <row size="0.63">apple;duck;star;car;house</row>
+      <row size="0.8">boot;house;duck;apple;car</row>
+      <row size="1.0">duck;apple;star;car;boot</row>
+      <row size="1.25">apple;star;duck;car;house</row>
+      <row size="1.6">house;duck;star;boot;apple</row>
+      <row size="2.0">duck;star;house;car;boot</row>
+    </chart>
+    <chart caption="Kay 2" type="optotype" optotype="kay" startsize="0.1" sizelock="true">
+      <row size="0.05">duck;star;house;apple;car</row>
+      <row size="0.067">house;duck;car;star;apple</row>
+      <row size="0.08">boot;star;duck;apple;car</row>
+      <row size="0.1">duck;apple;star;car;boot</row>
+      <row size="0.125">boot;house;duck;apple;car</row>
+      <row size="0.16">apple;star;boot;duck;house</row>
+      <row size="0.2">house;apple;star;boot;car</row>
+      <row size="0.25">star;boot;car;house;duck</row>
+      <row size="0.32">apple;star;duck;car;boot</row>
+      <row size="0.4">boot;house;apple;duck;star</row>
+      <row size="0.5">star;apple;house;car;boot</row>
+      <row size="0.63">car;star;duck;apple;house</row>
+      <row size="0.8">boot;apple;car;house;duck</row>
+      <row size="1.0">apple;car;boot;star;house</row>
+      <row size="1.25">star;duck;house;boot;car</row>
+      <row size="1.6">car;boot;apple;house;duck</row>
+      <row size="2.0">boot;apple;duck;star;house</row>
     </chart>
   </group>
   <group numkey="5">
@@ -158,7 +177,7 @@
     </chart>
   </group>
   <group numkey="7">
-    <chart caption="HOTV 1" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="HOTV 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">OHVTV</row>
       <row size="0.067">VTOHO</row>
       <row size="0.08">TOTVH</row>
@@ -177,7 +196,7 @@
       <row size="1.6">VTOHO</row>
       <row size="2.0">OHVTV</row>
     </chart>
-    <chart caption="HOTV 2" type="font" fontfamily="Sloan" startsize="0.1" sizelock="true">
+    <chart caption="HOTV 2" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">HVTOV</row>
       <row size="0.067">OTVHT</row>
       <row size="0.08">THOVH</row>
@@ -195,67 +214,6 @@
       <row size="1.25">HVTOV</row>
       <row size="1.6">OTVHT</row>
       <row size="2.0">HOTVO</row>
-    </chart>
-  </group>
-  <group numkey="8">
-    <chart caption="Kay 1" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
-      <row size="0.05">BADFE</row>
-      <row size="0.067">CBAED</row>
-      <row size="0.08">FDEAC</row>
-      <row size="0.1">ACBFE</row>
-      <row size="0.125">BACDF</row>
-      <row size="0.16">CBDAE</row>
-      <row size="0.2">FAECB</row>
-      <row size="0.25">BEAFD</row>
-      <row size="0.32">EFBDC</row>
-      <row size="0.4">FBECD</row>
-      <row size="0.5">EFABC</row>
-      <row size="0.63">ADFCE</row>
-      <row size="0.8">BEDAC</row>
-      <row size="1.0">DAFCB</row>
-      <row size="1.25">AFDCE</row>
-      <row size="1.6">EDFBA</row>
-      <row size="2.0">DFECB</row>
-    </chart>
-    <chart caption="Kay 2" type="font" fontfamily="Kay" startsize="0.1" sizelock="true">
-      <row size="0.05">DFEAC</row>
-      <row size="0.067">EDCFA</row>
-      <row size="0.08">BFDAC</row>
-      <row size="0.1">DAFCB</row>
-      <row size="0.125">BEDAC</row>
-      <row size="0.16">AFBDE</row>
-      <row size="0.2">EAFBC</row>
-      <row size="0.25">FBCED</row>
-      <row size="0.32">AFDCB</row>
-      <row size="0.4">BEADF</row>
-      <row size="0.5">FAECB</row>
-      <row size="0.63">CFDAE</row>
-      <row size="0.8">BACED</row>
-      <row size="1.0">ACBFE</row>
-      <row size="1.25">FDEBC</row>
-      <row size="1.6">CBAED</row>
-      <row size="2.0">BADFE</row>
-    </chart>
-  </group>
-  <group numkey="9">
-    <chart caption="Sloan SVG" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">VHCNO</row>
-      <row size="0.067">SVHCZ</row>
-      <row size="0.08">OZDVK</row>
-      <row size="0.1">NCKZO</row>
-      <row size="0.125">RHSDK</row>
-      <row size="0.16">DOVHR</row>
-      <row size="0.2">CZRHS</row>
-      <row size="0.25">ONHRC</row>
-      <row size="0.32">DKSNV</row>
-      <row size="0.4">ZSOKN</row>
-      <row size="0.5">CKDNR</row>
-      <row size="0.63">SRZKD</row>
-      <row size="0.8">HZOVC</row>
-      <row size="1.0">NVDOK</row>
-      <row size="1.25">VHCNO</row>
-      <row size="1.6">SVHCZ</row>
-      <row size="2.0">OZDVK</row>
     </chart>
   </group>
 </charts>
