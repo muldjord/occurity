@@ -41,6 +41,7 @@ struct MainSettings {
   //QString startSize = "1.0";
   double pxPerArcMin = 0.0;
   QString optotypesDir = "./optotypes";
+  QString chartsXml = "charts.xml";
   QString sizeFormat = "decimal";
   QString hexRed = "#d20000";
   QString hexGreen = "#00d200";

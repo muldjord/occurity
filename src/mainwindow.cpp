@@ -35,7 +35,6 @@
 #include <QScreen>
 #include <QTimer>
 #include <QDir>
-#include <QFontDatabase>
 #include <QProcess>
 #include <QDomDocument>
 
@@ -59,9 +58,11 @@ MainWindow::MainWindow()
   printf("  Monitor resolution: %d x %d\n", mainSettings->width, mainSettings->height);
   updateFromConfig();
 
-  loadFonts(config->value("fontDir", "./fonts").toString());
+  if(!QFile::exists(mainSettings->chartsXml)) {
+    QFile::copy("charts.xml.example", mainSettings->chartsXml);
+  }
 
-  if(loadCharts(config->value("chartsXml", "charts.xml").toString())) {
+  if(loadCharts(mainSettings->chartsXml)) {
     printf("Charts xml loaded successfully!\n");
   } else {
     printf("Charts xml loading failed!\n");
@@ -132,12 +133,10 @@ bool MainWindow::loadCharts(QString chartsXml)
       QDomElement xmlChart = chartNodes.at(b).toElement();
       AbstractChart *chart = nullptr;
       QString chartType = xmlChart.attribute("type");
-      if(chartType == "font") {
-        chart = new FontChart(mainSettings, this);
+      if(chartType == "optotype") {
+        chart = new OptotypeChart(mainSettings, this);
       } else if(chartType == "svg") {
         chart = new SvgChart(mainSettings, this);
-      } else if(chartType == "optotype") {
-        chart = new OptotypeChart(mainSettings, this);
       }
       if(chart == nullptr) {
         printf("PARSE ERROR: Chart type '%s' was not recognized, skipping...\n",
@@ -154,52 +153,7 @@ bool MainWindow::loadCharts(QString chartsXml)
       }
       chart->setBgColor(xmlChart.attribute("bgcolor"));
       printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
-      if(chart->getType() == "font") {
-        if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
-          printf("    Size lock: true\n");
-          chart->setSizeLocked(true);
-        } else {
-          printf("    Size lock: false\n");
-        }
-        chart->setOptotype(xmlChart.attribute("fontfamily"));
-        printf("    Font family: '%s'\n", chart->getOptotype().toStdString().c_str());
-        QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
-        QMap<QString, int> rowSizeMap;
-        for(int b = 0; b < xmlRows.count(); ++b) {
-          QDomElement xmlRow = xmlRows.at(b).toElement();
-          QString rowSize = xmlRow.attribute("size");
-          chart->addRowString(rowSize, xmlRow.text());
-          rowSizeMap[rowSize] = 0;
-          printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
-        }
-        QList<QString> rowSizeStrings;
-        for(auto str : rowSizeMap.keys()) {
-          rowSizeStrings.append(str);
-        }
-        chart->setRowSizes(rowSizeStrings);
-        if(xmlChart.hasAttribute("startsize")) {
-          chart->setStartSize(xmlChart.attribute("startsize"));
-        }
-      } else if(chart->getType() == "svg") {
-        chart->setSource(xmlChart.attribute("source"));
-        // Check if scaling enabled, then set accordingly. It is 'false' by default
-        if(xmlChart.attribute("scale") == "true") {
-          printf("    Scaling: true\n");
-          chart->setScale(true);
-        } else {
-          printf("    Scaling: false\n");
-        }
-        QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
-        for(int b = 0; b < xmlSvgLayers.count(); ++b) {
-          QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
-          QString svgLayerId = xmlSvgLayer.attribute("id");
-          if(!chart->addSvgLayer(svgLayerId)) {
-            printf("  Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
-          } else {
-            printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
-          }
-        }
-      } else if(chart->getType() == "optotype") {
+      if(chart->getType() == "optotype") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
           printf("    Size lock: true\n");
           chart->setSizeLocked(true);
@@ -224,6 +178,25 @@ bool MainWindow::loadCharts(QString chartsXml)
         chart->setRowSizes(rowSizeStrings);
         if(xmlChart.hasAttribute("startsize")) {
           chart->setStartSize(xmlChart.attribute("startsize"));
+        }
+      } else if(chart->getType() == "svg") {
+        chart->setSource(xmlChart.attribute("source"));
+        // Check if scaling enabled, then set accordingly. It is 'false' by default
+        if(xmlChart.attribute("scale") == "true") {
+          printf("    Scaling: true\n");
+          chart->setScale(true);
+        } else {
+          printf("    Scaling: false\n");
+        }
+        QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
+        for(int b = 0; b < xmlSvgLayers.count(); ++b) {
+          QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
+          QString svgLayerId = xmlSvgLayer.attribute("id");
+          if(!chart->addSvgLayer(svgLayerId)) {
+            printf("  Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
+          } else {
+            printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
+          }
         }
       }
       chart->init();
@@ -274,7 +247,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     // Set size for all other charts on same button if sizeLock is set
     for(int a = 0; a < charts.length(); ++a) {
       if(currentChart != nullptr && currentChart != charts.at(a) &&
-         (charts.at(a)->getType() == "font" || charts.at(a)->getType() == "optotype") &&
+         charts.at(a)->getType() == "optotype" &&
          charts.at(a)->isSizeLocked() &&
          currentChart->isSizeLocked() &&
          currentChart->getNumKey() == charts.at(a)->getNumKey()) {
@@ -311,22 +284,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
   return false;
 }
 
-void MainWindow::loadFonts(QString dirStr)
-{
-  printf("Loading fonts from folder: '%s'\n", dirStr.toStdString().c_str());
-  QDir fontDir(dirStr, "*.ttf *.otf", QDir::Name, QDir::NoDotAndDotDot | QDir::Files);
-  QList<QFileInfo> fontFiles = fontDir.entryInfoList();
-  for(const auto &fontFile: fontFiles) {
-    printf("  Loading '%s'... ", fontFile.fileName().toStdString().c_str());
-    if(QFontDatabase::addApplicationFont(fontFile.absoluteFilePath()) != -1) {
-      printf("Success!\n");
-    } else {
-      printf("Error!\n");
-    }
-  }
-  printf("\n");
-}
-
 void MainWindow::updateFromConfig()
 {
   while(!config->contains("rulerWidth")) {
@@ -345,9 +302,6 @@ void MainWindow::updateFromConfig()
 
   if(!config->contains("chartsXml")) {
     config->setValue("chartsXml", "charts.xml");
-  }
-  if(!config->contains("fontDir")) {
-      config->setValue("fontDir", "./fonts");
   }
   if(!config->contains("optotypesDir")) {
     config->setValue("optotypesDir", "./optotypes");
@@ -373,6 +327,7 @@ void MainWindow::updateFromConfig()
   mainSettings->hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
 
   mainSettings->optotypesDir = config->value("optotypesDir").toString();
+  mainSettings->chartsXml = config->value("chartsXml").toString();
 
   printf("  Pixels per mm: %f\n", mainSettings->pxPerMm);
   printf("  Pixels per arc minute: %f\n", mainSettings->pxPerArcMin);
