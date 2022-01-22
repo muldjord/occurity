@@ -24,7 +24,7 @@ In order to install a system using VisuTest you need the following hardware
 
 #### Resolution
 VisuTest should display correctly on any monitor using any resolution provided the following two requirements are met:
-* The height of the actual physical monitor displayable area (do not measure it with the plastic bezels included, just the vertical pixel monitor area) must be correctly entered into the VisuTest configuration (Press 'p' on the keyboard and use arrow keys to set it).
+* The physical length of the ruler must be set correctly in the VisuTest configuration (Press 'p' on the keyboard and use arrow keys to set it).
 * The physical distance from the patients eyes to the monitor must be set correctly in the VisuTest configuration (Press 'p' on the keyboard and use arrow keys to set it).
 
 To test if the monitor you are using reports its resolution correctly to the VisuTest software, please set the height as described above and temporarily set the patient distance to 600 cm and measure the exact height of the letters at chart size 0.05 and 0.25. At 0.05 the height must be exactly 175 mm and at 0.25 the height must be exactly 35 mm. If this is correct your monitor will work with VisuTest.
@@ -88,7 +88,7 @@ This will autostart VisuTest when the system is logged in.
     * Test color: White 
 
 ### Getting and compiling VisuTest
-Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it. When it's compiled, you need to install the fonts you wish to use (read below).
+Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it.
 ```
 $ cd
 $ git clone https://github.com/muldjord/visutest.git
@@ -98,10 +98,10 @@ $ make
 ```
 
 ### Optotypes
-VisuTest comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the 'optotypes` subdirectories.
+VisuTest comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
 
 ### charts.xml
-All of the charts displayed in the VisuTest software are customizable. Edit the '/home/pi/visutest/charts.xml' file in any basic text/xml editor. The format is as follows:
+All of the charts displayed in the VisuTest software are customizable. Edit the `charts.xml` file in any basic text/xml editor. The format is as follows:
 
 #### 'xml' node
 ```
@@ -124,7 +124,7 @@ This node is the parent node containing all charts. Don't change or remove it.
 </group>
 ```
 This groups several charts together on the same number key. It supports the following attributes, some of which are required:
-* numkey="1" (required) <-- This is the number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the defined charts
+* numkey="1" (required) <-- This is the number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the charts contained in the group.
 
 #### 'chart' nodes
 ```
@@ -132,48 +132,48 @@ This groups several charts together on the same number key. It supports the foll
   ...
 </chart>
 ```
-Must be nested in the 'charts' node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
-* caption="Caption" <-- The caption that is shown on-screen in VisuTest
-* type="optotype" (required) <-- The chart type. Currently supports 'optotype' and 'svg'
-* bgcolor="white" <-- Sets the background color of the chart (can be 'black', 'white' or hex as '#AABBCC')
-* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between size and chart changes
+Must be nested in the `group` node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
+* caption="Caption" <-- The caption that is shown on-screen in VisuTest.
+* type="optotype" (required) <-- The chart type. Currently supports `optotype` and `svg`.
+* bgcolor="white" <-- Sets the background color of the chart (can be `black`, `white` or hex as `#AABBCC`).
+* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between size and chart changes.
 
 ##### 'optotype' chart type specific
-* optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`
-* startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a 'row' below
+* optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
+* startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a `row` below.
 
 ###### 'row' node
-Must be nested inside a 'chart' node. A single 'row' node defines a row in the chart. It has the following format:
+Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
 ```
 <row size="0.1">NCKZO</row>
-<row size="0.1">one;two;three</row>
+<row size="0.1">one;two;three;four;five</row>
 ```
-Size tells which size is needed for the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
+Size defines the size used by the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
 
-You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg` and so on.
+You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg`, `C.svg` and so on.
 
-The second way is by using semicolons to separate the optotype signs, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second examples this would require files to be names `one.svg` and so on.
+The second way is by using semicolons to separate the optotypes, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second examples this would require files to be named `one.svg`, `two.svg` and so on.
 
 ##### 'svg' chart type specific
-* source="filename.svg" <-- The filename containing the SVG you want to use
+* source="filename.svg" <-- The filename containing the SVG you want to use.
 
 ###### 'layer' node
-Must be nested inside a 'chart' node. Defines a layer from inside an SVG to be displayed on the chart. It has the following format:
+Must be nested inside a `chart` node. Defines a layer from inside an SVG to be displayed on the chart. It has the following format:
 ```
 <layer id="layername"/>
 ```
-You can add as many layer nodes as you'd like. VisuTest can then switch between them with the left/right arrow keys.
+You can add as many layer nodes as you'd like. VisuTest can then switch between them with the left/right arrow keys. SVG's and their layers can be created with the open source software [Inkscape](https://inkscape.org/).
 
 ### config.ini
-You can configure several options of VisuTest to fit your needs. The first time VisuTest is started, the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the 'p' key on the keyboard and change the values using the arrow keys, or simply edit the 'config.ini' file in any editor.
-* physDistance=310 <-- The distance from the monitor to the patient in centimeters.
-* physHeight=281 <-- The physical height of the actual screen area in millimeters. Be aware that this is ONLY the area where actual pixels are present on the screen. You should NOT include the plastic bezel.
-* chartsXml="charts.xml" <-- Allows you to override the default xml file that defines the charts. Default is 'charts.xml'.
-* optotypesDir="your/optotypes/folder" <-- Defines the optotypes folder to load chart optotypes from. Default is './optotypes'
-* redValue=210 <-- Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be '#d20000'.
-* greenValue=210 <-- Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be '#00d200'.
-* sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the initial size as set in charts.xml.
-* hibernateTime=140 <-- After this many minutes of inactivity, the monitor will turn off to avoid burn-in.
+You can configure several options of VisuTest to fit your needs. The first time VisuTest is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
+* physDistance=310 <-- The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
+* rulerWidth=125 <-- The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
+* chartsXml="charts.xml" <-- Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
+* optotypesDir="your/optotypes/folder" <-- Defines the optotypes folder to load chart optotypes from. Default is `optotypes`.
+* redValue=210 <-- Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
+* greenValue=210 <-- Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
+* sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
+* hibernateTime=140 <-- After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
 
 ## Releases
 
@@ -182,9 +182,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add all charts to combo in preferences to allow setting 'startingChart' config variable
 
 #### Version 0.7.0 (In progress, unreleased)
-* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute
-* Added crowding rectangle for all optotype charts using 'c' key
-* Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio
+* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute.
+* Added crowding rectangle for all optotype charts using 'c' key.
+* Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio.
 
 ##### Known issues
 * 'svgchart' type doesn't scale in a meaningful manner. Considering changing 'scale' attribute to a 'mode' attribute that can be set as 'fittowidth', 'static', 'scaled' and perhaps a few others. 'static' should just place the SVG at whatever pixel size it has been made with. 'scaled' should scale according to patient distance (otherwise similar to 'static')
