@@ -42,8 +42,10 @@ public:
   OptotypeChart(MainSettings *mainSettings, QObject *parent);
   ~OptotypeChart();
   void init() override;
-  void setOptotype(QString optotype) override;
+  void setOptotype(const QString &optotype) override;
   QString getOptotype() override;
+  void setCrowdingSpan(const double &crowdingSpan);
+  double getCrowdingSpan();
   void setSizeLocked(const bool &sizeLocked) override;
   bool isSizeLocked() override;
   void setSize(const QString &sizeStr) override;
@@ -54,8 +56,8 @@ public slots:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  void addRow(QString size, QString row) override;
-  void setStartSize(const QString startSize) override;
+  void addRow(const QString &size, const QString &row) override;
+  void setStartSize(const QString &startSize) override;
 
 private slots:
   void resetSize();
@@ -64,6 +66,7 @@ private:
   QString optotype = "";
   bool sizeLocked = false;
   bool crowding = false;
+  double crowdingSpan = 2.5;
 
   int skew = 0;
   bool single = false;

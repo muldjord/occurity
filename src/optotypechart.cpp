@@ -112,7 +112,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   updateAll();
 }
 
-void OptotypeChart::setOptotype(QString optotype)
+void OptotypeChart::setOptotype(const QString &optotype)
 {
   this->optotype = optotype;
 }
@@ -120,6 +120,16 @@ void OptotypeChart::setOptotype(QString optotype)
 QString OptotypeChart::getOptotype()
 {
   return optotype;
+}
+
+void OptotypeChart::setCrowdingSpan(const double &crowdingSpan)
+{
+  this->crowdingSpan = crowdingSpan;
+}
+
+double OptotypeChart::getCrowdingSpan()
+{
+  return crowdingSpan;
 }
 
 void OptotypeChart::setSizeLocked(const bool &sizeLocked)
@@ -132,7 +142,7 @@ bool OptotypeChart::isSizeLocked()
   return sizeLocked;
 }
 
-void OptotypeChart::addRow(QString size, QString row)
+void OptotypeChart::addRow(const QString &size, const QString &row)
 {
   /*
     Don't do any resizing / scaling here. It has to be done in updateAll(), otherwise it
@@ -183,7 +193,7 @@ void OptotypeChart::updateAll()
       double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
       
       // Scale row to current decimalSize and patient distance
-      rows.at(a).second->setScale(((mainSettings->pxPerArcMin * 5.0) / ((10.0 * decimalSize) * 500.0)) * mainSettings->distanceFactor);
+      rows.at(a).second->setScale((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings->distanceFactor);
 
       // Calculate skew
       double currentSkew = ((rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() + spaceWidthScaled) / rows.at(a).second->childItems().length()) * skew;
@@ -232,10 +242,10 @@ void OptotypeChart::updateAll()
         crowdingPen.setCapStyle(Qt::FlatCap);
         crowdingPen.setJoinStyle(Qt::MiterJoin);
         crowdRect->setPen(crowdingPen);
-        crowdRect->setRect(rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() - (arcMinScaled * 1.5),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).y() - (arcMinScaled * 1.5),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(lastVisible)->pos()).x() - rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() + rows.at(a).second->mapRectToScene(rows.at(a).second->childItems().at(lastVisible)->boundingRect()).width() + (arcMinScaled * 3.0),
-                           rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() + (arcMinScaled * 3.0));
+        crowdRect->setRect(rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).y() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(lastVisible)->pos()).x() - rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() + rows.at(a).second->mapRectToScene(rows.at(a).second->childItems().at(lastVisible)->boundingRect()).width() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled),
+                           rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled));
         crowdRect->show();
       } else {
         crowdRect->hide();
@@ -264,7 +274,7 @@ void OptotypeChart::updateAll()
   update(0, 0, mainSettings->width, mainSettings->height);
 }
 
-void OptotypeChart::setStartSize(const QString startSize)
+void OptotypeChart::setStartSize(const QString &startSize)
 {
   this->startSize = startSize;
 }
