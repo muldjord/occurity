@@ -24,8 +24,8 @@ In order to install a system using VisuTest you need the following hardware
 
 #### Resolution
 VisuTest should display correctly on any monitor using any resolution provided the following two requirements are met:
-* The physical length of the ruler must be set correctly in the VisuTest configuration (Press 'p' on the keyboard and use arrow keys to set it).
-* The physical distance from the patients eyes to the monitor must be set correctly in the VisuTest configuration (Press 'p' on the keyboard and use arrow keys to set it).
+* The physical length of the ruler must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
+* The physical distance from the patients eyes to the monitor must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
 
 To test if the monitor you are using reports its resolution correctly to the VisuTest software, please set the height as described above and temporarily set the patient distance to 600 cm and measure the exact height of the letters at chart size 0.05 and 0.25. At 0.05 the height must be exactly 175 mm and at 0.25 the height must be exactly 35 mm. If this is correct your monitor will work with VisuTest.
 
@@ -58,7 +58,7 @@ $ sudo apt install qt5-default libqt5svg5-dev
 I recommend applying the following settings on your Pi system to optimize it for use with VisuTest.
 
 #### raspi-config
-Run 'raspi-config' in a terminal and set the following options:
+Run `raspi-config` in a terminal and set the following options:
 * Boot Options->B1 Desktop / CLI->B4 Desktop Autologin
 * Boot Options->B2 Wait for Network at Boot->No
 * Boot Options->B3 Splash Screen->Yes
@@ -141,6 +141,7 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 ##### 'optotype' chart type specific
 * optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
 * startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a `row` below.
+* crowdingspan="2.5" <-- Sets optotype crowding span in size relative arc minutes. If left out the default value of 2.5 is used.
 
 ###### 'row' node
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
@@ -156,6 +157,7 @@ The second way is by using semicolons to separate the optotypes, which correspon
 
 ##### 'svg' chart type specific
 * source="filename.svg" <-- The filename containing the SVG you want to use.
+* scaling="distance" <-- Can be `width`, `height` or `distance`. `distance` scales according to patient distance. The SVG must be scaled as 100 pixels being equal to 1 arc minute at a distance of 6 meters. `width` and `height` simply scales the SVG to fit the width or height of the screen.
 
 ###### 'layer' node
 Must be nested inside a `chart` node. Defines a layer from inside an SVG to be displayed on the chart. It has the following format:
@@ -178,22 +180,22 @@ You can configure several options of VisuTest to fit your needs. The first time 
 ## Releases
 
 #### Version x.x.x (unimplemented)
-* Add 'startingChart' to config to allow setting initial displayed chart
-* Add all charts to combo in preferences to allow setting 'startingChart' config variable
+* Add `startingChart` to config to allow setting initial displayed chart
+* Add all charts to combo in preferences to allow setting `startingChart` config variable
 
 #### Version 0.7.0 (In progress, unreleased)
-* MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute.
-* Added crowding rectangle for all optotype charts using 'c' key.
+* MAJOR: Added `optotype` chart type. This chart type obsoletes the old `font` chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute.
+* Added crowding rectangle for all optotype charts using `c` key.
 * Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio.
 * Now sizelocks between number keys instead of just in the same group
 
 ##### Known issues
-* 'svgchart' type doesn't scale in a meaningful manner. Considering changing 'scale' attribute to a 'mode' attribute that can be set as 'fittowidth', 'static', 'scaled' and perhaps a few others. 'static' should just place the SVG at whatever pixel size it has been made with. 'scaled' should scale according to patient distance (otherwise similar to 'static')
-* SVG optotype files has to be named as single letter filenames to work wellwith the current XML row design. This hould probably be expanded to allow any filename where the XML could split them using ';'
+* `svgchart` type doesn't scale in a meaningful manner. Considering changing `scale` attribute to a `mode` attribute that can be set as `fittowidth`, `static`, `scaled` and perhaps a few others. `static` should just place the SVG at whatever pixel size it has been made with. `scaled` should scale according to patient distance (otherwise similar to `static`)
+* SVG optotype files has to be named as single letter filenames to work wellwith the current XML row design. This hould probably be expanded to allow any filename where the XML could split them using `;`
 
 #### Version 0.6.2 (26may2021)
-* Added 'T' to Sloan font
-* Added 'HOTV' charts to 'charts.xml' on numkey 7
+* Added `T` to Sloan font
+* Added `HOTV` charts to `charts.xml` on numkey 7
 * Updated deprecated Qt5 functions
 
 #### Version 0.6.1 (08jul2020)
