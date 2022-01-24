@@ -100,7 +100,7 @@
     </chart>
   </group>
   <group numkey="3">
-    <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1">
+    <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1" sizelock="true">
       <row size="0.05">25639</row>
       <row size="0.067">97502</row>
       <row size="0.08">38426</row>
