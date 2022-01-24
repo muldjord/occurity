@@ -28,7 +28,6 @@
 #define __VISUTEST_MAINWINDOW_H__
 
 #include "abstractchart.h"
-#include "fontchart.h"
 #include "svgchart.h"
 #include "optotypechart.h"
 #include "mainsettings.h"

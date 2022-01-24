@@ -162,6 +162,10 @@ bool MainWindow::loadCharts(QString chartsXml)
         }
         chart->setOptotype(xmlChart.attribute("optotype"));
         printf("    Optotype: '%s'\n", chart->getOptotype().toStdString().c_str());
+        if(xmlChart.hasAttribute("crowdingspan")) {
+          chart->setCrowdingSpan(xmlChart.attribute("crowdingspan").toDouble());
+        }
+        printf("    Crowding span: '%f'\n", chart->getCrowdingSpan());
         QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
         QMap<QString, int> rowSizeMap;
         for(int b = 0; b < xmlRows.count(); ++b) {
@@ -175,18 +179,15 @@ bool MainWindow::loadCharts(QString chartsXml)
         for(auto &str : rowSizeMap.keys()) {
           rowSizeStrings.append(str);
         }
-        chart->setRowSizes(rowSizeStrings);
+        //chart->setRowSizes(rowSizeStrings);
         if(xmlChart.hasAttribute("startsize")) {
           chart->setStartSize(xmlChart.attribute("startsize"));
         }
       } else if(chart->getType() == "svg") {
         chart->setSource(xmlChart.attribute("source"));
-        // Check if scaling enabled, then set accordingly. It is 'false' by default
-        if(xmlChart.attribute("scale") == "true") {
-          printf("    Scaling: true\n");
-          chart->setScale(true);
-        } else {
-          printf("    Scaling: false\n");
+        if(xmlChart.hasAttribute("scaling")) {
+          chart->setScaling(xmlChart.attribute("scaling"));
+          printf("    Scaling: %s\n", xmlChart.attribute("scaling").toStdString().c_str());
         }
         QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
         for(int b = 0; b < xmlSvgLayers.count(); ++b) {
