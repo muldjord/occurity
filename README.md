@@ -136,7 +136,7 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 * caption="Caption" <-- The caption that is shown on-screen in VisuTest.
 * type="optotype" (required) <-- The chart type. Currently supports `optotype` and `svg`.
 * bgcolor="white" <-- Sets the background color of the chart (can be `black`, `white` or hex as `#AABBCC`).
-* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute within the same group, it will, if possible, inherit the size of the previous chart, giving a consistent size between size and chart changes.
+* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes.
 
 ##### 'optotype' chart type specific
 * optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
@@ -185,6 +185,7 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * MAJOR: Added 'optotype' chart type. This chart type obsoletes the old 'font' chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute.
 * Added crowding rectangle for all optotype charts using 'c' key.
 * Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio.
+* Now sizelocks between number keys instead of just in the same group
 
 ##### Known issues
 * 'svgchart' type doesn't scale in a meaningful manner. Considering changing 'scale' attribute to a 'mode' attribute that can be set as 'fittowidth', 'static', 'scaled' and perhaps a few others. 'static' should just place the SVG at whatever pixel size it has been made with. 'scaled' should scale according to patient distance (otherwise similar to 'static')
