@@ -121,17 +121,17 @@
     </chart>
   </group>
   <group numkey="5">
-    <chart caption="Astigmatism dots" type="svg" source="svg/astigmatism_dots.svg" scale="true">
+    <chart caption="Astigmatism dots" type="svg" source="svg/astigmatism_dots.svg" scaling="distance">
       <layer id="dots"/>
       <layer id="mask"/>
     </chart>
   </group>
   <group numkey="6">
-    <chart caption="RG" type="svg" source="svg/redgreen_mirrored.svg" bgcolor="black" scale="false"/>
-    <chart caption="Worth four dots" type="svg" source="svg/worth_four_dots.svg" numkey="6" bgcolor="black" scale="true">
+    <chart caption="RG" type="svg" source="svg/redgreen_mirrored.svg" bgcolor="black" scaling="width"/>
+    <chart caption="Worth four dots" type="svg" source="svg/worth_four_dots.svg" numkey="6" bgcolor="black" scaling="distance">
       <layer id="layer1"/>
     </chart>
-    <chart caption="Coincidence" type="svg" source="svg/coincidence.svg" bgcolor="black" scale="true">
+    <chart caption="Coincidence" type="svg" source="svg/coincidence.svg" bgcolor="black" scaling="distance">
       <layer id="horizontal"/>
       <layer id="vertical"/>
     </chart>
