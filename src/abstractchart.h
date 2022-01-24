@@ -48,7 +48,7 @@ public:
   ~AbstractChart();
   virtual void init();
   // setName and getName has been replaced with the default objectName and setObjectName
-  void setType(QString type);
+  void setType(const QString &type);
   QString getType();
   void setNumKey(Qt::Key numKey);
   Qt::Key getNumKey();
@@ -57,15 +57,15 @@ public:
   virtual bool isSizeLocked(){return false;};
   virtual void setSize(const QString &){};
   virtual QString getSize(){return QString();};
-  virtual void setOptotype(QString){};
+  virtual void setOptotype(const QString &){};
   virtual QString getOptotype();
-  virtual void setSource(const QString){};
-  virtual void addRow(QString, QString);
-  virtual void addRowString(QString, QString);
-  virtual void setRowSizes(QList<QString>){};
-  virtual void setStartSize(const QString){};
-  virtual void setScale(const bool){};
-  virtual bool addSvgLayer(const QString){return false;};
+  virtual void setCrowdingSpan(const double &){};
+  virtual double getCrowdingSpan();
+  virtual void setSource(const QString &){};
+  virtual void addRow(const QString &, const QString &);
+  virtual void setStartSize(const QString &){};
+  virtual void setScaling(const QString &){};
+  virtual bool addSvgLayer(const QString &){return false;};
   MainSettings *mainSettings;
 
 protected:

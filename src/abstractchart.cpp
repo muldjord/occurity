@@ -50,7 +50,7 @@ void AbstractChart::init()
 {
 }
 
-void AbstractChart::setType(QString type)
+void AbstractChart::setType(const QString &type)
 {
   if(type == "font") {
     this->type = FONTCHART;
@@ -89,6 +89,11 @@ QString AbstractChart::getOptotype()
   return QString("None");
 }
 
+double AbstractChart::getCrowdingSpan()
+{
+  return 2.5;
+}
+
 void AbstractChart::setBgColor(QString color)
 {
   if(color.left(1) == "#" && color.length() == 7) {
@@ -109,10 +114,6 @@ void AbstractChart::setBgColor(QString color)
   }
 }
 
-void AbstractChart::addRow(QString, QString)
-{
-}
-
-void AbstractChart::addRowString(QString, QString)
+void AbstractChart::addRow(const QString &, const QString &)
 {
 }
