@@ -29,28 +29,28 @@ else
     exit 1
 fi
 
-if rsync -va $LOCALDIR/icons $USBDIR/icons >> $LOGFILE; then
+if rsync -va $LOCALDIR/icons $USBDIR >> $LOGFILE; then
     echo "Synced icons successfully!" >> $LOGFILE
 else
     echo "Sync failed, quitting..." >> $LOGFILE
     exit 1
 fi
 
-if rsync -va $LOCALDIR/optotypes $USBDIR/optotypes >> $LOGFILE; then
+if rsync -va $LOCALDIR/optotypes $USBDIR >> $LOGFILE; then
     echo "Synced optotypes files successfully!" >> $LOGFILE
 else
     echo "Sync failed, quitting..." >> $LOGFILE
     exit 1
 fi
 
-if rsync -va $LOCALDIR/scripts $USBDIR/scripts >> $LOGFILE; then
+if rsync -va $LOCALDIR/scripts $USBDIR >> $LOGFILE; then
     echo "Synced scripts files successfully!" >> $LOGFILE
 else
     echo "Sync failed, quitting..." >> $LOGFILE
     exit 1
 fi
 
-if rsync -va $LOCALDIR/svg $USBDIR/svg >> $LOGFILE; then
+if rsync -va $LOCALDIR/svg $USBDIR >> $LOGFILE; then
     echo "Synced svg files successfully!" >> $LOGFILE
 else
     echo "Sync failed, quitting..." >> $LOGFILE
