@@ -46,8 +46,10 @@ SvgChart::~SvgChart()
 void SvgChart::init()
 {
   svgItem = new QGraphicsSvgItem();
+  addItem(svgItem);
 
   titleItem->setText(objectName());
+  addItem(titleItem);
 
   updateAll();
 }
@@ -74,7 +76,7 @@ void SvgChart::keyPressEvent(QKeyEvent *event)
   updateAll();
 }
 
-void SvgChart::setSource(const QString source)
+void SvgChart::setSource(const QString &source)
 {
   QFile svgFile(source);
   if(svgFile.open(QIODevice::ReadOnly)) {
@@ -93,12 +95,12 @@ void SvgChart::setRedGreen(const QString hexRed, const QString hexGreen)
   svgXml.replace("fill:#00d200", "fill:" + hexGreen.toUtf8());
 }
 
-void SvgChart::setScale(const bool scale)
+void SvgChart::setScaling(const QString &scaling)
 {
-  this->scale = scale;
+  this->scaling = scaling;
 }
 
-bool SvgChart::addSvgLayer(const QString svgLayerId)
+bool SvgChart::addSvgLayer(const QString &svgLayerId)
 {
   layers.append(svgLayerId);
   return true;
@@ -115,25 +117,21 @@ void SvgChart::updateAll()
   else
     svgItem->setElementId("");
 
-  for(const auto item: items()) {
-    removeItem(item);
-  }
-
-  addItem(svgItem);
-  if(scale) {
-    svgItem->setScale((mainSettings->width / svgItem->renderer()->defaultSize().width()) * mainSettings->distanceFactor);
-  } else {
+  if(scaling == "width") {
     svgItem->setScale(mainSettings->width / svgItem->renderer()->defaultSize().width());
+  } else if(scaling == "height") {
+    svgItem->setScale((double)mainSettings->height / svgItem->renderer()->defaultSize().height());
+  } else if(scaling == "distance") {
+    svgItem->setScale((mainSettings->pxPerArcMin / 100.0) * mainSettings->distanceFactor);
   }
-  svgItem->setX((mainSettings->width / 2.0) - (svgItem->boundingRect().width() * svgItem->scale()) / 2.0);
-  svgItem->setY((mainSettings->height / 2.0) - (svgItem->boundingRect().height() * svgItem->scale()) / 2.0);
+  svgItem->setX((mainSettings->width / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).width()) / 2.0);
+  svgItem->setY((mainSettings->height / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).height()) / 2.0);
 
   // Re-add title
   QFont font;
   font.setFamily("Arial");
   font.setPixelSize(mainSettings->pxPerArcMin * mainSettings->distanceFactor * 1.5);
   titleItem->setFont(font);
-  addItem(titleItem);
   titleItem->setX(mainSettings->width - titleItem->boundingRect().width() - 10);
   titleItem->setY(mainSettings->height - titleItem->boundingRect().height() - 10);
 

@@ -48,14 +48,14 @@ public slots:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  void setSource(const QString source) override;
-  void setScale(const bool scale) override;
-  bool addSvgLayer(const QString svgLayerId) override;
+  void setSource(const QString &source) override;
+  void setScaling(const QString &scaling) override;
+  bool addSvgLayer(const QString &svgLayerId) override;
 
 private:
   QByteArray svgXmlOrig = "";
   QByteArray svgXml = "";
-  bool scale = false;
+  QString scaling = "width";
   QList<QString> layers;
   int svgIdx = 0;
   QGraphicsSvgItem *svgItem;
