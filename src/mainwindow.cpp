@@ -249,8 +249,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       if(currentChart != nullptr && currentChart != charts.at(a) &&
          charts.at(a)->getType() == "optotype" &&
          charts.at(a)->isSizeLocked() &&
-         currentChart->isSizeLocked() &&
-         currentChart->getNumKey() == charts.at(a)->getNumKey()) {
+         currentChart->isSizeLocked()) {
         charts.at(a)->setSize(currentChart->getSize());
       }
     }
