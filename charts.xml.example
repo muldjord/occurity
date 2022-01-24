@@ -61,23 +61,23 @@
   </group>
   <group numkey="2">
     <chart caption="Tumbling E" type="optotype" optotype="tumblinge" startsize="0.1" sizelock="true">
-      <row size="0.05">Ew;En;Es;Ee;Es</row>
-      <row size="0.067">Es;Ee;Ew;En;Ew</row>
-      <row size="0.08">Ee;Es;Ee;Es;En</row>
-      <row size="0.1">Ew;En;Ew;Ee;Es</row>
-      <row size="0.125">Ee;Ew;Es;En;Ee</row>
-      <row size="0.16">Es;En;Ee;Ew;Es</row>
-      <row size="0.2">Ee;Es;Ew;Es;En</row>
-      <row size="0.25">Ew;Ee;En;Ew;Es</row>
-      <row size="0.32">En;Es;Ew;Es;Ee</row>
-      <row size="0.4">Ew;Ee;En;Ee;Es</row>
-      <row size="0.5">Ee;Es;Ee;En;Ee</row>
-      <row size="0.63">Es;Ee;En;Ew;En</row>
-      <row size="0.8">En;Ew;Ee;En;Ew</row>
-      <row size="1.0">Ew;En;Es;Ee;Es</row>
-      <row size="1.25">Es;Ee;Ew;Es;En</row>
-      <row size="1.6">Ew;En;Es;Ee;Ew</row>
-      <row size="2.0">Es;Ee;En;Ew;Es</row>
+      <row size="0.05">Ee;Es;En;Ee;Ew</row>
+      <row size="0.067">Ew;Es;Ee;Ew;En</row>
+      <row size="0.08">Es;Ew;En;Ee;Es</row>
+      <row size="0.1">Ee;Ew;En;Ee;Es</row>
+      <row size="0.125">Ew;Es;Ee;En;Ew</row>
+      <row size="0.16">En;Ee;Es;Ew;En</row>
+      <row size="0.2">Es;En;Ew;Es;Ee</row>
+      <row size="0.25">Ew;Ee;En;Ee;Es</row>
+      <row size="0.32">Ee;En;Es;En;Ew</row>
+      <row size="0.4">Ew;Es;Ee;Ew;En</row>
+      <row size="0.5">Es;Ee;En;Es;Ew</row>
+      <row size="0.63">En;Ew;Es;En;Ee</row>
+      <row size="0.8">Ee;Es;Ee;Ew;En</row>
+      <row size="1.0">Es;Ew;En;Ee;Es</row>
+      <row size="1.25">Ew;En;Es;Ew;Ee</row>
+      <row size="1.6">Ee;Es;En;Ee;Ew</row>
+      <row size="2.0">En;Ew;Ee;Es;En</row>
     </chart>
     <chart caption="Landolt C" type="optotype" optotype="landoltc" startsize="0.1" sizelock="true">
       <row size="0.05">Cs;Cnw;Cw;Cse;Cne</row>
