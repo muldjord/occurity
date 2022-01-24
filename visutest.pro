@@ -17,13 +17,8 @@ HEADERS += src/mainwindow.h \
            src/about.h \
            src/slider.h \
            src/abstractchart.h \
-           src/fontchart.h \
            src/svgchart.h \
-           src/optotypechart.h \
-           src/lettersize.h \
-           src/letterrow.h \
-           src/letter.h
-
+           src/optotypechart.h
 
 SOURCES += src/main.cpp \
            src/mainwindow.cpp \
@@ -31,12 +26,8 @@ SOURCES += src/main.cpp \
            src/about.cpp \
            src/slider.cpp \
            src/abstractchart.cpp \
-           src/fontchart.cpp \
            src/svgchart.cpp \
-           src/optotypechart.cpp \
-           src/lettersize.cpp \
-           src/letterrow.cpp \
-           src/letter.cpp
+           src/optotypechart.cpp
 
 RESOURCES += visutest.qrc
 RC_FILE = visutest.rc
