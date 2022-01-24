@@ -286,18 +286,20 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 
 void MainWindow::updateFromConfig()
 {
-  while(!config->contains("rulerWidth")) {
-    if(config->contains("physHeight")) {
-      config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
-      config->remove("physHeight");
-    }
-    spawnPreferences();
-  }
-
   // Convert obsolete 'physDistance' variable to 'patientDistance'
   if(config->contains("physDistance")) {
     config->setValue("patientDistance", config->value("physDistance").toInt());
     config->remove("physDistance");
+  }
+
+  // Convert obsolete 'physHeight' variable to 'rulerWidth'
+  if(config->contains("physHeight")) {
+    config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
+    config->remove("physHeight");
+  }
+  
+  while(!config->contains("rulerWidth")) {
+    spawnPreferences();
   }
 
   if(!config->contains("chartsXml")) {
