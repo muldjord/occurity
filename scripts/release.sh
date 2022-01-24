@@ -21,9 +21,37 @@ fi
 source $LOCALDIR/VERSION
 echo "Release version:" $VERSION >> $LOGFILE
 
-echo "Syncing release files to USBPEN..." >> $LOGFILE
+echo "Syncing files to USBPEN..." >> $LOGFILE
 if rsync --files-from=$LOCALDIR/scripts/include.txt -va $LOCALDIR/ $USBDIR/ >> $LOGFILE; then
-    echo "Sync completed successfully!" >> $LOGFILE
+    echo "Synced main files successfully!" >> $LOGFILE
+else
+    echo "Sync failed, quitting..." >> $LOGFILE
+    exit 1
+fi
+
+if rsync -va $LOCALDIR/icons $USBDIR/icons >> $LOGFILE; then
+    echo "Synced icons successfully!" >> $LOGFILE
+else
+    echo "Sync failed, quitting..." >> $LOGFILE
+    exit 1
+fi
+
+if rsync -va $LOCALDIR/optotypes $USBDIR/optotypes >> $LOGFILE; then
+    echo "Synced optotypes files successfully!" >> $LOGFILE
+else
+    echo "Sync failed, quitting..." >> $LOGFILE
+    exit 1
+fi
+
+if rsync -va $LOCALDIR/scripts $USBDIR/scripts >> $LOGFILE; then
+    echo "Synced scripts files successfully!" >> $LOGFILE
+else
+    echo "Sync failed, quitting..." >> $LOGFILE
+    exit 1
+fi
+
+if rsync -va $LOCALDIR/svg $USBDIR/svg >> $LOGFILE; then
+    echo "Synced svg files successfully!" >> $LOGFILE
 else
     echo "Sync failed, quitting..." >> $LOGFILE
     exit 1
