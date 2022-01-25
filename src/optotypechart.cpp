@@ -190,7 +190,7 @@ void OptotypeChart::updateAll()
       sizeStr = rows.at(a).first;
       double decimalSize = sizeStr.toDouble();
       double arcMinScaled = (mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0;
-      double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
+      double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled * mainSettings->distanceFactor;
       
       // Scale row to current decimalSize and patient distance
       rows.at(a).second->setScale((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings->distanceFactor);
