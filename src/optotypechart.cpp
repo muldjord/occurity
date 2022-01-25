@@ -189,8 +189,8 @@ void OptotypeChart::updateAll()
     if(a == currentRowIdx) {
       sizeStr = rows.at(a).first;
       double decimalSize = sizeStr.toDouble();
-      double arcMinScaled = (mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0;
-      double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled * mainSettings->distanceFactor;
+      double arcMinScaled = ((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0) * mainSettings->distanceFactor;
+      double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
       
       // Scale row to current decimalSize and patient distance
       rows.at(a).second->setScale((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings->distanceFactor);
@@ -237,7 +237,7 @@ void OptotypeChart::updateAll()
       // Enable / disable crowding
       if(crowding) {
         QPen crowdingPen;
-        crowdingPen.setWidth(arcMinScaled * mainSettings->distanceFactor);
+        crowdingPen.setWidth(arcMinScaled);
         crowdingPen.setColor(QColor(0, 0, 0));
         crowdingPen.setCapStyle(Qt::FlatCap);
         crowdingPen.setJoinStyle(Qt::MiterJoin);
