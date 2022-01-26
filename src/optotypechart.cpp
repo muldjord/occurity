@@ -31,6 +31,8 @@
 #include <math.h>
 #include <QKeyEvent>
 #include <QGraphicsSvgItem>
+#include <QFileInfo>
+#include <QMessageBox>
 
 OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
@@ -172,10 +174,15 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     }
   }
   for(const auto &letter: letters) {
-    QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(mainSettings->optotypesDir + "/" + optotype + "/" + letter + ".svg");
-    svgLetter->setX(curX);
-    layer->addToGroup(svgLetter);
-    curX += svgLetter->boundingRect().width() + spaceWidth;
+    QString svgFilename = mainSettings->optotypesDir + "/" + optotype + "/" + letter + ".svg";
+    if(QFileInfo::exists(svgFilename)) {
+      QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(svgFilename);
+      svgLetter->setX(curX);
+      layer->addToGroup(svgLetter);
+      curX += svgLetter->boundingRect().width() + spaceWidth;
+    } else {
+      QMessageBox::warning(nullptr, tr("File not found"), tr("File '") + svgFilename + tr("' not found. Please correct this."));
+    }
   }
 
   rowPair.first = size;
