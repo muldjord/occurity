@@ -183,6 +183,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
+#### Version 0.7.1 (26jan2022)
+* Moved reset timer to mainwindow instead of each chart
+
 #### Version 0.7.0 (26jan2022)
 * MAJOR: Added `optotype` chart type. This chart type obsoletes the old `font` chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute at a 6 meter patient distance.
 * Added crowding rectangle for all optotype charts using `c` key.
