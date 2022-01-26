@@ -46,7 +46,7 @@ OptotypeChart::~OptotypeChart()
 void OptotypeChart::init()
 {
   crowdRect = addRect(0, 0, 10, 10);
-  
+
   sizeItem = new QGraphicsSimpleTextItem("0.0");
   copyrightItem = new QGraphicsSimpleTextItem("");
   QFont font;
@@ -151,7 +151,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
 
   QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings->optotypesDir + "/" + optotype + "/_.svg");
   spaceWidth = svgSpace->boundingRect().width();
-  
+
   QGraphicsItemGroup *layer = new QGraphicsItemGroup;
   addItem(layer);
 
@@ -193,7 +193,7 @@ void OptotypeChart::updateAll()
       double decimalSize = sizeStr.toDouble();
       double arcMinScaled = ((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0) * mainSettings->distanceFactor;
       double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
-      
+
       // Scale row to current decimalSize and patient distance
       rows.at(a).second->setScale((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings->distanceFactor);
 

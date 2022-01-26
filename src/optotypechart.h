@@ -67,7 +67,7 @@ private:
 
   int skew = 0;
   double spaceWidth = 0.0;
-  
+
   void addRow();
   //void setLogMARSize(double value);
   //void loadRowStrings(QString filename);
@@ -76,6 +76,6 @@ private:
   QGraphicsSimpleTextItem *sizeItem;
   QGraphicsSimpleTextItem *copyrightItem;
   QGraphicsRectItem *crowdRect;
-  
+
 };
 #endif/*__VISUTEST_OPTOTYPECHART_H__*/
