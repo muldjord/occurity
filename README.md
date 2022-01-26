@@ -183,15 +183,12 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
-#### Version 0.7.0 (In progress, unreleased)
-* MAJOR: Added `optotype` chart type. This chart type obsoletes the old `font` chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute.
+#### Version 0.7.0 (26jan2022)
+* MAJOR: Added `optotype` chart type. This chart type obsoletes the old `font` chart and uses SVG's directly instead of requiring a ttf font. All SVG's should be calibrated as 100 pixels = 1 arc minute at a 6 meter patient distance.
 * Added crowding rectangle for all optotype charts using `c` key.
 * Now uses a 500 pixel width ruler in preferences to determine pixel to mm ratio.
-* Now sizelocks between number keys instead of just in the same group
-
-##### Known issues
-* `svgchart` type doesn't scale in a meaningful manner. Considering changing `scale` attribute to a `mode` attribute that can be set as `fittowidth`, `static`, `scaled` and perhaps a few others. `static` should just place the SVG at whatever pixel size it has been made with. `scaled` should scale according to patient distance (otherwise similar to `static`)
-* SVG optotype files has to be named as single letter filenames to work wellwith the current XML row design. This hould probably be expanded to allow any filename where the XML could split them using `;`
+* Now sizelocks between all charts instead of just in the same group.
+* Crowding and single mode now follows chart changes.
 
 #### Version 0.6.2 (26may2021)
 * Added `T` to Sloan font
