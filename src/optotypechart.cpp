@@ -100,7 +100,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       skew++;
     }
   } else if(event->key() == Qt::Key_C) {
-    crowding = !crowding;
+    mainSettings->crowding = !mainSettings->crowding;
   } else if(event->key() == Qt::Key_M) {
     single = !single;
   }
@@ -235,7 +235,7 @@ void OptotypeChart::updateAll()
       }
 
       // Enable / disable crowding
-      if(crowding) {
+      if(mainSettings->crowding) {
         QPen crowdingPen;
         crowdingPen.setWidth(arcMinScaled);
         crowdingPen.setColor(QColor(0, 0, 0));

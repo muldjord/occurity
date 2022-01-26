@@ -45,6 +45,9 @@ struct MainSettings {
   QString sizeFormat = "decimal";
   QString hexRed = "#d20000";
   QString hexGreen = "#00d200";
+
+  // Global chart configs
+  bool crowding = false;
 };
 
 #endif // MAINSETTINGS_H

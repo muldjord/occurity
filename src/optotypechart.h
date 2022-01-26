@@ -65,7 +65,6 @@ private slots:
 private:
   QString optotype = "";
   bool sizeLocked = false;
-  bool crowding = false;
   double crowdingSpan = 2.5;
 
   int skew = 0;
