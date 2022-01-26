@@ -74,6 +74,7 @@ protected:
 
 public slots:
   virtual void updateAll(){};
+  virtual void resetAll(){};
 
 private:
   int type = 0;
