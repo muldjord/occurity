@@ -84,6 +84,10 @@ MainWindow::MainWindow()
   connect(&hiberTimer, &QTimer::timeout, this, &MainWindow::hibernate);
   hiberTimer.start();
 
+  resetTimer.setInterval(mainSettings->sizeResetTime);
+  resetTimer.setSingleShot(true);
+  resetTimer.start();
+
   QTimer::singleShot(0, this, &MainWindow::init);
 }
 
@@ -146,6 +150,7 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->installEventFilter(this);
       chart->setType(chartType);
       connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateAll);
+      connect(&resetTimer, &QTimer::timeout, chart, &AbstractChart::resetAll);
       chart->setObjectName(xmlChart.attribute("caption"));
       if(numKey) {
         // 48 is the Qt::Key equivalent of Qt::Key_0 ascending from there to Qt::Key_9
@@ -214,6 +219,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
   if(event->type() == QEvent::KeyPress) {
     // Reset hibernation inactivity timer
     hiberTimer.start();
+
+    // Set from config and restart reset timer
+    resetTimer.setInterval(mainSettings->sizeResetTime);
+    resetTimer.start();
 
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
@@ -297,7 +306,7 @@ void MainWindow::updateFromConfig()
     config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
     config->remove("physHeight");
   }
-  
+
   while(!config->contains("rulerWidth")) {
     spawnPreferences();
   }
