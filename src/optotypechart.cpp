@@ -37,9 +37,6 @@
 OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
 {
-  sizeResetTimer.setInterval(mainSettings->sizeResetTime);
-  sizeResetTimer.setSingleShot(true);
-  connect(&sizeResetTimer, &QTimer::timeout, this, &OptotypeChart::resetSize);
 }
 
 OptotypeChart::~OptotypeChart()
@@ -108,10 +105,6 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   } else if(event->key() == Qt::Key_R) {
     // Shuffle current row, but remember to reset when changing row
   }
-
-  // Update reset interval in case it has changed
-  sizeResetTimer.setInterval(mainSettings->sizeResetTime);
-  sizeResetTimer.start();
 
   updateAll();
 }
@@ -289,9 +282,9 @@ void OptotypeChart::setStartSize(const QString &startSize)
   this->startSize = startSize;
 }
 
-void OptotypeChart::resetSize()
+void OptotypeChart::resetAll()
 {
-  printf("Resetting size!\n");
+  skew = 0;
   setSize(startSize);
 }
 

@@ -53,14 +53,12 @@ public:
 
 public slots:
   void updateAll() override;
+  void resetAll() override;
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
   void addRow(const QString &size, const QString &row) override;
   void setStartSize(const QString &startSize) override;
-
-private slots:
-  void resetSize();
 
 private:
   QString optotype = "";
@@ -79,8 +77,5 @@ private:
   QGraphicsSimpleTextItem *copyrightItem;
   QGraphicsRectItem *crowdRect;
   
-  QTimer sizeResetTimer;
-
-
 };
 #endif/*__VISUTEST_OPTOTYPECHART_H__*/
