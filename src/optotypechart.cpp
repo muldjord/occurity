@@ -214,6 +214,7 @@ void OptotypeChart::updateAll()
       rows.at(a).second->show();
 
       // Show / hide optotypes depending on whether they are cut off at screen edges
+      // or if single is set
       for(auto *letter: rows.at(a).second->childItems()) {
         if(mainSettings->single) {
           if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings->width / 2.0 - 2 &&
