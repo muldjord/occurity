@@ -17,18 +17,25 @@
     </message>
 </context>
 <context>
-    <name>Preferences</name>
+    <name>OptotypeChart</name>
     <message>
-        <source>Physical height of screen area (mm):</source>
-        <translation>Fysisk højde af skærmområde (mm):</translation>
+        <source>File not found</source>
+        <translation>Fil ikke fundet</translation>
     </message>
+    <message>
+        <source>File &apos;</source>
+        <translation>Filen &apos;</translation>
+    </message>
+    <message>
+        <source>&apos; not found. Please correct this.</source>
+        <translation>&apos; blev ikke fundet. Ret venligst dette.</translation>
+    </message>
+</context>
+<context>
+    <name>Preferences</name>
     <message>
         <source>Patient distance to monitor (cm):</source>
         <translation>Patients distance til skærm (cm):</translation>
-    </message>
-    <message>
-        <source>Size reset time (seconds):</source>
-        <translation>Tid før nulstilling af størrelse (sekunder):</translation>
     </message>
     <message>
         <source>Red color value:</source>
@@ -41,6 +48,14 @@
     <message>
         <source>Close</source>
         <translation>Luk</translation>
+    </message>
+    <message>
+        <source>Physical length of ruler (mm):</source>
+        <translation>Den fysiske længde af linealen (mm):</translation>
+    </message>
+    <message>
+        <source>Idle time before size reset (seconds):</source>
+        <translation>Inaktiv tid før nulstilling af størrelse (sekunder):</translation>
     </message>
 </context>
 </TS>
