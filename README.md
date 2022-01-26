@@ -27,7 +27,7 @@ VisuTest should display correctly on any monitor using any resolution provided t
 * The physical length of the ruler must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
 * The physical distance from the patients eyes to the monitor must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
 
-To test if the monitor you are using reports its resolution correctly to the VisuTest software, please set the height as described above and temporarily set the patient distance to 600 cm and measure the exact height of the letters at chart size 0.05 and 0.25. At 0.05 the height must be exactly 175 mm and at 0.25 the height must be exactly 35 mm. If this is correct your monitor will work with VisuTest.
+To test if the monitor you are using reports its resolution correctly to the VisuTest software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype letters at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with VisuTest. To test if your monitor scales correctly, you can also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype letter must be 58 mm at 0.1 and 23 at 0.25.
 
 #### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
