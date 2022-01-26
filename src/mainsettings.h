@@ -48,6 +48,7 @@ struct MainSettings {
 
   // Global chart configs
   bool crowding = false;
+  bool single = false;
 };
 
 #endif // MAINSETTINGS_H

@@ -102,7 +102,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   } else if(event->key() == Qt::Key_C) {
     mainSettings->crowding = !mainSettings->crowding;
   } else if(event->key() == Qt::Key_M) {
-    single = !single;
+    mainSettings->single = !mainSettings->single;
   }
 
   // Update reset interval in case it has changed
@@ -206,7 +206,7 @@ void OptotypeChart::updateAll()
 
       // Show / hide optotypes depending on whether they are cut off at screen edges
       for(auto *letter: rows.at(a).second->childItems()) {
-        if(single) {
+        if(mainSettings->single) {
           if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings->width / 2.0 - 2 &&
              rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) <= mainSettings->width / 2.0 + 2) {
             letter->show();
