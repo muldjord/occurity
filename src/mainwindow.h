@@ -71,6 +71,9 @@ private:
   // Automatic hibernation timer shutting down monitor signal after X minutes of inactivity
   QTimer hiberTimer;
 
+  // Timer that resets all charts after being idle for configured time
+  QTimer resetTimer;
+
   // Cooldown for switching monitor on or off using 'q' to allow hibernation to complete
   QTimer hiberCooldownTimer;
   bool allowHibernate = true;
