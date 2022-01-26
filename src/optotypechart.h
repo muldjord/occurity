@@ -68,7 +68,6 @@ private:
   double crowdingSpan = 2.5;
 
   int skew = 0;
-  //bool single = false;
   double spaceWidth = 0.0;
   
   void addRow();
