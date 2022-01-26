@@ -103,6 +103,8 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     mainSettings->crowding = !mainSettings->crowding;
   } else if(event->key() == Qt::Key_M) {
     mainSettings->single = !mainSettings->single;
+  } else if(event->key() == Qt::Key_R) {
+    // Shuffle current row, but remember to reset when changing row
   }
 
   // Update reset interval in case it has changed
