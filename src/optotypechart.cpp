@@ -33,6 +33,7 @@
 #include <QGraphicsSvgItem>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QRandomGenerator>
 
 OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
@@ -76,19 +77,35 @@ void OptotypeChart::init()
   copyrightItem->setPos((mainSettings->width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings->height - 35);
 
   setSize(startSize);
+
+  // Set initial original positions so we can reset back to them when changing size
+  for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+    origCoords.append(child->pos());
+  }
 }
 
 void OptotypeChart::keyPressEvent(QKeyEvent *event)
 {
-  if(event->key() == Qt::Key_Up) {
-    currentRowIdx--;
-    if(currentRowIdx < 0) {
-      currentRowIdx = 0;
+  if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+    // Reset positions for all optotypes in row before changing size
+    for(int a = 0; a < rows.at(currentRowIdx).second->childItems().length(); ++a) {
+      rows.at(currentRowIdx).second->childItems().at(a)->setPos(origCoords.at(a));
     }
-  } else if(event->key() == Qt::Key_Down) {
-    currentRowIdx++;
-    if(currentRowIdx > rows.length() - 1) {
-      currentRowIdx = rows.length() - 1;
+    if(event->key() == Qt::Key_Up) {
+      currentRowIdx--;
+      if(currentRowIdx < 0) {
+        currentRowIdx = 0;
+      }
+    } else if(event->key() == Qt::Key_Down) {
+      currentRowIdx++;
+      if(currentRowIdx > rows.length() - 1) {
+        currentRowIdx = rows.length() - 1;
+      }
+    }
+    // Set coordinates for next row, so we can reset back to them when changing size
+    origCoords.clear();
+    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+      origCoords.append(child->pos());
     }
   } else if(event->key() == Qt::Key_Left) {
     if(skew > - (rows.at(currentRowIdx).second->childItems().length() / 2)) {
@@ -103,7 +120,15 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   } else if(event->key() == Qt::Key_M) {
     mainSettings->single = !mainSettings->single;
   } else if(event->key() == Qt::Key_R) {
-    // Shuffle current row, but remember to reset when changing row
+    QList<QPointF> availableCoords;
+    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+      availableCoords.append(child->pos());
+    }
+    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+      int chosen = QRandomGenerator::global()->bounded(availableCoords.length());
+      child->setPos(availableCoords.at(chosen));
+      availableCoords.removeAt(chosen);
+    }    
   }
 
   updateAll();
@@ -226,17 +251,6 @@ void OptotypeChart::updateAll()
         }
       }
 
-      int firstVisible = -1;
-      int lastVisible = -1;
-      for(int b = 0; b < rows.at(a).second->childItems().length(); ++b) {
-        if(rows.at(a).second->childItems().at(b)->isVisible() && firstVisible == -1) {
-          firstVisible = b;
-        }
-        if(rows.at(a).second->childItems().at(b)->isVisible()) {
-          lastVisible = b;
-        }
-      }
-
       // Enable / disable crowding
       if(mainSettings->crowding) {
         QPen crowdingPen;
@@ -245,9 +259,28 @@ void OptotypeChart::updateAll()
         crowdingPen.setCapStyle(Qt::FlatCap);
         crowdingPen.setJoinStyle(Qt::MiterJoin);
         crowdRect->setPen(crowdingPen);
-        crowdRect->setRect(rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() - ((crowdingSpan + 0.5) * arcMinScaled),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).y() - ((crowdingSpan + 0.5) * arcMinScaled),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(lastVisible)->pos()).x() - rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(firstVisible)->pos()).x() + rows.at(a).second->mapRectToScene(rows.at(a).second->childItems().at(lastVisible)->boundingRect()).width() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled),
+
+        int leftMost = 0;
+        double leftX = 100000000;
+        int rightMost = 0;
+        double rightX = 0;
+        for(int b = 0; b < rows.at(a).second->childItems().length(); ++b) {
+          if(!rows.at(a).second->childItems().at(b)->isVisible()) {
+            continue;
+          }
+          if(rows.at(a).second->childItems().at(b)->pos().x() < leftX) {
+            leftMost = b;
+            leftX = rows.at(a).second->childItems().at(b)->pos().x();
+          }
+          if(rows.at(a).second->childItems().at(b)->pos().x() > rightX) {
+            rightMost = b;
+            rightX = rows.at(a).second->childItems().at(b)->pos().x();
+          }
+        }
+
+        crowdRect->setRect(rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).x() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).y() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(rightMost)->pos()).x() - rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).x() + rows.at(a).second->mapRectToScene(rows.at(a).second->childItems().at(rightMost)->boundingRect()).width() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled),
                            rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled));
         crowdRect->show();
       } else {

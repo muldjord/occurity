@@ -72,6 +72,7 @@ private:
   //void setLogMARSize(double value);
   //void loadRowStrings(QString filename);
   QList<QPair<QString, QGraphicsItemGroup *> > rows;
+  QList<QPointF> origCoords;
   int currentRowIdx = 0;
   QGraphicsSimpleTextItem *sizeItem;
   QGraphicsSimpleTextItem *copyrightItem;
