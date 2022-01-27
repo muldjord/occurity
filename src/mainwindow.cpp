@@ -84,7 +84,7 @@ MainWindow::MainWindow()
   connect(&hiberTimer, &QTimer::timeout, this, &MainWindow::hibernate);
   hiberTimer.start();
 
-  resetTimer.setInterval(mainSettings->sizeResetTime);
+  // Initial interval is set in updateFromConfig;
   resetTimer.setSingleShot(true);
   resetTimer.start();
 
@@ -220,8 +220,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     // Reset hibernation inactivity timer
     hiberTimer.start();
 
-    // Set from config and restart reset timer
-    resetTimer.setInterval(mainSettings->sizeResetTime);
+    // Restart reset timer
     resetTimer.start();
 
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -324,7 +323,9 @@ void MainWindow::updateFromConfig()
     config->setValue("hibernateTime", 120);
   }
 
-  mainSettings->sizeResetTime = config->value("sizeResetTime").toInt() * 1000; // Seconds
+  resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
+  resetTimer.start();
+
   mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
   mainSettings->patientDistance = config->value("patientDistance").toDouble(); // Cm

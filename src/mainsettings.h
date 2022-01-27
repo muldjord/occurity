@@ -31,7 +31,6 @@
 
 struct MainSettings {
   int hibernateTime = 7200000; // 2 hours
-  int sizeResetTime = 240000; // 4 minutes
   int width = 1920;
   int height = 1080;
   double patientDistance = 600.0;
