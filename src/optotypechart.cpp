@@ -268,11 +268,11 @@ void OptotypeChart::updateAll()
           if(!rows.at(a).second->childItems().at(b)->isVisible()) {
             continue;
           }
-          if(rows.at(a).second->childItems().at(b)->pos().x() < leftX) {
+          if(rows.at(a).second->childItems().at(b)->pos().x() <= leftX) {
             leftMost = b;
             leftX = rows.at(a).second->childItems().at(b)->pos().x();
           }
-          if(rows.at(a).second->childItems().at(b)->pos().x() > rightX) {
+          if(rows.at(a).second->childItems().at(b)->pos().x() >= rightX) {
             rightMost = b;
             rightX = rows.at(a).second->childItems().at(b)->pos().x();
           }
