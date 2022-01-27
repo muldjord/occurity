@@ -69,10 +69,9 @@ private:
   double spaceWidth = 0.0;
 
   void addRow();
-  //void setLogMARSize(double value);
-  //void loadRowStrings(QString filename);
+  void positionReset();
+
   QList<QPair<QString, QGraphicsItemGroup *> > rows;
-  QList<QPointF> origCoords;
   int currentRowIdx = 0;
   QGraphicsSimpleTextItem *sizeItem;
   QGraphicsSimpleTextItem *copyrightItem;

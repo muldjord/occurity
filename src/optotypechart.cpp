@@ -77,20 +77,11 @@ void OptotypeChart::init()
   copyrightItem->setPos((mainSettings->width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings->height - 35);
 
   setSize(startSize);
-
-  // Set initial original positions so we can reset back to them when changing size
-  for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
-    origCoords.append(child->pos());
-  }
 }
 
 void OptotypeChart::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
-    // Reset positions for all optotypes in row before changing size
-    for(int a = 0; a < rows.at(currentRowIdx).second->childItems().length(); ++a) {
-      rows.at(currentRowIdx).second->childItems().at(a)->setPos(origCoords.at(a));
-    }
     if(event->key() == Qt::Key_Up) {
       currentRowIdx--;
       if(currentRowIdx < 0) {
@@ -102,11 +93,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
         currentRowIdx = rows.length() - 1;
       }
     }
-    // Set coordinates for next row, so we can reset back to them when changing size
-    origCoords.clear();
-    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
-      origCoords.append(child->pos());
-    }
+    positionReset();
   } else if(event->key() == Qt::Key_Left) {
     if(skew > - (rows.at(currentRowIdx).second->childItems().length() / 2)) {
       skew--;
@@ -196,6 +183,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     if(QFileInfo::exists(svgFilename)) {
       QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(svgFilename);
       svgLetter->setX(curX);
+      svgLetter->setData(0, svgLetter->pos());
       layer->addToGroup(svgLetter);
       curX += svgLetter->boundingRect().width() + spaceWidth;
     } else {
@@ -329,10 +317,19 @@ void OptotypeChart::setSize(const QString &sizeStr)
       break;
     }
   }
+  positionReset();
   updateAll();
 }
 
 QString OptotypeChart::getSize()
 {
   return rows.at(currentRowIdx).first;
+}
+
+void OptotypeChart::positionReset()
+{
+  // Reset positions for all optotype letters in row in case they've been randomized
+  for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+    child->setPos(child->data(0).toPointF());
+  }
 }
