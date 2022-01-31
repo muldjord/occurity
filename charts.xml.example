@@ -101,23 +101,23 @@
   </group>
   <group numkey="3">
     <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1" sizelock="true">
-      <row size="0.05">25639</row>
-      <row size="0.067">97502</row>
-      <row size="0.08">38426</row>
-      <row size="0.1">85309</row>
-      <row size="0.125">63574</row>
-      <row size="0.16">04925</row>
-      <row size="0.2">79683</row>
-      <row size="0.25">56390</row>
-      <row size="0.32">24976</row>
-      <row size="0.4">42083</row>
-      <row size="0.5">69750</row>
-      <row size="0.63">57384</row>
-      <row size="0.8">89635</row>
-      <row size="1.0">27968</row>
-      <row size="1.25">56390</row>
-      <row size="1.6">83049</row>
-      <row size="2.0">38426</row>
+      <row size="0.05">32596</row>
+      <row size="0.067">59632</row>
+      <row size="0.08">65923</row>
+      <row size="0.1">96235</row>
+      <row size="0.125">35962</row>
+      <row size="0.16">62359</row>
+      <row size="0.2">59623</row>
+      <row size="0.25">23596</row>
+      <row size="0.32">35629</row>
+      <row size="0.4">62935</row>
+      <row size="0.5">39256</row>
+      <row size="0.63">25639</row>
+      <row size="0.8">63925</row>
+      <row size="1.0">92563</row>
+      <row size="1.25">56392</row>
+      <row size="1.6">69523</row>
+      <row size="2.0">52639</row>
     </chart>
   </group>
   <group numkey="5">
