@@ -39,10 +39,9 @@
 #include <QScrollArea>
 #include <QTabWidget>
 
-Preferences::Preferences(QSettings *config, QWidget *parent) : QDialog(parent)
+Preferences::Preferences(QSettings *config, QWidget *parent)
+  : QDialog(parent), config(config)
 {
-  this->config = config;
-
   setFixedSize(1200, 400);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("VisuTest v" VERSION);
