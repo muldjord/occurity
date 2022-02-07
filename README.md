@@ -142,6 +142,7 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 * optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
 * startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a `row` below.
 * crowdingspan="2.5" <-- Sets optotype crowding span in size relative arc minutes. If left out the default value of 2.5 is used.
+* animation="file.gif" <-- Sets the attention animation for this chart. Activate with `v`.
 
 ###### 'row' node
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
@@ -182,6 +183,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 #### Version x.x.x (unimplemented)
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
+
+#### Version 0.7.3 (In progress, unreleased)
+* Added attention animation to 'optotype' chart type with key `v`. Set with `animation="file.gif"`
 
 #### Version 0.7.2 (27jan2022)
 * Implemented randomize row with 'r' key
