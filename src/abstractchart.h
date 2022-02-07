@@ -35,9 +35,8 @@
 #include <QKeyEvent>
 #include <QGraphicsSimpleTextItem>
 
-constexpr int FONTCHART = 0;
+constexpr int OPTOTYPECHART = 0;
 constexpr int SVGCHART = 1;
-constexpr int OPTOTYPECHART = 2;
 
 class AbstractChart : public QGraphicsScene
 {
@@ -53,32 +52,24 @@ public:
   void setNumKey(Qt::Key numKey);
   Qt::Key getNumKey();
   void setBgColor(QString color);
-  virtual void setSizeLocked(const bool &){};
-  virtual bool isSizeLocked(){return false;};
-  virtual void setSize(const QString &){};
-  virtual QString getSize(){return QString();};
-  virtual void setOptotype(const QString &){};
-  virtual QString getOptotype();
-  virtual void setCrowdingSpan(const double &){};
-  virtual double getCrowdingSpan();
-  virtual void setSource(const QString &){};
-  virtual void addRow(const QString &, const QString &);
-  virtual void setStartSize(const QString &){};
-  virtual void setScaling(const QString &){};
-  virtual bool addSvgLayer(const QString &){return false;};
   MainSettings *mainSettings;
+  void setSizeLocked(const bool &sizeLocked);
+  bool isSizeLocked();
+  virtual void setSize(const QString &sizeStr);
+  virtual QString getSize();
 
 protected:
-  QString startSize = "0.16";
   QGraphicsSimpleTextItem *titleItem;
-
+                                    
 public slots:
   virtual void updateAll(){};
   virtual void resetAll(){};
 
 private:
-  int type = 0;
+  int type = -1;
   Qt::Key numKey = Qt::Key_0;
+  QString sizeStr = "";
+  bool sizeLocked = false;
 
 };
 #endif/*__VISUTEST_ABSTRACTCHART_H__*/

@@ -42,15 +42,15 @@ public:
   ~SvgChart();
   void init() override;
   void setRedGreen(const QString hexRed, const QString hexGreen);
+  void setSource(const QString &source);
+  void setScaling(const QString &scaling);
+  bool addSvgLayer(const QString &svgLayerId);
 
 public slots:
   void updateAll() override;
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  void setSource(const QString &source) override;
-  void setScaling(const QString &scaling) override;
-  bool addSvgLayer(const QString &svgLayerId) override;
 
 private:
   QByteArray svgXmlOrig = "";

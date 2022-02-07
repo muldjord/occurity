@@ -52,23 +52,19 @@ void AbstractChart::init()
 
 void AbstractChart::setType(const QString &type)
 {
-  if(type == "font") {
-    this->type = FONTCHART;
+  if(type == "optotype") {
+    this->type = OPTOTYPECHART;
   } else if(type == "svg") {
     this->type = SVGCHART;
-  } else if(type == "optotype") {
-    this->type = OPTOTYPECHART;
   }
 }
 
 QString AbstractChart::getType()
 {
-  if(type == FONTCHART) {
-    return QString("font");
+  if(type == OPTOTYPECHART) {
+    return QString("optotype");
   } else if(type == SVGCHART) {
     return QString("svg");
-  } else if(type == OPTOTYPECHART) {
-    return QString("optotype");
   }
 
   return QString("Invalid type");
@@ -84,14 +80,24 @@ Qt::Key AbstractChart::getNumKey()
   return numKey;
 }
 
-QString AbstractChart::getOptotype()
+void AbstractChart::setSize(const QString &sizeStr)
 {
-  return QString("None");
+  this->sizeStr = sizeStr;
 }
 
-double AbstractChart::getCrowdingSpan()
+QString AbstractChart::getSize()
 {
-  return 2.5;
+  return sizeStr;
+}
+
+void AbstractChart::setSizeLocked(const bool &sizeLocked)
+{
+  this->sizeLocked = sizeLocked;
+}
+
+bool AbstractChart::isSizeLocked()
+{
+  return sizeLocked;
 }
 
 void AbstractChart::setBgColor(QString color)
@@ -112,8 +118,4 @@ void AbstractChart::setBgColor(QString color)
   } else if(color == "white") {
     setBackgroundBrush(Qt::white);
   }
-}
-
-void AbstractChart::addRow(const QString &, const QString &)
-{
 }
