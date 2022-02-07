@@ -34,6 +34,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QRandomGenerator>
+#include <QLabel>
+#include <QMovie>
 
 OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
@@ -46,6 +48,18 @@ OptotypeChart::~OptotypeChart()
 
 void OptotypeChart::init()
 {
+  if(!animation.isEmpty() && QFileInfo::exists(animation)) {
+    QLabel *gifAnim = new QLabel();
+    QMovie *movie = new QMovie(animation);
+    gifAnim->setMovie(movie);
+    movie->start();
+    videoItem = addWidget(gifAnim);
+    videoItem->setZValue(-1);
+    videoItem->setPos(mainSettings->width / 2.0 - videoItem->boundingRect().width() / 2.0,
+                      mainSettings->height / 4.0 - videoItem->boundingRect().height() / 2.0);
+    videoItem->hide();
+  }
+  
   crowdRect = addRect(0, 0, 10, 10);
 
   sizeItem = new QGraphicsSimpleTextItem("0.0");
@@ -116,6 +130,12 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       child->setPos(availableCoords.at(chosen));
       availableCoords.removeAt(chosen);
     }    
+  } else if(event->key() == Qt::Key_V && videoItem != nullptr) {
+    if(videoItem->isVisible()) {
+      videoItem->hide();
+    } else if(!videoItem->isVisible()) {
+      videoItem->show();
+    }
   }
 
   updateAll();
@@ -139,16 +159,6 @@ void OptotypeChart::setCrowdingSpan(const double &crowdingSpan)
 double OptotypeChart::getCrowdingSpan()
 {
   return crowdingSpan;
-}
-
-void OptotypeChart::setSizeLocked(const bool &sizeLocked)
-{
-  this->sizeLocked = sizeLocked;
-}
-
-bool OptotypeChart::isSizeLocked()
-{
-  return sizeLocked;
 }
 
 void OptotypeChart::addRow(const QString &size, const QString &row)
@@ -332,4 +342,9 @@ void OptotypeChart::positionReset()
   for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
     child->setPos(child->data(0).toPointF());
   }
+}
+
+void OptotypeChart::setAnimation(const QString &animation)
+{
+  this->animation = animation;
 }

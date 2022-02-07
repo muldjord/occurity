@@ -33,6 +33,7 @@
 #include "abstractchart.h"
 
 #include <QTimer>
+#include <QGraphicsProxyWidget>
 
 class OptotypeChart : public AbstractChart
 {
@@ -42,14 +43,15 @@ public:
   OptotypeChart(MainSettings *mainSettings, QObject *parent);
   ~OptotypeChart();
   void init() override;
-  void setOptotype(const QString &optotype) override;
-  QString getOptotype() override;
+  void setOptotype(const QString &optotype);
+  QString getOptotype();
   void setCrowdingSpan(const double &crowdingSpan);
   double getCrowdingSpan();
-  void setSizeLocked(const bool &sizeLocked) override;
-  bool isSizeLocked() override;
+  void setAnimation(const QString &animation);
   void setSize(const QString &sizeStr) override;
   QString getSize() override;
+  void addRow(const QString &size, const QString &row);
+  void setStartSize(const QString &startSize);
 
 public slots:
   void updateAll() override;
@@ -57,14 +59,15 @@ public slots:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  void addRow(const QString &size, const QString &row) override;
-  void setStartSize(const QString &startSize) override;
-
+  
 private:
-  QString optotype = "";
-  bool sizeLocked = false;
-  double crowdingSpan = 2.5;
+  QString startSize = "0.16";
+  QGraphicsProxyWidget *videoItem = nullptr;
 
+  QString optotype = "";
+  double crowdingSpan = 2.5;
+  QString animation = "";
+  
   int skew = 0;
   double spaceWidth = 0.0;
 
