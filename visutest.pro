@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = VisuTest
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += widgets xml svg multimediawidgets multimedia
+QT += widgets xml svg
 CONFIG += release
 TRANSLATIONS = visutest_da_DK.ts
 QMAKE_CXXFLAGS += -std=c++11
