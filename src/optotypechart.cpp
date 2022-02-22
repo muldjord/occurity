@@ -107,14 +107,10 @@ void OptotypeChart::init()
 void OptotypeChart::makeIdle()
 {
   if(videoItem != nullptr) {
-    if(videoItem->isVisible()) {
-      videoItem->hide();
-      player->stop();
-    }
+    videoItem->hide();
+    player->stop();
   } else if(animItem != nullptr) {
-    if(animItem->isVisible()) {
-      animItem->hide();
-    }
+    animItem->hide();
   }
 }
 
