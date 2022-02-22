@@ -2,8 +2,8 @@
 /***************************************************************************
  *            optotypechart.cpp
  *
- *  Tue Jan 11 14:32:00 UTC+1 2021
- *  Copyright 2021 Lars Bisballe
+ *  Tue Jan 11 14:32:00 UTC+1 2022
+ *  Copyright 2022 Lars Bisballe
  *  larsbjensen@gmail.com
  ****************************************************************************/
 
@@ -49,15 +49,25 @@ OptotypeChart::~OptotypeChart()
 void OptotypeChart::init()
 {
   if(!animation.isEmpty() && QFileInfo::exists(animation)) {
-    QLabel *gifAnim = new QLabel();
-    QMovie *movie = new QMovie(animation);
-    gifAnim->setMovie(movie);
-    movie->start();
-    videoItem = addWidget(gifAnim);
-    videoItem->setZValue(-1);
-    videoItem->setPos(mainSettings->width / 2.0 - videoItem->boundingRect().width() / 2.0,
-                      mainSettings->height / 4.0 - videoItem->boundingRect().height() / 2.0);
-    videoItem->hide();
+    QFileInfo animInfo(animation);
+    if(animInfo.suffix() == "gif") {
+      QLabel *gifAnim = new QLabel();
+      QMovie *movie = new QMovie(animation);
+      gifAnim->setMovie(movie);
+      movie->start();
+      animItem = addWidget(gifAnim);
+      animItem->setZValue(-1);
+      animItem->setPos(mainSettings->width / 2.0 - animItem->boundingRect().width() / 2.0,
+                        mainSettings->height / 4.0 - animItem->boundingRect().height() / 2.0);
+      animItem->hide();
+    } else {
+      videoItem = new QGraphicsVideoItem;
+      videoItem->setAspectRatioMode(Qt::IgnoreAspectRatio);
+      player = new QMediaPlayer(this);
+      player->setVideoOutput(videoItem);
+      addItem(videoItem);
+      videoItem->hide();
+    }
   }
   
   crowdRect = addRect(0, 0, 10, 10);
@@ -129,12 +139,27 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       int chosen = QRandomGenerator::global()->bounded(availableCoords.length());
       child->setPos(availableCoords.at(chosen));
       availableCoords.removeAt(chosen);
-    }    
-  } else if(event->key() == Qt::Key_V && videoItem != nullptr) {
-    if(videoItem->isVisible()) {
-      videoItem->hide();
-    } else if(!videoItem->isVisible()) {
-      videoItem->show();
+    }
+  } else if(event->key() == Qt::Key_V) {
+    if(videoItem != nullptr) {
+      if(videoItem->isVisible()) {
+        videoItem->hide();
+        player->stop();
+      } else if(!videoItem->isVisible()) {
+        QFileInfo animInfo(animation);
+        player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
+        videoItem->setSize(QSizeF(mainSettings->width, mainSettings->height));
+        videoItem->setPos(0, 0);
+        videoItem->setZValue(2);
+        videoItem->show();
+        player->play();
+      }
+    } else if(animItem != nullptr) {
+      if(animItem->isVisible()) {
+        animItem->hide();
+      } else if(!animItem->isVisible()) {
+        animItem->show();
+      }
     }
   }
 

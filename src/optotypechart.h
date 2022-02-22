@@ -2,8 +2,8 @@
 /***************************************************************************
  *            optotypechart.h
  *
- *  Tue Jan 11 14:32:00 UTC+1 2021
- *  Copyright 2021 Lars Bisballe
+ *  Tue Jan 11 14:32:00 UTC+1 2022
+ *  Copyright 2022 Lars Bisballe
  *  larsbjensen@gmail.com
  ****************************************************************************/
 
@@ -33,6 +33,8 @@
 #include "abstractchart.h"
 
 #include <QTimer>
+#include <QMediaPlayer>
+#include <QGraphicsVideoItem>
 #include <QGraphicsProxyWidget>
 
 class OptotypeChart : public AbstractChart
@@ -62,7 +64,9 @@ protected:
   
 private:
   QString startSize = "0.16";
-  QGraphicsProxyWidget *videoItem = nullptr;
+  QMediaPlayer *player = nullptr;
+  QGraphicsVideoItem *videoItem = nullptr;
+  QGraphicsProxyWidget *animItem = nullptr;
 
   QString optotype = "";
   double crowdingSpan = 2.5;
