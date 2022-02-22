@@ -45,6 +45,7 @@ public:
   OptotypeChart(MainSettings *mainSettings, QObject *parent);
   ~OptotypeChart();
   void init() override;
+  void makeIdle() override;
   void setOptotype(const QString &optotype);
   QString getOptotype();
   void setCrowdingSpan(const double &crowdingSpan);

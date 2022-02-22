@@ -277,6 +277,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
           }
         }
       }
+      currentChart->makeIdle();
       setScene(charts.at(chosen));
       printf("Chart '%s' activated!\n", charts.at(chosen)->objectName().toStdString().c_str());
       return true;

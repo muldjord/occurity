@@ -63,6 +63,7 @@ void OptotypeChart::init()
     } else {
       videoItem = new QGraphicsVideoItem;
       videoItem->setAspectRatioMode(Qt::IgnoreAspectRatio);
+      videoItem->setZValue(2);
       player = new QMediaPlayer(this);
       player->setVideoOutput(videoItem);
       addItem(videoItem);
@@ -101,6 +102,14 @@ void OptotypeChart::init()
   copyrightItem->setPos((mainSettings->width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings->height - 35);
 
   setSize(startSize);
+}
+
+void OptotypeChart::makeIdle()
+{
+  if(player != nullptr && videoItem != nullptr && videoItem->isVisible()) {
+    videoItem->hide();
+    player->stop();
+  }
 }
 
 void OptotypeChart::keyPressEvent(QKeyEvent *event)
@@ -150,7 +159,6 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
         player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
         videoItem->setSize(QSizeF(mainSettings->width, mainSettings->height));
         videoItem->setPos(0, 0);
-        videoItem->setZValue(2);
         videoItem->show();
         player->play();
       }

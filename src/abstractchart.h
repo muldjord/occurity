@@ -46,6 +46,7 @@ public:
   AbstractChart(MainSettings *mainSettings, QObject *parent);
   ~AbstractChart();
   virtual void init();
+  virtual void makeIdle(){};
   // setName and getName has been replaced with the default objectName and setObjectName
   void setType(const QString &type);
   QString getType();
