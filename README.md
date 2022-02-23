@@ -177,6 +177,7 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * greenValue=210 <-- Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
 * sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
 * hibernateTime=140 <-- After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
+* rowSkipDelta=4 <-- The number of lines skipped when pressing 'w' and 's'
 
 ## Releases
 

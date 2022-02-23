@@ -33,6 +33,7 @@ struct MainSettings {
   int hibernateTime = 7200000; // 2 hours
   int width = 1920;
   int height = 1080;
+  int rowSkipDelta = 4;
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
   double rulerWidth = 137.0;

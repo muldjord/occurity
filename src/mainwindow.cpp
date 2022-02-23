@@ -326,11 +326,16 @@ void MainWindow::updateFromConfig()
   if(!config->contains("hibernateTime")) {
     config->setValue("hibernateTime", 120);
   }
+  if(!config->contains("rowSkipDelta")) {
+    config->setValue("rowSkipDelta", 4);
+  }
 
   resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
 
   mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
+
+  mainSettings->rowSkipDelta = config->value("rowSkipDelta").toInt();
 
   mainSettings->patientDistance = config->value("patientDistance").toDouble(); // Cm
   mainSettings->rulerWidth = config->value("rulerWidth").toDouble(); // Mm

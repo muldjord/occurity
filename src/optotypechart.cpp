@@ -116,7 +116,10 @@ void OptotypeChart::makeIdle()
 
 void OptotypeChart::keyPressEvent(QKeyEvent *event)
 {
-  if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Down) {
+  if(event->key() == Qt::Key_Up ||
+     event->key() == Qt::Key_Down ||
+     event->key() == Qt::Key_W ||
+     event->key() == Qt::Key_S) {
     if(event->key() == Qt::Key_Up) {
       currentRowIdx--;
       if(currentRowIdx < 0) {
@@ -126,6 +129,16 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       currentRowIdx++;
       if(currentRowIdx > rows.length() - 1) {
         currentRowIdx = rows.length() - 1;
+      }
+    } else if(event->key() == Qt::Key_S) {
+      currentRowIdx += mainSettings->rowSkipDelta;
+      if(currentRowIdx > rows.length() - 1) {
+        currentRowIdx = rows.length() - 1;
+      }
+    } else if(event->key() == Qt::Key_W) {
+      currentRowIdx -= mainSettings->rowSkipDelta;
+      if(currentRowIdx < 0) {
+        currentRowIdx = 0;
       }
     }
     positionReset();
