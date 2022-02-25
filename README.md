@@ -178,6 +178,7 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
 * hibernateTime=140 <-- After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
 * rowSkipDelta=4 <-- The number of lines skipped when pressing 'w' and 's'
+* pinCode=0000 <-- Sets the pincode to be entered in order to unlock the Preferences dialog. Defaults to `2018`
 
 ## Releases
 
@@ -185,10 +186,11 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
-#### Version 0.7.3 (In progress, unreleased)
-* Added attention animation option to 'optotype' chart with key `v`. Set with `animation="file.gif"`
-* Added attention video option to 'optotype' chart with key `v`. Set with `animation="file.mp4"`
+#### Version 0.8.0 (In progress, unreleased)
+* Added attention gif animation option to 'optotype' chart with key `v`. Set with `animation="file.gif"`
+* Added fullscreen attention video option to 'optotype' chart with key `v`. Set with `animation="file.mp4"`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolution is recommended
 * Added option to skip multiple lines on 'optotype' charts using `w` and `s`. Configure number of lines in Preferences
+* Added pincode dialog to preferences. Pincode can be set in config.ini with `pinCode=0000`
 
 #### Version 0.7.2 (27jan2022)
 * Implemented randomize row with 'r' key
