@@ -42,7 +42,7 @@
 Preferences::Preferences(QSettings *config, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 400);
+  setFixedSize(1200, 500);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("VisuTest v" VERSION);
 
@@ -64,6 +64,8 @@ Preferences::Preferences(QSettings *config, QWidget *parent)
   Slider *hexRed = new Slider(config, "", "redValue", 0, 255, 210, 1, this);
   QLabel *hexGreenLabel = new QLabel(tr("Green color value:"), this);
   Slider *hexGreen = new Slider(config, "", "greenValue", 0, 255, 210, 1, this);
+  QLabel *rowSkipDeltaLabel = new QLabel(tr("Skip this many lines when using multiline row skipping:"), this);
+  Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", 2, 10, 4, 1, this);
   QPushButton *saveButton = new QPushButton(tr("Close"), this);
   connect(saveButton, &QPushButton::clicked, this, &QDialog::accept);
 
@@ -79,6 +81,8 @@ Preferences::Preferences(QSettings *config, QWidget *parent)
   configLayout->addWidget(hexRed);
   configLayout->addWidget(hexGreenLabel);
   configLayout->addWidget(hexGreen);
+  configLayout->addWidget(rowSkipDeltaLabel);
+  configLayout->addWidget(rowSkipDelta);
   configLayout->addWidget(saveButton);
 
   QHBoxLayout *layout = new QHBoxLayout;
