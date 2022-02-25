@@ -26,6 +26,7 @@
  */
 
 #include "mainwindow.h"
+#include "pindialog.h"
 #include "preferences.h"
 
 #include <stdio.h>
@@ -329,6 +330,9 @@ void MainWindow::updateFromConfig()
   if(!config->contains("rowSkipDelta")) {
     config->setValue("rowSkipDelta", 4);
   }
+  if(!config->contains("pinCode")) {
+    config->setValue("pinCode", "2018");
+  }
 
   resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
@@ -337,6 +341,8 @@ void MainWindow::updateFromConfig()
 
   mainSettings->rowSkipDelta = config->value("rowSkipDelta").toInt();
 
+  mainSettings->pinCode = config->value("pinCode").toString();
+  
   mainSettings->patientDistance = config->value("patientDistance").toDouble(); // Cm
   mainSettings->rulerWidth = config->value("rulerWidth").toDouble(); // Mm
 
@@ -358,9 +364,13 @@ void MainWindow::updateFromConfig()
 
 void MainWindow::spawnPreferences()
 {
-  printf("Spawning Preferences...\n");
-  Preferences prefs(config, this);
-  prefs.exec();
+  PinDialog pinDialog(this);
+  pinDialog.exec();
+  if(pinDialog.getPin() == mainSettings->pinCode) {
+    printf("Spawning Preferences...\n");
+    Preferences prefs(config, this);
+    prefs.exec();
+  }
 }
 
 void MainWindow::enableHibernate()
