@@ -57,5 +57,9 @@
         <source>Idle time before size reset (seconds):</source>
         <translation>Inaktiv tid før nulstilling af størrelse (sekunder):</translation>
     </message>
+    <message>
+        <source>Skip this many lines when using multiline row skipping:</source>
+        <translation type="unfinished">Antal linier der skal springes over når der bruges flerlinie skifte:</translation>
+    </message>
 </context>
 </TS>
