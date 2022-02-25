@@ -186,7 +186,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
 #### Version 0.7.3 (In progress, unreleased)
-* Added attention animation to 'optotype' chart type with key `v`. Set with `animation="file.gif"`
+* Added attention animation option to 'optotype' chart with key `v`. Set with `animation="file.gif"`
+* Added attention video option to 'optotype' chart with key `v`. Set with `animation="file.mp4"`
+* Added option to skip multiple lines on 'optotype' charts using `w` and `s`. Configure number of lines in Preferences
 
 #### Version 0.7.2 (27jan2022)
 * Implemented randomize row with 'r' key
