@@ -42,7 +42,7 @@ class OptotypeChart : public AbstractChart
   Q_OBJECT
 
 public:
-  OptotypeChart(MainSettings *mainSettings, QObject *parent);
+  OptotypeChart(MainSettings &mainSettings, QObject *parent);
   ~OptotypeChart();
   void init() override;
   void makeIdle() override;

@@ -37,7 +37,7 @@
 #include <QLabel>
 #include <QMovie>
 
-OptotypeChart::OptotypeChart(MainSettings *mainSettings, QObject *parent) :
+OptotypeChart::OptotypeChart(MainSettings &mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
 {
 }
@@ -57,8 +57,8 @@ void OptotypeChart::init()
       movie->start();
       animItem = addWidget(gifAnim);
       animItem->setZValue(-1);
-      animItem->setPos(mainSettings->width / 2.0 - animItem->boundingRect().width() / 2.0,
-                        mainSettings->height / 4.0 - animItem->boundingRect().height() / 2.0);
+      animItem->setPos(mainSettings.width / 2.0 - animItem->boundingRect().width() / 2.0,
+                        mainSettings.height / 4.0 - animItem->boundingRect().height() / 2.0);
       animItem->hide();
     } else {
       videoItem = new QGraphicsVideoItem;
@@ -77,7 +77,7 @@ void OptotypeChart::init()
   copyrightItem = new QGraphicsSimpleTextItem("");
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize((mainSettings->pxPerArcMin * 5.0) * mainSettings->distanceFactor * 0.2);
+  font.setPixelSize((mainSettings.pxPerArcMin * 5.0) * mainSettings.distanceFactor * 0.2);
   sizeItem->setFont(font);
   font.setPixelSize(25);
   copyrightItem->setFont(font);
@@ -99,7 +99,7 @@ void OptotypeChart::init()
   addItem(sizeItem);
   addItem(titleItem);
   addItem(copyrightItem);
-  copyrightItem->setPos((mainSettings->width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings->height - 35);
+  copyrightItem->setPos((mainSettings.width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings.height - 35);
 
   setSize(startSize);
 }
@@ -131,12 +131,12 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
         currentRowIdx = rows.length() - 1;
       }
     } else if(event->key() == Qt::Key_S) {
-      currentRowIdx += mainSettings->rowSkipDelta;
+      currentRowIdx += mainSettings.rowSkipDelta;
       if(currentRowIdx > rows.length() - 1) {
         currentRowIdx = rows.length() - 1;
       }
     } else if(event->key() == Qt::Key_W) {
-      currentRowIdx -= mainSettings->rowSkipDelta;
+      currentRowIdx -= mainSettings.rowSkipDelta;
       if(currentRowIdx < 0) {
         currentRowIdx = 0;
       }
@@ -151,9 +151,9 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       skew++;
     }
   } else if(event->key() == Qt::Key_C) {
-    mainSettings->crowding = !mainSettings->crowding;
+    mainSettings.crowding = !mainSettings.crowding;
   } else if(event->key() == Qt::Key_M) {
-    mainSettings->single = !mainSettings->single;
+    mainSettings.single = !mainSettings.single;
   } else if(event->key() == Qt::Key_R) {
     QList<QPointF> availableCoords;
     for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
@@ -172,7 +172,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       } else if(!videoItem->isVisible()) {
         QFileInfo animInfo(animation);
         player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
-        videoItem->setSize(QSizeF(mainSettings->width, mainSettings->height));
+        videoItem->setSize(QSizeF(mainSettings.width, mainSettings.height));
         videoItem->setPos(0, 0);
         videoItem->show();
         player->play();
@@ -219,7 +219,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   */
   QPair<QString, QGraphicsItemGroup *> rowPair;
 
-  QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings->optotypesDir + "/" + optotype + "/_.svg");
+  QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings.optotypesDir + "/" + optotype + "/_.svg");
   spaceWidth = svgSpace->boundingRect().width();
 
   QGraphicsItemGroup *layer = new QGraphicsItemGroup;
@@ -237,7 +237,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     }
   }
   for(const auto &letter: letters) {
-    QString svgFilename = mainSettings->optotypesDir + "/" + optotype + "/" + letter + ".svg";
+    QString svgFilename = mainSettings.optotypesDir + "/" + optotype + "/" + letter + ".svg";
     if(QFileInfo::exists(svgFilename)) {
       QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(svgFilename);
       svgLetter->setX(curX);
@@ -262,34 +262,34 @@ void OptotypeChart::updateAll()
     if(a == currentRowIdx) {
       sizeStr = rows.at(a).first;
       double decimalSize = sizeStr.toDouble();
-      double arcMinScaled = ((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0) * mainSettings->distanceFactor;
+      double arcMinScaled = ((mainSettings.pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0) * mainSettings.distanceFactor;
       double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
 
       // Scale row to current decimalSize and patient distance
-      rows.at(a).second->setScale((mainSettings->pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings->distanceFactor);
+      rows.at(a).second->setScale((mainSettings.pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings.distanceFactor);
 
       // Calculate skew
       double currentSkew = ((rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() + spaceWidthScaled) / rows.at(a).second->childItems().length()) * skew;
 
       // Always use mapRectToScene to make sure current scaling is taken into account
-      rows.at(a).second->setX((mainSettings->width / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() / 2) + currentSkew);
-      rows.at(a).second->setY((mainSettings->height / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() / 2));
+      rows.at(a).second->setX((mainSettings.width / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() / 2) + currentSkew);
+      rows.at(a).second->setY((mainSettings.height / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() / 2));
 
       rows.at(a).second->show();
 
       // Show / hide optotypes depending on whether they are cut off at screen edges
       // or if single is set
       for(auto *letter: rows.at(a).second->childItems()) {
-        if(mainSettings->single) {
-          if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings->width / 2.0 - 2 &&
-             rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) <= mainSettings->width / 2.0 + 2) {
+        if(mainSettings.single) {
+          if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
+             rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
             letter->show();
           } else {
             letter->hide();
           }
         } else {
           if(rows.at(a).second->mapToScene(letter->pos()).x() < 0 ||
-             rows.at(a).second->mapToScene(letter->pos()).x() + rows.at(a).second->mapRectToScene(letter->boundingRect()).width() > mainSettings->width) {
+             rows.at(a).second->mapToScene(letter->pos()).x() + rows.at(a).second->mapRectToScene(letter->boundingRect()).width() > mainSettings.width) {
             letter->hide();
           } else {
             letter->show();
@@ -298,7 +298,7 @@ void OptotypeChart::updateAll()
       }
 
       // Enable / disable crowding
-      if(mainSettings->crowding) {
+      if(mainSettings.crowding) {
         QPen crowdingPen;
         crowdingPen.setWidth(arcMinScaled);
         crowdingPen.setColor(QColor(0, 0, 0));
@@ -339,21 +339,21 @@ void OptotypeChart::updateAll()
 
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->pxPerArcMin * mainSettings->distanceFactor * 1.5);
+  font.setPixelSize(mainSettings.pxPerArcMin * mainSettings.distanceFactor * 1.5);
 
   // Add the letter size visual help
   sizeItem->setText(sizeStr);
   sizeItem->setFont(font);
   sizeItem->setX(10);
-  sizeItem->setY(mainSettings->height - sizeItem->boundingRect().height() - 10);
+  sizeItem->setY(mainSettings.height - sizeItem->boundingRect().height() - 10);
 
   // Re-add title
   titleItem->setFont(font);
-  titleItem->setX(mainSettings->width - titleItem->boundingRect().width() - 10);
-  titleItem->setY(mainSettings->height - titleItem->boundingRect().height() - 10);
+  titleItem->setX(mainSettings.width - titleItem->boundingRect().width() - 10);
+  titleItem->setY(mainSettings.height - titleItem->boundingRect().height() - 10);
 
   // Update entire screen area
-  update(0, 0, mainSettings->width, mainSettings->height);
+  update(0, 0, mainSettings.width, mainSettings.height);
 }
 
 void OptotypeChart::setStartSize(const QString &startSize)
