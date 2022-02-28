@@ -34,7 +34,7 @@
 #include <QFileInfo>
 #include <QSvgRenderer>
 
-SvgChart::SvgChart(MainSettings *mainSettings, QObject *parent) :
+SvgChart::SvgChart(MainSettings &mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
 {
 }
@@ -108,7 +108,7 @@ bool SvgChart::addSvgLayer(const QString &svgLayerId)
 
 void SvgChart::updateAll()
 {
-  setRedGreen(mainSettings->hexRed, mainSettings->hexGreen);
+  setRedGreen(mainSettings.hexRed, mainSettings.hexGreen);
 
   svgItem->renderer()->load(svgXml);
 
@@ -118,23 +118,23 @@ void SvgChart::updateAll()
     svgItem->setElementId("");
 
   if(scaling == "width") {
-    svgItem->setScale(mainSettings->width / svgItem->renderer()->defaultSize().width());
+    svgItem->setScale(mainSettings.width / svgItem->renderer()->defaultSize().width());
   } else if(scaling == "height") {
-    svgItem->setScale((double)mainSettings->height / svgItem->renderer()->defaultSize().height());
+    svgItem->setScale((double)mainSettings.height / svgItem->renderer()->defaultSize().height());
   } else if(scaling == "distance") {
-    svgItem->setScale((mainSettings->pxPerArcMin / 100.0) * mainSettings->distanceFactor);
+    svgItem->setScale((mainSettings.pxPerArcMin / 100.0) * mainSettings.distanceFactor);
   }
-  svgItem->setX((mainSettings->width / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).width()) / 2.0);
-  svgItem->setY((mainSettings->height / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).height()) / 2.0);
+  svgItem->setX((mainSettings.width / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).width()) / 2.0);
+  svgItem->setY((mainSettings.height / 2.0) - (svgItem->mapRectToScene(svgItem->boundingRect()).height()) / 2.0);
 
   // Re-add title
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize(mainSettings->pxPerArcMin * mainSettings->distanceFactor * 1.5);
+  font.setPixelSize(mainSettings.pxPerArcMin * mainSettings.distanceFactor * 1.5);
   titleItem->setFont(font);
-  titleItem->setX(mainSettings->width - titleItem->boundingRect().width() - 10);
-  titleItem->setY(mainSettings->height - titleItem->boundingRect().height() - 10);
+  titleItem->setX(mainSettings.width - titleItem->boundingRect().width() - 10);
+  titleItem->setY(mainSettings.height - titleItem->boundingRect().height() - 10);
 
   // Update entire screen area
-  update(0, 0, mainSettings->width, mainSettings->height);
+  update(0, 0, mainSettings.width, mainSettings.height);
 }

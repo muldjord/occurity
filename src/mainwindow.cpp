@@ -28,6 +28,7 @@
 #include "mainwindow.h"
 #include "pindialog.h"
 #include "preferences.h"
+#include "updater.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -44,7 +45,7 @@ MainWindow::MainWindow()
   setCursor(Qt::BlankCursor);
   printf("Running VisuTest v." VERSION "\n");
   config = new QSettings("config.ini", QSettings::IniFormat);
-  mainSettings = new MainSettings;
+  //mainSettings = new MainSettings;
   setWindowTitle("VisuTest v" VERSION);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -54,16 +55,16 @@ MainWindow::MainWindow()
   qApp->processEvents();
 
   QRect res = QGuiApplication::primaryScreen()->geometry();
-  mainSettings->width = res.width();
-  mainSettings->height = res.height();
-  printf("  Monitor resolution: %d x %d\n", mainSettings->width, mainSettings->height);
+  mainSettings.width = res.width();
+  mainSettings.height = res.height();
+  printf("  Monitor resolution: %d x %d\n", mainSettings.width, mainSettings.height);
   updateFromConfig();
 
-  if(!QFile::exists(mainSettings->chartsXml)) {
-    QFile::copy("charts.xml.example", mainSettings->chartsXml);
+  if(!QFile::exists(mainSettings.chartsXml)) {
+    QFile::copy("charts.xml.example", mainSettings.chartsXml);
   }
 
-  if(loadCharts(mainSettings->chartsXml)) {
+  if(loadCharts(mainSettings.chartsXml)) {
     printf("Charts xml loaded successfully!\n");
   } else {
     printf("Charts xml loading failed!\n");
@@ -80,7 +81,7 @@ MainWindow::MainWindow()
   hiberCooldownTimer.setSingleShot(true);
   connect(&hiberCooldownTimer, &QTimer::timeout, this, &MainWindow::enableHibernate);
 
-  hiberTimer.setInterval(mainSettings->hibernateTime);
+  hiberTimer.setInterval(mainSettings.hibernateTime);
   hiberTimer.setSingleShot(true);
   connect(&hiberTimer, &QTimer::timeout, this, &MainWindow::hibernate);
   hiberTimer.start();
@@ -287,6 +288,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       spawnPreferences();
       updateFromConfig();
       return true;
+    } else if(keyEvent->key() == Qt::Key_U) {
+      spawnUpdater();
+      return true;
     } else if(keyEvent->key() == Qt::Key_Q) {
       if(allowHibernate) {
         flipHibernate();
@@ -307,7 +311,7 @@ void MainWindow::updateFromConfig()
 
   // Convert obsolete 'physHeight' variable to 'rulerWidth'
   if(config->contains("physHeight")) {
-    config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings->height) * 500);
+    config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings.height) * 500);
     config->remove("physHeight");
   }
 
@@ -337,27 +341,27 @@ void MainWindow::updateFromConfig()
   resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
 
-  mainSettings->hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
+  mainSettings.hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
-  mainSettings->rowSkipDelta = config->value("rowSkipDelta").toInt();
+  mainSettings.rowSkipDelta = config->value("rowSkipDelta").toInt();
 
-  mainSettings->pinCode = config->value("pinCode").toString();
+  mainSettings.pinCode = config->value("pinCode").toString();
   
-  mainSettings->patientDistance = config->value("patientDistance").toDouble(); // Cm
-  mainSettings->rulerWidth = config->value("rulerWidth").toDouble(); // Mm
+  mainSettings.patientDistance = config->value("patientDistance").toDouble(); // Cm
+  mainSettings.rulerWidth = config->value("rulerWidth").toDouble(); // Mm
 
-  mainSettings->distanceFactor = mainSettings->patientDistance / 600.0;
-  mainSettings->pxPerMm = 500.0 / mainSettings->rulerWidth;
+  mainSettings.distanceFactor = mainSettings.patientDistance / 600.0;
+  mainSettings.pxPerMm = 500.0 / mainSettings.rulerWidth;
   // At 6 m distance (size 0.1) a letter should be 87.3 mm tall on screen (5 arc minutes)
-  mainSettings->pxPerArcMin = (87.3 / 5.0) * mainSettings->pxPerMm;
-  mainSettings->hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
-  mainSettings->hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
+  mainSettings.pxPerArcMin = (87.3 / 5.0) * mainSettings.pxPerMm;
+  mainSettings.hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
+  mainSettings.hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
 
-  mainSettings->optotypesDir = config->value("optotypesDir").toString();
-  mainSettings->chartsXml = config->value("chartsXml").toString();
+  mainSettings.optotypesDir = config->value("optotypesDir").toString();
+  mainSettings.chartsXml = config->value("chartsXml").toString();
 
-  printf("  Pixels per mm: %f\n", mainSettings->pxPerMm);
-  printf("  Pixels per arc minute: %f\n", mainSettings->pxPerArcMin);
+  printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
+  printf("  Pixels per arc minute: %f\n", mainSettings.pxPerArcMin);
   printf("\n");
   emit configUpdated();
 }
@@ -366,10 +370,21 @@ void MainWindow::spawnPreferences()
 {
   PinDialog pinDialog(this);
   pinDialog.exec();
-  if(pinDialog.getPin() == mainSettings->pinCode) {
+  if(pinDialog.getPin() == mainSettings.pinCode) {
     printf("Spawning Preferences...\n");
     Preferences prefs(config, this);
     prefs.exec();
+  }
+}
+
+void MainWindow::spawnUpdater()
+{
+  PinDialog pinDialog(this);
+  pinDialog.exec();
+  if(pinDialog.getPin() == mainSettings.pinCode) {
+    printf("Spawning updater...\n");
+    Updater updater(mainSettings, this);
+    updater.exec();
   }
 }
 

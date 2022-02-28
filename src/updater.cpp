@@ -1,9 +1,9 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            svgchart.h
+ *            updater.cpp
  *
- *  Tue Sep 25 14:00:00 UTC+1 2018
- *  Copyright 2018 Lars Bisballe
+ *  Mon Feb 28 10:00:00 UTC+1 2022
+ *  Copyright 2022 Lars Bisballe
  *  larsbjensen@gmail.com
  ****************************************************************************/
 
@@ -24,41 +24,16 @@
  *  along with VisuTest; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
-#ifndef __VISUTEST_SVGCHART_H__
-#define __VISUTEST_SVGCHART_H__
 
-#include "mainsettings.h"
-#include "abstractchart.h"
+#include "updater.h"
 
-#include <QGraphicsSvgItem>
-#include <QDomDocument>
+#include <QVBoxLayout>
 
-class SvgChart : public AbstractChart
+Updater::Updater(MainSettings &mainSettings, QWidget *parent)
+  : QDialog(parent), mainSettings(mainSettings)
 {
-  Q_OBJECT
-
-public:
-  SvgChart(MainSettings &mainSettings, QObject *parent);
-  ~SvgChart();
-  void init() override;
-  void setRedGreen(const QString hexRed, const QString hexGreen);
-  void setSource(const QString &source);
-  void setScaling(const QString &scaling);
-  bool addSvgLayer(const QString &svgLayerId);
-
-public slots:
-  void updateAll() override;
-
-protected:
-  void keyPressEvent(QKeyEvent *event) override;
-
-private:
-  QByteArray svgXmlOrig = "";
-  QByteArray svgXml = "";
-  QString scaling = "width";
-  QList<QString> layers;
-  int svgIdx = 0;
-  QGraphicsSvgItem *svgItem;
-
-};
-#endif/*__VISUTEST_SVGCHART_H__*/
+  setWindowTitle(tr("VisuTest updater"));
+  setFixedSize(500, 500);
+  QVBoxLayout *layout = new QVBoxLayout;
+  setLayout(layout);
+}

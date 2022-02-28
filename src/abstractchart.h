@@ -43,7 +43,7 @@ class AbstractChart : public QGraphicsScene
   Q_OBJECT
 
 public:
-  AbstractChart(MainSettings *mainSettings, QObject *parent);
+  AbstractChart(MainSettings &mainSettings, QObject *parent);
   ~AbstractChart();
   virtual void init();
   virtual void makeIdle(){};
@@ -53,7 +53,7 @@ public:
   void setNumKey(Qt::Key numKey);
   Qt::Key getNumKey();
   void setBgColor(QString color);
-  MainSettings *mainSettings;
+  MainSettings &mainSettings;
   void setSizeLocked(const bool &sizeLocked);
   bool isSizeLocked();
   virtual void setSize(const QString &sizeStr);

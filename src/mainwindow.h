@@ -61,10 +61,11 @@ private:
   void flipHibernate(bool forceHibernate = false);
 
   QSettings *config;
-  MainSettings *mainSettings;
+  MainSettings mainSettings;
   void loadFonts(QString dirStr);
   bool loadCharts(QString chartsXml);
   void spawnPreferences();
+  void spawnUpdater();
   void updateFromConfig();
   QList<AbstractChart*> charts;
 

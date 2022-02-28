@@ -31,14 +31,13 @@
 #include <math.h>
 #include <QKeyEvent>
 
-AbstractChart::AbstractChart(MainSettings *mainSettings, QObject *parent) :
-  QGraphicsScene(0, 0, mainSettings->width, mainSettings->height, parent)
+AbstractChart::AbstractChart(MainSettings &mainSettings, QObject *parent) :
+  QGraphicsScene(0, 0, mainSettings.width, mainSettings.height, parent), mainSettings(mainSettings)
 {
-  this->mainSettings = mainSettings;
   titleItem = new QGraphicsSimpleTextItem();
   QFont font;
   font.setFamily("Arial");
-  font.setPixelSize((mainSettings->pxPerArcMin * 5.0) * mainSettings->distanceFactor * 2.0);
+  font.setPixelSize((mainSettings.pxPerArcMin * 5.0) * mainSettings.distanceFactor * 2.0);
   titleItem->setFont(font);
 }
 
