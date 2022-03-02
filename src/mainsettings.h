@@ -34,7 +34,8 @@ struct MainSettings {
   int width = 1920;
   int height = 1080;
   int rowSkipDelta = 4;
-  QString pinCode = "2018";
+  QString pinCode = "4242";
+  QString updateBaseFolder = "/media/pi/USBPEN";
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
   double rulerWidth = 137.0;
