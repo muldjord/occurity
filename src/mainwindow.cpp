@@ -335,7 +335,10 @@ void MainWindow::updateFromConfig()
     config->setValue("rowSkipDelta", 4);
   }
   if(!config->contains("pinCode")) {
-    config->setValue("pinCode", "2018");
+    config->setValue("pinCode", "4242");
+  }
+  if(!config->contains("updateBaseFolder")) {
+    config->setValue("updateBaseFolder", "/media/pi/USBPEN");
   }
 
   resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
@@ -346,7 +349,9 @@ void MainWindow::updateFromConfig()
   mainSettings.rowSkipDelta = config->value("rowSkipDelta").toInt();
 
   mainSettings.pinCode = config->value("pinCode").toString();
-  
+
+  mainSettings.updateBaseFolder = config->value("updateBaseFolder").toString();
+
   mainSettings.patientDistance = config->value("patientDistance").toDouble(); // Cm
   mainSettings.rulerWidth = config->value("rulerWidth").toDouble(); // Mm
 
