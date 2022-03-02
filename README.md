@@ -57,6 +57,13 @@ $ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev
 ### System configurations
 I recommend applying the following settings on your Pi system to optimize it for use with VisuTest.
 
+#### /etc/sudoers/sudoers.d/pi
+To allow VisuTest to use the integrated update function (activated with 'u' on the keyboard), it is necessary to allow the `pi` user to install software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+```
+pi ALL = NOPASSWD : /usr/bin/apt-get
+
+```
+
 #### raspi-config
 Run `raspi-config` in a terminal and set the following options:
 * Boot Options->B1 Desktop / CLI->B4 Desktop Autologin
@@ -169,16 +176,16 @@ You can add as many layer nodes as you'd like. VisuTest can then switch between 
 
 ### config.ini
 You can configure several options of VisuTest to fit your needs. The first time VisuTest is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
-* physDistance=310 <-- The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
-* rulerWidth=125 <-- The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
-* chartsXml="charts.xml" <-- Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
-* optotypesDir="your/optotypes/folder" <-- Defines the optotypes folder to load chart optotypes from. Default is `optotypes`.
-* redValue=210 <-- Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
-* greenValue=210 <-- Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
-* sizeResetTime=240 <-- After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
-* hibernateTime=140 <-- After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
-* rowSkipDelta=4 <-- The number of lines skipped when pressing 'w' and 's'
-* pinCode=0000 <-- Sets the pincode to be entered in order to unlock the Preferences dialog. Defaults to `2018`
+* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
+* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
+* `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
+* `optotypesDir="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `optotypes`.
+* `redValue=210`: Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
+* `greenValue=210`: Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
+* `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
+* `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
+* `rowSkipDelta=4`: The number of lines skipped when pressing 'w' and 's'
+* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences dialog. Default is `4242`
 
 ## Releases
 
