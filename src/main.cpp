@@ -42,11 +42,9 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
   // Decide which type of debug message it is, and add string to signify it
   // Then append the debug message itself to the same string.
   switch (type) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
   case QtInfoMsg:
     txt += QString(": Info: %1").arg(msg);
     break;
-#endif
   case QtDebugMsg:
     txt += QString(": Debug: %1").arg(msg);
     break;
@@ -63,16 +61,14 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
   printf("%s", txt.toStdString().c_str());
 
   // Set debug file
-  /*
   QFile outFile("debug.log");
   outFile.open(QIODevice::WriteOnly | QIODevice::Append);
   QTextStream ts(&outFile);
   if (txt.right(1) == "\n")
     ts << txt;
   else
-    ts << txt << endl;
+    ts << txt << Qt::endl;
   outFile.close();
-  */
 }
 
 int main(int argc, char *argv[])
