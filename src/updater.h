@@ -29,9 +29,17 @@
 
 #include "mainsettings.h"
 
-#include <QDialog>
+#include <QWizard>
+#include <QWizardPage>
+#include <QRadioButton>
+#include <QButtonGroup>
 
-class Updater : public QDialog
+struct Command {
+  QString type = "";
+  QList<QString> parameters;
+};
+
+class Updater : public QWizard
 {
   Q_OBJECT
 
@@ -41,7 +49,12 @@ public:
 protected:
 
 private:
+  void accept() override;
+  QRadioButton *applyUpdateButton = nullptr;
+  QButtonGroup *updateButtons = nullptr;
   MainSettings &mainSettings;
+  bool isExcluded(const QList<QString> &excludes, const QString &source);
+  void applyUpdate(const QString &filename);
   
 };
 #endif/*__VISUTEST_UPDATER_H__*/
