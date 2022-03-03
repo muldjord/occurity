@@ -91,6 +91,9 @@ This will autostart VisuTest when the system is logged in.
     * Color: Black
     * Test color: White 
 
+#### pcmanfm
+* Run the command `pcmanfm` which will open the File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+
 ### Getting and compiling VisuTest
 Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it.
 ```
