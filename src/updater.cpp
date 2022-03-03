@@ -241,6 +241,8 @@ void Updater::applyUpdate(const QString &filename)
     }
   }
   qInfo("Update completed!\n");
+  QMessageBox::information(this, tr("Update completed"), tr("Update completed successfully!\n\nPress OK to reboot the system."));
+  QProcess::execute("reboot", {});
 }
 
 bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
