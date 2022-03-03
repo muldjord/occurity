@@ -52,7 +52,7 @@ Preferences::Preferences(QSettings *config, QWidget *parent)
   tabWidget->setMinimumWidth(600);
 
   QLabel *rulerWidthLabel = new QLabel(tr("Physical length of ruler (mm):"), this);
-  Slider *rulerWidth = new Slider(config, "", "rulerWidth", 50, 800, 137, 1, this);
+  Slider *rulerWidth = new Slider(config, "", "rulerWidth", 50, 800, 138, 1, this);
   rulerWidth->setFocus();
   QLabel *rulerLabel = new QLabel(this);
   rulerLabel->setPixmap(QPixmap(":ruler.png"));
