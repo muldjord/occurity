@@ -89,6 +89,6 @@ void Slider::saveToConfig()
 
   config->setValue((group.isEmpty()?"":group + "/") + name, value);
 
-  qDebug("Key '%s' saved to config with value '%s'\n", name.toStdString().c_str(),
+  printf("Key '%s' saved to config with value '%s'\n", name.toStdString().c_str(),
 	 value.toStdString().c_str());
 }
