@@ -35,14 +35,14 @@ struct MainSettings {
   int height = 1080;
   int rowSkipDelta = 4;
   QString pinCode = "4242";
-  QString updateBaseFolder = "/media/pi/USBPEN";
+  QString updateBaseFolder = "/media/pi/USBPEN/visutest";
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
   double rulerWidth = 138.0;
   double pxPerMm = 42.0;
   //QString startSize = "1.0";
   double pxPerArcMin = 0.0;
-  QString optotypesDir = "./optotypes";
+  QString optotypesDir = "optotypes";
   QString chartsXml = "charts.xml";
   QString sizeFormat = "decimal";
   QString hexRed = "#d20000";

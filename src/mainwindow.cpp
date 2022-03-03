@@ -323,7 +323,7 @@ void MainWindow::updateFromConfig()
     config->setValue("chartsXml", "charts.xml");
   }
   if(!config->contains("optotypesDir")) {
-    config->setValue("optotypesDir", "./optotypes");
+    config->setValue("optotypesDir", "optotypes");
   }
   if(!config->contains("sizeResetTime")) {
     config->setValue("sizeResetTime", 240);
@@ -338,7 +338,7 @@ void MainWindow::updateFromConfig()
     config->setValue("pinCode", "4242");
   }
   if(!config->contains("updateBaseFolder")) {
-    config->setValue("updateBaseFolder", "/media/pi/USBPEN");
+    config->setValue("updateBaseFolder", "/media/pi/USBPEN/visutest");
   }
 
   resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
