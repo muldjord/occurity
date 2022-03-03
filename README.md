@@ -65,15 +65,12 @@ pi ALL = NOPASSWD : /usr/bin/apt-get
 ```
 
 #### raspi-config
-Run `raspi-config` in a terminal and set the following options:
-* Boot Options->B1 Desktop / CLI->B4 Desktop Autologin
-* Boot Options->B2 Wait for Network at Boot->No
-* Boot Options->B3 Splash Screen->Yes
-* Localization Options->Change Timezone->CONTINENT->CITY
-* Localization Options->Change Locale->Check only your locale (for instance en_DK.UTF-8)
-* Advanced Options->A2 Overscan->No (IMPORTANT!!! Otherwise the screen will have black bars and acuity test will be faulty)
-
-Some, if not all, of the above can also be set in the ui when the Pi boots for the first time.
+Run `sudo raspi-config` in a terminal and set the following options:
+* 1 System Options->S5 Boot / Auto login->B4 Desktop Autologin
+* 1 System Options->S6 Network at Boot->No
+* 1 System Options->S7 Splash Screen->Yes
+* 2 Display Options->D2 Underscan->No
+* 2 Display Options->D3 Screen Blanking->No
 
 #### /etc/xdg/lxsession/LXDE-pi/autostart
 Add the following line to the bottom of the file:
