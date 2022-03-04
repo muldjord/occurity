@@ -110,7 +110,9 @@ void OptotypeChart::makeIdle()
 {
   if(videoItem != nullptr) {
     if(videoItem->pos().x() < 100) {
-      player->stop();
+      while(player->state() != QMediaPlayer::StoppedState) {
+        player->stop();
+      }
       videoItem->setPos(mainSettings.width, mainSettings.height);
     } else if(animItem != nullptr) {
       animItem->hide();
@@ -172,7 +174,9 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     if(videoItem != nullptr) {
       if(videoItem->pos().x() < 100) {
         printf("STOPPING!\n");
-        player->stop();
+        while(player->state() != QMediaPlayer::StoppedState) {
+          player->stop();
+        }
         videoItem->setPos(mainSettings.width, mainSettings.height);
       } else {
         printf("STARTING!\n");
