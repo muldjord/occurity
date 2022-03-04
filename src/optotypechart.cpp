@@ -67,7 +67,9 @@ void OptotypeChart::init()
       player = new QMediaPlayer(this);
       player->setVideoOutput(videoItem);
       addItem(videoItem);
-      videoItem->hide();
+      videoItem->show();
+      videoItem->setPos(mainSettings.width, mainSettings.height);
+      videoItem->setSize(QSizeF(mainSettings.width, mainSettings.height));
     }
   }
   
@@ -107,10 +109,12 @@ void OptotypeChart::init()
 void OptotypeChart::makeIdle()
 {
   if(videoItem != nullptr) {
-    videoItem->hide();
-    player->stop();
-  } else if(animItem != nullptr) {
-    animItem->hide();
+    if(videoItem->pos().x() < 100) {
+      player->stop();
+      videoItem->setPos(mainSettings.width, mainSettings.height);
+    } else if(animItem != nullptr) {
+      animItem->hide();
+    }
   }
 }
 
@@ -166,6 +170,26 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     }
   } else if(event->key() == Qt::Key_V) {
     if(videoItem != nullptr) {
+      if(videoItem->pos().x() < 100) {
+        printf("STOPPING!\n");
+        player->stop();
+        videoItem->setPos(mainSettings.width, mainSettings.height);
+      } else {
+        printf("STARTING!\n");
+        QFileInfo animInfo(animation);
+        player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
+        player->play();
+        videoItem->setPos(0, 0);
+      }
+    } else if(animItem != nullptr) {
+      if(animItem->isVisible()) {
+        animItem->hide();
+      } else if(!animItem->isVisible()) {
+        animItem->show();
+      }
+    }
+    /*
+    if(videoItem != nullptr) {
       if(videoItem->isVisible()) {
         videoItem->hide();
         player->stop();
@@ -184,6 +208,8 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
         animItem->show();
       }
     }
+
+     */
   }
 
   updateAll();
