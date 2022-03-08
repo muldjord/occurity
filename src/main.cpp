@@ -34,6 +34,7 @@
 #include <QSplashScreen>
 #include <QEventLoop>
 #include <QTimer>
+#include <QTextStream>
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QString &msg)
 {

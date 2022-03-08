@@ -33,9 +33,11 @@
 #include "abstractchart.h"
 
 #include <QTimer>
-#include <QMediaPlayer>
-#include <QGraphicsVideoItem>
+//#include <QMediaPlayer>
+//#include <QGraphicsVideoItem>
 #include <QGraphicsProxyWidget>
+#include <QtAV>
+#include <QtAVWidgets>
 
 class OptotypeChart : public AbstractChart
 {
@@ -65,8 +67,10 @@ protected:
   
 private:
   QString startSize = "0.16";
-  QMediaPlayer *player = nullptr;
-  QGraphicsVideoItem *videoItem = nullptr;
+  QtAV::AVPlayer mediaPlayer;
+  QtAV::GraphicsItemRenderer *videoItem;
+  //QMediaPlayer *player = nullptr;
+  //QGraphicsVideoItem *videoItem = nullptr;
   QGraphicsProxyWidget *animItem = nullptr;
 
   QString optotype = "";

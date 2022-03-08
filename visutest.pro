@@ -2,7 +2,9 @@ TEMPLATE = app
 TARGET = VisuTest
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += widgets xml svg multimediawidgets multimedia
+# The following line is necessary due to a bug in QtAV when using Qt 5.12 and later
+LIBS += -L$$QT.core.libs -lQtAV -lQtAVWidgets
+QT += widgets xml svg av avwidgets
 CONFIG += release
 TRANSLATIONS = visutest_da_DK.ts
 QMAKE_CXXFLAGS += -std=c++11
