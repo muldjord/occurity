@@ -61,7 +61,6 @@ void OptotypeChart::init()
                         mainSettings.height / 4.0 - animItem->boundingRect().height() / 2.0);
       animItem->hide();
     } else {
-      /*
       videoItem = new QGraphicsVideoItem;
       videoItem->setAspectRatioMode(Qt::IgnoreAspectRatio);
       videoItem->setZValue(2);
@@ -71,21 +70,6 @@ void OptotypeChart::init()
       videoItem->show();
       videoItem->setPos(mainSettings.width, mainSettings.height);
       videoItem->setSize(QSizeF(mainSettings.width, mainSettings.height));
-      */
-      QtAV::Widgets::registerRenderers();
-      videoItem = new QtAV::GraphicsItemRenderer;
-      videoItem->resizeRenderer(640, 360);
-      videoItem->setOutAspectRatioMode(QtAV::VideoRenderer::VideoAspectRatio);
-      mediaPlayer.setRenderer(videoItem);
-      addItem(videoItem);
-      mediaPlayer.play("video.mp4");
-      /*
-      QtAV::GLWidgetRenderer2 renderer;
-      renderer.show();
-      QtAV::AVPlayer player;
-      player.setRenderer(&renderer);
-      player.play("video.mp4");
-      */
     }
   }
   
@@ -124,7 +108,6 @@ void OptotypeChart::init()
 
 void OptotypeChart::makeIdle()
 {
-  /*
   if(videoItem != nullptr) {
     if(videoItem->pos().x() < 100) {
       while(player->state() != QMediaPlayer::StoppedState) {
@@ -135,7 +118,6 @@ void OptotypeChart::makeIdle()
       animItem->hide();
     }
   }
-  */
 }
 
 void OptotypeChart::keyPressEvent(QKeyEvent *event)
@@ -189,7 +171,6 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       availableCoords.removeAt(chosen);
     }
   } else if(event->key() == Qt::Key_V) {
-    /*
     if(videoItem != nullptr) {
       if(videoItem->pos().x() < 100) {
         printf("STOPPING!\n");
@@ -211,7 +192,6 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
         animItem->show();
       }
     }
-        */
     /*
     if(videoItem != nullptr) {
       if(videoItem->isVisible()) {
