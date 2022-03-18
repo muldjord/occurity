@@ -60,16 +60,6 @@ void OptotypeChart::init()
       animItem->setPos(mainSettings.width / 2.0 - animItem->boundingRect().width() / 2.0,
                         mainSettings.height / 4.0 - animItem->boundingRect().height() / 2.0);
       animItem->hide();
-    } else {
-      videoItem = new QGraphicsVideoItem;
-      videoItem->setAspectRatioMode(Qt::IgnoreAspectRatio);
-      videoItem->setZValue(2);
-      player = new QMediaPlayer(this);
-      player->setVideoOutput(videoItem);
-      addItem(videoItem);
-      videoItem->show();
-      videoItem->setPos(mainSettings.width, mainSettings.height);
-      videoItem->setSize(QSizeF(mainSettings.width, mainSettings.height));
     }
   }
   
@@ -108,15 +98,8 @@ void OptotypeChart::init()
 
 void OptotypeChart::makeIdle()
 {
-  if(videoItem != nullptr) {
-    if(videoItem->pos().x() < 100) {
-      while(player->state() != QMediaPlayer::StoppedState) {
-        player->stop();
-      }
-      videoItem->setPos(mainSettings.width, mainSettings.height);
-    } else if(animItem != nullptr) {
-      animItem->hide();
-    }
+  if(animItem != nullptr) {
+    animItem->hide();
   }
 }
 
@@ -124,8 +107,8 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_Up ||
      event->key() == Qt::Key_Down ||
-     event->key() == Qt::Key_W ||
-     event->key() == Qt::Key_S) {
+     event->key() == Qt::Key_PageUp ||
+     event->key() == Qt::Key_PageDown) {
     if(event->key() == Qt::Key_Up) {
       currentRowIdx--;
       if(currentRowIdx < 0) {
@@ -136,15 +119,15 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       if(currentRowIdx > rows.length() - 1) {
         currentRowIdx = rows.length() - 1;
       }
-    } else if(event->key() == Qt::Key_S) {
-      currentRowIdx += mainSettings.rowSkipDelta;
-      if(currentRowIdx > rows.length() - 1) {
-        currentRowIdx = rows.length() - 1;
-      }
-    } else if(event->key() == Qt::Key_W) {
+    } else if(event->key() == Qt::Key_PageUp) {
       currentRowIdx -= mainSettings.rowSkipDelta;
       if(currentRowIdx < 0) {
         currentRowIdx = 0;
+      }
+    } else if(event->key() == Qt::Key_PageDown) {
+      currentRowIdx += mainSettings.rowSkipDelta;
+      if(currentRowIdx > rows.length() - 1) {
+        currentRowIdx = rows.length() - 1;
       }
     }
     positionReset();
@@ -170,50 +153,12 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
       child->setPos(availableCoords.at(chosen));
       availableCoords.removeAt(chosen);
     }
-  } else if(event->key() == Qt::Key_V) {
-    if(videoItem != nullptr) {
-      if(videoItem->pos().x() < 100) {
-        printf("STOPPING!\n");
-        while(player->state() != QMediaPlayer::StoppedState) {
-          player->stop();
-        }
-        videoItem->setPos(mainSettings.width, mainSettings.height);
-      } else {
-        printf("STARTING!\n");
-        QFileInfo animInfo(animation);
-        player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
-        player->play();
-        videoItem->setPos(0, 0);
-      }
-    } else if(animItem != nullptr) {
-      if(animItem->isVisible()) {
-        animItem->hide();
-      } else if(!animItem->isVisible()) {
-        animItem->show();
-      }
+  } else if(event->key() == Qt::Key_A && animItem != nullptr) {
+    if(animItem->isVisible()) {
+      animItem->hide();
+    } else {
+      animItem->show();
     }
-    /*
-    if(videoItem != nullptr) {
-      if(videoItem->isVisible()) {
-        videoItem->hide();
-        player->stop();
-      } else if(!videoItem->isVisible()) {
-        QFileInfo animInfo(animation);
-        player->setMedia(QUrl::fromLocalFile(animInfo.absoluteFilePath()));
-        videoItem->setSize(QSizeF(mainSettings.width, mainSettings.height));
-        videoItem->setPos(0, 0);
-        videoItem->show();
-        player->play();
-      }
-    } else if(animItem != nullptr) {
-      if(animItem->isVisible()) {
-        animItem->hide();
-      } else if(!animItem->isVisible()) {
-        animItem->show();
-      }
-    }
-
-     */
   }
 
   updateAll();

@@ -62,6 +62,7 @@ private:
 
   QSettings *config;
   MainSettings mainSettings;
+  VideoPlayer *videoPlayer = nullptr;
   void loadFonts(QString dirStr);
   bool loadCharts(QString chartsXml);
   void spawnPreferences();

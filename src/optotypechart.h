@@ -65,8 +65,6 @@ protected:
   
 private:
   QString startSize = "0.16";
-  QMediaPlayer *player = nullptr;
-  QGraphicsVideoItem *videoItem = nullptr;
   QGraphicsProxyWidget *animItem = nullptr;
 
   QString optotype = "";

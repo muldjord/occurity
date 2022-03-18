@@ -73,6 +73,8 @@ MainWindow::MainWindow()
 
   installEventFilter(this);
 
+  videoPlayer = new VideoPlayer(mainSettings.width, mainSettings.height, this);
+
   secretTimer.setInterval(400);
   secretTimer.setSingleShot(true);
   connect(&secretTimer, &QTimer::timeout, this, &MainWindow::enableSecret);
@@ -296,6 +298,12 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         flipHibernate();
         return true;
       }
+    } else if(keyEvent->key() == Qt::Key_Z) {
+      videoPlayer->startVideo();
+      return true;
+    } else if(keyEvent->key() == Qt::Key_X) {
+      videoPlayer->stopVideo();
+      return true;
     }
   }
   return false;

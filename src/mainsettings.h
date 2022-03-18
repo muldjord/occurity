@@ -27,6 +27,8 @@
 #ifndef MAINSETTINGS_H
 #define MAINSETTINGS_H
 
+#include "videoplayer.h"
+
 #include <QString>
 
 struct MainSettings {

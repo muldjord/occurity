@@ -12,6 +12,7 @@ DEFINES+=VERSION=\\\"$$VERSION\\\"
 
 # Input
 HEADERS += src/mainwindow.h \
+           src/videoplayer.h \
            src/pindialog.h \
            src/preferences.h \
            src/mainsettings.h \
@@ -24,6 +25,7 @@ HEADERS += src/mainwindow.h \
 
 SOURCES += src/main.cpp \
            src/mainwindow.cpp \
+           src/videoplayer.cpp \
            src/pindialog.cpp \
            src/preferences.cpp \
            src/about.cpp \
