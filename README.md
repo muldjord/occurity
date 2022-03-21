@@ -52,6 +52,7 @@ Run the following commands in a terminal on the Pi to install the prerequisites.
 ```
 $ sudo apt update
 $ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
+$ sudo apt remove gstreamer1.0-plugins-bad
 ```
 
 ### System configurations
@@ -71,6 +72,8 @@ Run `sudo raspi-config` in a terminal and set the following options:
 * 1 System Options->S7 Splash Screen->Yes
 * 2 Display Options->D2 Underscan->No
 * 2 Display Options->D3 Screen Blanking->No
+* 6 Advanced Options->A2 GL Driver->Enable
+* 6 Advanced Options->A8 Glamor->Enable
 
 #### /etc/xdg/lxsession/LXDE-pi/autostart
 Add the following line to the bottom of the file:
@@ -93,6 +96,7 @@ This will autostart VisuTest when the system is logged in.
 
 #### pcmanfm
 * Run the command `pcmanfm` which will open the File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+* Right-click panel and choose panel settings. Disable notifications.
 
 ### Getting and compiling VisuTest
 Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it.
