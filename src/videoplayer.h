@@ -30,6 +30,7 @@
 #include <QVideoWidget>
 #include <QMediaPlayer>
 #include <QBuffer>
+#include <QTimer>
 
 class VideoPlayer : public QVideoWidget
 {
@@ -41,14 +42,16 @@ public:
   void startVideo();
   void stopVideo();
 
+private slots:
+  void setAllowStop();
+
 private:
+  bool allowStop = false;
+
   QMediaPlayer *mediaPlayer = nullptr;
   QByteArray videoData = "";
   QBuffer *videoBuffer = nullptr;
-  /*
-protected:
-  void keyPressEvent(QKeyEvent *event) override;
-  */
+  QTimer allowStopTimer;
 
 };
 #endif/*__VISUTEST_VIDEOPLAYER_H__*/

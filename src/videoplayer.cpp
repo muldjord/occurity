@@ -51,6 +51,9 @@ VideoPlayer::VideoPlayer(const int &width, const int &height, QWidget *parent) :
   videoBuffer->setData(videoData);
   videoBuffer->open(QIODevice::ReadOnly);
   mediaPlayer->setMedia(QMediaContent(), videoBuffer);
+  allowStopTimer.setInterval(4000);
+  allowStopTimer.setSingleShot(true);
+  connect(&allowStopTimer, &QTimer::timeout, this, &VideoPlayer::setAllowStop);
 }
 
 VideoPlayer::~VideoPlayer()
@@ -63,11 +66,20 @@ void VideoPlayer::startVideo()
   printf("Starting video!\n");
   show();
   mediaPlayer->play();
+  allowStopTimer.start();
 }
 
 void VideoPlayer::stopVideo()
 {
-  printf("Stopping video!\n");
-  mediaPlayer->stop();
-  hide();
+  if(allowStop) {
+    printf("Stopping video!\n");
+    allowStop = false;
+    mediaPlayer->stop();
+    hide();
+  }
+}
+
+void VideoPlayer::setAllowStop()
+{
+  allowStop = true;
 }
