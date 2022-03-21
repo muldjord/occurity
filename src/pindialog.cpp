@@ -32,10 +32,10 @@
 
 PinDialog::PinDialog(QWidget *parent) : QDialog(parent)
 {
-  setWindowTitle(tr("Please enter pincode:"));
-  setFixedSize(300, 100);
+  setWindowTitle(tr("Pincode:"));
+  setFixedSize(200, 80);
   pinLabel = new QLabel(tr(""));
-  pinLabel->setStyleSheet("QLabel {background-color: white; font-size: 60px;}");
+  pinLabel->setStyleSheet("QLabel {background-color: white; font-size: 70px;}");
   pinLabel->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout;
   layout->addWidget(pinLabel);
