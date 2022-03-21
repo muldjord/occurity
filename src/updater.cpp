@@ -141,7 +141,7 @@ void Updater::applyUpdate(const QString &filename)
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
       if(aptProc.exitStatus() == QProcess::NormalExit) {
         if(aptProc.exitCode() != 0) {
-          qCritical("Apt install process failed:\n%s\n", aptProc.readAllStandardError().data());
+          qWarning("Apt install process failed:\n%s\n", aptProc.readAllStandardError().data());
           QMessageBox::critical(this, tr("Warning"), tr("The apt install command failed. See 'debug.log' for more information. Continuing anyway!"));
         } else {
           qInfo("%s\n", aptProc.readAllStandardError().data());
@@ -165,7 +165,7 @@ void Updater::applyUpdate(const QString &filename)
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
       if(aptProc.exitStatus() == QProcess::NormalExit) {
         if(aptProc.exitCode() != 0) {
-          qCritical("Apt remove process failed:\n%s\n", aptProc.readAllStandardError().data());
+          qWarning("Apt remove process failed:\n%s\n", aptProc.readAllStandardError().data());
           QMessageBox::critical(this, tr("Warning"), tr("The apt remove command failed. See 'debug.log' for more information. Continuing anyway!"));
         } else {
           qInfo("%s\n", aptProc.readAllStandardError().data());
