@@ -193,6 +193,28 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * `rowSkipDelta=4`: The number of lines skipped when pressing 'w' and 's'
 * `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences dialog. Default is `4242`
 
+## Keyboard control
+* q: Hibernate / turn monitor off
+* u: Launch updater (requires pin-code)
+* p: Launch preferences (requires pin-code)
+
+### Optotype chart specific keyboard functions
+* up: Change to next line with bigger size
+* down: Change to next line with smaller size
+* left: Move entire row to the left
+* right: Move entire row to the right
+* PgUp: Skip n number of lines bigger (configure n in preferences)
+* PgDn: Skip n number of lines smaller (configure n in preferences)
+* c: Enable / disable crowding
+* m: Switch between single and multi-optotype from the selected row. Use left / right to move between them
+* r: Randomize optotypes from selected line
+* a: Enable / disable attention gif animation
+* z: Start attention video
+* x: Stop attention video
+
+### SVG chart specific keyboard functions
+* left / right: Switch between layers defined in charts.xml
+
 ## Releases
 
 #### Version x.x.x (unimplemented)
