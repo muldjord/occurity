@@ -134,7 +134,7 @@ void Updater::applyUpdate(const QString &filename)
       aptProc.setArguments(QList<QString> {"apt-get", "update"});
       aptProc.start();
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      QList<QString> parameters {"apt-get", "install"};
+      QList<QString> parameters {"apt-get", "install", "--force-yes"};
       parameters.append(command.parameters);
       aptProc.setArguments(parameters);
       aptProc.start();
