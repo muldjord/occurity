@@ -46,7 +46,8 @@ Preferences::Preferences(QSettings *config, QWidget *parent)
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("VisuTest v" VERSION);
 
-  move(QApplication::desktop()->width() / 2 - 225, QApplication::desktop()->height() / 2 - 250);
+  move(QApplication::desktop()->width() / 2 - (width() / 2),
+       QApplication::desktop()->height() / 2 - (height() / 2));
 
   About *tabWidget = new About(this);
   tabWidget->setMinimumWidth(600);
