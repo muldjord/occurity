@@ -97,6 +97,7 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+  delete videoPlayer;
 }
 
 void MainWindow::init()
