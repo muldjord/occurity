@@ -32,6 +32,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDirIterator>
+#include <QLabel>
 
 Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   : QWizard(parent), mainSettings(mainSettings)
@@ -90,6 +91,10 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
     }
   }
 
+  if(!foundUpdate) {
+    QLabel *noUpdate = new QLabel(tr("No updates found."));
+    updateLayout->addWidget(noUpdate);
+  }
   QWizardPage *updatePage = new QWizardPage;
   updatePage->setLayout(updateLayout);
 
