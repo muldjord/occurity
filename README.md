@@ -96,6 +96,8 @@ This will autostart VisuTest when the system is logged in.
 
 #### pcmanfm
 * Run the command `pcmanfm` which will open the File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+
+#### Update notifications
 * Right-click panel and choose panel settings. Disable notifications.
 
 ### Getting and compiling VisuTest
