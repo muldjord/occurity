@@ -131,7 +131,7 @@ void Updater::applyUpdate(const QString &filename)
       qInfo("Running apt install...\n");
       QProcess aptProc;
       aptProc.setProgram("sudo");
-      aptProc.setArguments(QList<QString> {"apt-get", "update", "--force-yes"});
+      aptProc.setArguments(QList<QString> {"apt-get", "update"});
       aptProc.start();
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
       QList<QString> parameters {"apt-get", "install"};
@@ -156,10 +156,10 @@ void Updater::applyUpdate(const QString &filename)
       qInfo("Running apt remove...\n");
       QProcess aptProc;
       aptProc.setProgram("sudo");
-      aptProc.setArguments(QList<QString> {"apt-get", "remove", "--force-yes"});
+      aptProc.setArguments(QList<QString> {"apt-get", "update"});
       aptProc.start();
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      QList<QString> parameters {"apt-get", "install"};
+      QList<QString> parameters {"apt-get", "remove", "--force-yes"};
       parameters.append(command.parameters);
       aptProc.setArguments(parameters);
       aptProc.start();
