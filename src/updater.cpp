@@ -142,15 +142,14 @@ void Updater::applyUpdate(const QString &filename)
       if(aptProc.exitStatus() == QProcess::NormalExit) {
         if(aptProc.exitCode() != 0) {
           qCritical("Apt install process failed:\n%s\n", aptProc.readAllStandardError().data());
-          QMessageBox::critical(this, tr("Error"), tr("The apt install command failed. See 'debug.log' for more information. Update cancelled!"));
-          return;
+          QMessageBox::critical(this, tr("Warning"), tr("The apt install command failed. See 'debug.log' for more information. Continuing anyway!"));
         } else {
+          qInfo("%s\n", aptProc.readAllStandardError().data());
           qInfo("%s\n", aptProc.readAllStandardOutput().data());
         }
       } else {
         qCritical("Apt QProcess did not complete with 'QProcess::NormalExit' status!\n");
-        QMessageBox::critical(this, tr("Error"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. Update cancelled!"));
-        return;
+        QMessageBox::critical(this, tr("Warning"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. See 'debug.log' for more information. Continuing anyway!"));
       }
     } else if(command.type == "aptremove" && command.parameters.length()) {
       qInfo("Running apt remove...\n");
@@ -167,15 +166,14 @@ void Updater::applyUpdate(const QString &filename)
       if(aptProc.exitStatus() == QProcess::NormalExit) {
         if(aptProc.exitCode() != 0) {
           qCritical("Apt remove process failed:\n%s\n", aptProc.readAllStandardError().data());
-          QMessageBox::critical(this, tr("Error"), tr("The apt remove command failed. See 'debug.log' for more information. Update cancelled!"));
-          return;
+          QMessageBox::critical(this, tr("Warning"), tr("The apt remove command failed. See 'debug.log' for more information. Continuing anyway!"));
         } else {
+          qInfo("%s\n", aptProc.readAllStandardError().data());
           qInfo("%s\n", aptProc.readAllStandardOutput().data());
         }
       } else {
         qCritical("Apt QProcess did not complete with 'QProcess::NormalExit' status!\n");
-        QMessageBox::critical(this, tr("Error"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. Update cancelled!"));
-        return;
+        QMessageBox::critical(this, tr("Warning"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. See 'debug.log' for more information. Continuing anyway!"));
       }
     } else if(command.type == "fileexclude" && command.parameters.length() == 1) {
       qInfo("Adding to file excludes: '%s'\n", command.parameters.first().toStdString().c_str());
