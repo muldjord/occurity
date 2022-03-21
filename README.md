@@ -200,8 +200,8 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
 #### Version 0.8.0 (In progress, unreleased)
-* Added attention gif animation option to 'optotype' chart with key `v`. Set with `animation="file.gif"`
-* Added fullscreen attention video option to 'optotype' chart with key `v`. Set with `animation="file.mp4"`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolution is recommended
+* Added attention gif animation option to 'optotype' chart. Show / hide with `a`. Set with `animation="file.gif"`
+* Added fullscreen attention video option to 'optotype' chart. Play / stop with `z` and `x`. Currently hardcoded to load and play `./video.mp4`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolution is recommended
 * Added option to skip multiple lines on `optotype` charts using `w` and `s`. Configure number of lines in Preferences
 * Added pincode dialog to preferences. Pincode can be set in config.ini with `pinCode=0000`
 * Changed mainSettings to reference instead of pointer
