@@ -131,7 +131,7 @@ void Updater::applyUpdate(const QString &filename)
       qInfo("Running apt install...\n");
       QProcess aptProc;
       aptProc.setProgram("sudo");
-      aptProc.setArguments(QList<QString> {"apt-get", "update"});
+      aptProc.setArguments(QList<QString> {"apt-get", "update", "--force-yes"});
       aptProc.start();
       aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
       QList<QString> parameters {"apt-get", "install"};
@@ -143,6 +143,31 @@ void Updater::applyUpdate(const QString &filename)
         if(aptProc.exitCode() != 0) {
           qCritical("Apt install process failed:\n%s\n", aptProc.readAllStandardError().data());
           QMessageBox::critical(this, tr("Error"), tr("The apt install command failed. See 'debug.log' for more information. Update cancelled!"));
+          return;
+        } else {
+          qInfo("%s\n", aptProc.readAllStandardOutput().data());
+        }
+      } else {
+        qCritical("Apt QProcess did not complete with 'QProcess::NormalExit' status!\n");
+        QMessageBox::critical(this, tr("Error"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. Update cancelled!"));
+        return;
+      }
+    } else if(command.type == "aptremove" && command.parameters.length()) {
+      qInfo("Running apt remove...\n");
+      QProcess aptProc;
+      aptProc.setProgram("sudo");
+      aptProc.setArguments(QList<QString> {"apt-get", "remove", "--force-yes"});
+      aptProc.start();
+      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
+      QList<QString> parameters {"apt-get", "install"};
+      parameters.append(command.parameters);
+      aptProc.setArguments(parameters);
+      aptProc.start();
+      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
+      if(aptProc.exitStatus() == QProcess::NormalExit) {
+        if(aptProc.exitCode() != 0) {
+          qCritical("Apt remove process failed:\n%s\n", aptProc.readAllStandardError().data());
+          QMessageBox::critical(this, tr("Error"), tr("The apt remove command failed. See 'debug.log' for more information. Update cancelled!"));
           return;
         } else {
           qInfo("%s\n", aptProc.readAllStandardOutput().data());
