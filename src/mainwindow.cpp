@@ -33,18 +33,17 @@
 #include <stdio.h>
 #include <math.h>
 #include <QApplication>
-#include <QSettings>
 #include <QScreen>
 #include <QTimer>
 #include <QDir>
 #include <QProcess>
 #include <QDomDocument>
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(QSettings &config) : config(config)
 {
   setCursor(Qt::BlankCursor);
   printf("Running VisuTest v." VERSION "\n");
-  config = new QSettings("config.ini", QSettings::IniFormat);
+  //config = new QSettings("config.ini", QSettings::IniFormat);
   //mainSettings = new MainSettings;
   setWindowTitle("VisuTest v" VERSION);
 
@@ -313,66 +312,66 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
 void MainWindow::updateFromConfig()
 {
   // Convert obsolete 'physDistance' variable to 'patientDistance'
-  if(config->contains("physDistance")) {
-    config->setValue("patientDistance", config->value("physDistance").toInt());
-    config->remove("physDistance");
+  if(config.contains("physDistance")) {
+    config.setValue("patientDistance", config.value("physDistance").toInt());
+    config.remove("physDistance");
   }
 
   // Convert obsolete 'physHeight' variable to 'rulerWidth'
-  if(config->contains("physHeight")) {
-    config->setValue("rulerWidth", ((double)config->value("physHeight").toInt() / (double)mainSettings.height) * 500);
-    config->remove("physHeight");
+  if(config.contains("physHeight")) {
+    config.setValue("rulerWidth", ((double)config.value("physHeight").toInt() / (double)mainSettings.height) * 500);
+    config.remove("physHeight");
   }
 
-  while(!config->contains("rulerWidth")) {
+  while(!config.contains("rulerWidth")) {
     spawnPreferences();
   }
 
-  if(!config->contains("chartsXml")) {
-    config->setValue("chartsXml", "charts.xml");
+  if(!config.contains("chartsXml")) {
+    config.setValue("chartsXml", "charts.xml");
   }
-  if(!config->contains("optotypesDir")) {
-    config->setValue("optotypesDir", "optotypes");
+  if(!config.contains("optotypesDir")) {
+    config.setValue("optotypesDir", "optotypes");
   }
-  if(!config->contains("sizeResetTime")) {
-    config->setValue("sizeResetTime", 240);
+  if(!config.contains("sizeResetTime")) {
+    config.setValue("sizeResetTime", 240);
   }
-  if(!config->contains("hibernateTime")) {
-    config->setValue("hibernateTime", 120);
+  if(!config.contains("hibernateTime")) {
+    config.setValue("hibernateTime", 120);
   }
-  if(!config->contains("rowSkipDelta")) {
-    config->setValue("rowSkipDelta", 4);
+  if(!config.contains("rowSkipDelta")) {
+    config.setValue("rowSkipDelta", 4);
   }
-  if(!config->contains("pinCode")) {
-    config->setValue("pinCode", "4242");
+  if(!config.contains("pinCode")) {
+    config.setValue("pinCode", "4242");
   }
-  if(!config->contains("updateBaseFolder")) {
-    config->setValue("updateBaseFolder", "/media/pi/USBPEN/visutest");
+  if(!config.contains("updateBaseFolder")) {
+    config.setValue("updateBaseFolder", "/media/pi/USBPEN/visutest");
   }
 
-  resetTimer.setInterval(config->value("sizeResetTime").toInt() * 1000);
+  resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
 
-  mainSettings.hibernateTime = config->value("hibernateTime").toInt() * 1000 * 60; // Minutes
+  mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
-  mainSettings.rowSkipDelta = config->value("rowSkipDelta").toInt();
+  mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
 
-  mainSettings.pinCode = config->value("pinCode").toString();
+  mainSettings.pinCode = config.value("pinCode").toString();
 
-  mainSettings.updateBaseFolder = config->value("updateBaseFolder").toString();
+  mainSettings.updateBaseFolder = config.value("updateBaseFolder").toString();
 
-  mainSettings.patientDistance = config->value("patientDistance").toDouble(); // Cm
-  mainSettings.rulerWidth = config->value("rulerWidth").toDouble(); // Mm
+  mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
+  mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm
 
   mainSettings.distanceFactor = mainSettings.patientDistance / 600.0;
   mainSettings.pxPerMm = 500.0 / mainSettings.rulerWidth;
   // At 6 m distance (size 0.1) a letter should be 87.3 mm tall on screen (5 arc minutes)
   mainSettings.pxPerArcMin = (87.3 / 5.0) * mainSettings.pxPerMm;
-  mainSettings.hexRed = "#" + QString::number(config->value("redValue").toInt(), 16) + "0000";
-  mainSettings.hexGreen = "#00" + QString::number(config->value("greenValue").toInt(), 16) + "00";
+  mainSettings.hexRed = "#" + QString::number(config.value("redValue").toInt(), 16) + "0000";
+  mainSettings.hexGreen = "#00" + QString::number(config.value("greenValue").toInt(), 16) + "00";
 
-  mainSettings.optotypesDir = config->value("optotypesDir").toString();
-  mainSettings.chartsXml = config->value("chartsXml").toString();
+  mainSettings.optotypesDir = config.value("optotypesDir").toString();
+  mainSettings.chartsXml = config.value("chartsXml").toString();
 
   printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
   printf("  Pixels per arc minute: %f\n", mainSettings.pxPerArcMin);

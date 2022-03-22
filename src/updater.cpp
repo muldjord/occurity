@@ -32,28 +32,16 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDirIterator>
+#include <QDialogButtonBox>
 
 Updater::Updater(MainSettings &mainSettings, QWidget *parent)
-  : QWizard(parent), mainSettings(mainSettings)
+  : QDialog(parent), mainSettings(mainSettings)
 {
   setWindowTitle(tr("VisuTest updater"));
   setFixedSize(500, 200);
 
-  // Update type
-  applyUpdateButton = new QRadioButton(tr("Apply update from update folder"));
-  applyUpdateButton->click();
-  //QRadioButton *createUpdateButton = new QRadioButton(tr("Create update from this version"));
-  /*
-  
-  QVBoxLayout *typeLayout = new QVBoxLayout;
-  typeLayout->addWidget(applyUpdateButton);
-
-  QWizardPage *typePage = new QWizardPage;
-  typePage->setLayout(typeLayout);
-  */
-  // Apply update page
-  QVBoxLayout *updateLayout = new QVBoxLayout;
-  updateButtons = new QButtonGroup;
+  QVBoxLayout *updatesLayout = new QVBoxLayout;
+  updatesButtons = new QButtonGroup;
   QList<QString> filters { "*.upd" };
   QDirIterator dirIt(mainSettings.updateBaseFolder,
                      filters,
@@ -77,24 +65,26 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
         }
       }
       if(!updTitle.isEmpty()) {
-        QRadioButton *updateTypeButton = new QRadioButton(updVersion + ": " + updTitle);
+        QRadioButton *updateTypeButton = new QRadioButton((updVersion.isEmpty()?"":updVersion + ": ") + updTitle);
         if(!foundUpdate) {
           updateTypeButton->click();
         }
         updateTypeButton->setObjectName(dirIt.fileInfo().absoluteFilePath());
-        updateButtons->addButton(updateTypeButton);
-        updateLayout->addWidget(updateTypeButton);
+        updatesButtons->addButton(updateTypeButton);
+        updatesLayout->addWidget(updateTypeButton);
         foundUpdate = true;
       }
       updFile.close();
     }
   }
 
-  QWizardPage *updatePage = new QWizardPage;
-  updatePage->setLayout(updateLayout);
+  QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
+  
+  QVBoxLayout *layout = new QVBoxLayout;
+  layout->addLayout(updatesLayout);
+  layout->addWidget(buttons);
 
-  //addPage(typePage);
-  addPage(updatePage);
+  setLayout(layout);
 }
 
 void Updater::applyUpdate(const QString &filename)
@@ -285,9 +275,8 @@ bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
 
 void Updater::accept()
 {
-  if(applyUpdateButton->isChecked() &&
-     !updateButtons->buttons().isEmpty()) {
-    for(const auto *button: updateButtons->buttons()) {
+  if(!updatesButtons->buttons().isEmpty()) {
+    for(const auto *button: updatesButtons->buttons()) {
       if(button->isChecked()) {
         applyUpdate(button->objectName());
         break;

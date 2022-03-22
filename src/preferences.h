@@ -36,15 +36,14 @@ class Preferences : public QDialog
   Q_OBJECT
 
 public:
-  Preferences(QSettings *config, QWidget *parent);
+  Preferences(QSettings &config, QWidget *parent);
   ~Preferences();
 
 protected:
   bool eventFilter(QObject *, QEvent *event) override;
-  //void keyPressEvent(QKeyEvent *event) override;
 
 private:
-  QSettings *config;
+  QSettings &config;
 
 };
 #endif/*__VISUTEST_PREFERENCES_H__*/

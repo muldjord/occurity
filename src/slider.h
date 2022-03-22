@@ -37,8 +37,9 @@ class Slider : public QWidget
   Q_OBJECT
 
 public:
-  Slider(QSettings *config, QString group, QString name,
-	 int minValue, int maxValue, int stdValue, int step = 10, QWidget *parent = nullptr);
+  Slider(QSettings &config, const QString &group, const QString &name, const QString &title,
+	 const int &minValue, const int &maxValue, const int &defaultValue, const int &step = 10,
+	 QWidget *parent = nullptr);
   ~Slider();
 
 public slots:
@@ -48,13 +49,13 @@ private slots:
   void saveToConfig();
 
 private:
+  QSettings &config;
+  QString group;
+  QString name;
+  int defaultValue;
+
   QSlider *valueSlider;
   QLineEdit *valueLineEdit;
-
-  QSettings *config;
-  QString name;
-  QString group;
-  int defaultValue;
 };
 
 #endif

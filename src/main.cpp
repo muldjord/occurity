@@ -82,6 +82,8 @@ int main(int argc, char *argv[])
 
   QDir::setCurrent(QApplication::applicationDirPath());
 
+  QSettings config("config.ini", QSettings::IniFormat);
+    
   QPixmap pixmap(":splash.png");
   QSplashScreen *splash = new QSplashScreen(pixmap);
   splash->show();
@@ -89,16 +91,17 @@ int main(int argc, char *argv[])
                       Qt::AlignLeft,
                       Qt::white);
   app.processEvents();
-
-  QEventLoop q;
-  QTimer::singleShot(5000, &q, &QEventLoop::quit);
-  q.exec();
+  if(config.value("showSplash", true).toBool()) {
+    QEventLoop q;
+    QTimer::singleShot(5000, &q, &QEventLoop::quit);
+    q.exec();
+  }
 
   QTranslator translator;
   translator.load("visutest_" + QLocale::system().name());
   app.installTranslator(&translator);
 
-  MainWindow mainWindow;
+  MainWindow mainWindow(config);
   mainWindow.show();
   splash->finish(&mainWindow);
   return app.exec();

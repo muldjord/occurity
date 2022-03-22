@@ -42,7 +42,7 @@ class MainWindow : public QGraphicsView
   Q_OBJECT
 
 public:
-  MainWindow();
+  MainWindow(QSettings &config);
   ~MainWindow();
 
 protected:
@@ -60,7 +60,7 @@ private slots:
 private:
   void flipHibernate(bool forceHibernate = false);
 
-  QSettings *config;
+  QSettings &config;
   MainSettings mainSettings;
   VideoPlayer *videoPlayer = nullptr;
   void loadFonts(QString dirStr);

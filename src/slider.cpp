@@ -28,18 +28,19 @@
 #include "slider.h"
 
 #include <stdio.h>
+#include <QLabel>
+#include <QVBoxLayout>
 #include <QHBoxLayout>
 
-Slider::Slider(QSettings *config, QString group, QString name,
-	       int minValue, int maxValue, int stdValue, int step, QWidget *parent)
-  : QWidget(parent)
+Slider::Slider(QSettings &config, const QString &group, const QString &name, const QString &title,
+	       const int &minValue, const int &maxValue, const int &defaultValue, const int &step,
+	       QWidget *parent)
+  : QWidget(parent), config(config), group(group), name(name), defaultValue(defaultValue)
 {
-  this->config = config;
-  this->group = group;
-  this->name = name;
-  this->defaultValue = stdValue;
-
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  QLabel *titleLabel = new QLabel(title);
+  QVBoxLayout *layout = new QVBoxLayout;
+  layout->addWidget(titleLabel);
+  QHBoxLayout *sliderLayout = new QHBoxLayout;
   valueSlider = new QSlider(Qt::Horizontal, this);
   valueSlider->installEventFilter(parent);
   valueSlider->setSingleStep(step);
@@ -49,22 +50,23 @@ Slider::Slider(QSettings *config, QString group, QString name,
   valueLineEdit->setFocusPolicy(Qt::NoFocus);
   valueLineEdit->setReadOnly(true);
   valueLineEdit->setMaximumWidth(40);
-  layout->addWidget(valueSlider);
-  layout->addWidget(valueLineEdit);
+  sliderLayout->addWidget(valueSlider);
+  sliderLayout->addWidget(valueLineEdit);
+  layout->addLayout(sliderLayout);
   setLayout(layout);
 
   connect(valueSlider, &QSlider::valueChanged, this, &Slider::saveToConfig);
 
   if(!group.isEmpty())
-    config->beginGroup(group);
+    config.beginGroup(group);
 
-  if(!config->contains(name)) {
-    config->setValue(name, stdValue);
+  if(!config.contains(name)) {
+    config.setValue(name, this->defaultValue);
   }
   valueLineEdit->setText(QString::number(valueSlider->value())); // Hack to make sure the initial value is displayed, even if it's equal to minValue in which case valueChanged is never emitted on construction
-  valueSlider->setValue(config->value(name, stdValue).toInt());
+  valueSlider->setValue(config.value(name, this->defaultValue).toInt());
   if(!group.isEmpty())
-    config->endGroup();
+    config.endGroup();
 }
 
 Slider::~Slider()
@@ -87,7 +89,7 @@ void Slider::saveToConfig()
     value.replace(",", ".");
   }
 
-  config->setValue((group.isEmpty()?"":group + "/") + name, value);
+  config.setValue((group.isEmpty()?"":group + "/") + name, value);
 
   printf("Key '%s' saved to config with value '%s'\n", name.toStdString().c_str(),
 	 value.toStdString().c_str());

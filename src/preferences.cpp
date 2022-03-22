@@ -39,7 +39,7 @@
 #include <QScrollArea>
 #include <QTabWidget>
 
-Preferences::Preferences(QSettings *config, QWidget *parent)
+Preferences::Preferences(QSettings &config, QWidget *parent)
   : QDialog(parent), config(config)
 {
   setFixedSize(1200, 500);
@@ -52,39 +52,36 @@ Preferences::Preferences(QSettings *config, QWidget *parent)
   About *tabWidget = new About(this);
   tabWidget->setMinimumWidth(600);
 
-  QLabel *rulerWidthLabel = new QLabel(tr("Physical length of ruler (mm):"), this);
-  Slider *rulerWidth = new Slider(config, "", "rulerWidth", 50, 800, 138, 1, this);
+  //QLabel *rulerWidthLabel = new QLabel(tr("Physical length of ruler (mm):"), this);
+  Slider *rulerWidth = new Slider(config, "", "rulerWidth", tr("Physical length of ruler (mm):"), 50, 800, 138, 1, this);
   rulerWidth->setFocus();
   QLabel *rulerLabel = new QLabel(this);
   rulerLabel->setPixmap(QPixmap(":ruler.png"));
-  QLabel *patientDistanceLabel = new QLabel(tr("Patient distance to monitor (cm):"), this);
-  Slider *patientDistance = new Slider(config, "", "patientDistance", 50, 1000, 600, 10, this);
-  QLabel *sizeResetTimeLabel = new QLabel(tr("Idle time before size reset (seconds):"), this);
-  Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", 10, 3600, 240, 10, this);
-  QLabel *hexRedLabel = new QLabel(tr("Red color value:"), this);
-  Slider *hexRed = new Slider(config, "", "redValue", 0, 255, 210, 1, this);
-  QLabel *hexGreenLabel = new QLabel(tr("Green color value:"), this);
-  Slider *hexGreen = new Slider(config, "", "greenValue", 0, 255, 210, 1, this);
-  QLabel *rowSkipDeltaLabel = new QLabel(tr("Skip this many lines when using multiline row skipping:"), this);
-  Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", 2, 10, 4, 1, this);
-  QPushButton *saveButton = new QPushButton(tr("Close"), this);
-  connect(saveButton, &QPushButton::clicked, this, &QDialog::accept);
+  //QLabel *patientDistanceLabel = new QLabel(tr("Patient distance to monitor (cm):"), this);
+  Slider *patientDistance = new Slider(config, "", "patientDistance", tr("Patient distance to monitor (cm):"), 50, 1000, 600, 10, this);
+  //QLabel *sizeResetTimeLabel = new QLabel(tr("Idle time before size reset (seconds):"), this);
+  Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", tr("Idle time before size reset (seconds):"), 10, 3600, 240, 10, this);
+  //QLabel *hexRedLabel = new QLabel(tr("Red color value:"), this);
+  Slider *hexRed = new Slider(config, "", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
+  //QLabel *hexGreenLabel = new QLabel(tr("Green color value:"), this);
+  Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
+  //QLabel *rowSkipDeltaLabel = new QLabel(tr("Skip this many lines when using multiline row skipping:"), this);
+  Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
   QVBoxLayout *configLayout = new QVBoxLayout;
-  configLayout->addWidget(rulerWidthLabel);
+  //configLayout->addWidget(rulerWidthLabel);
   configLayout->addWidget(rulerWidth);
-  configLayout->addWidget(rulerLabel);
-  configLayout->addWidget(patientDistanceLabel);
+  configLayout->addWidget(rulerLabel, 0, Qt::AlignCenter);
+  //configLayout->addWidget(patientDistanceLabel);
   configLayout->addWidget(patientDistance);
-  configLayout->addWidget(sizeResetTimeLabel);
+  //configLayout->addWidget(sizeResetTimeLabel);
   configLayout->addWidget(sizeResetTime);
-  configLayout->addWidget(hexRedLabel);
+  //configLayout->addWidget(hexRedLabel);
   configLayout->addWidget(hexRed);
-  configLayout->addWidget(hexGreenLabel);
+  //configLayout->addWidget(hexGreenLabel);
   configLayout->addWidget(hexGreen);
-  configLayout->addWidget(rowSkipDeltaLabel);
+  //configLayout->addWidget(rowSkipDeltaLabel);
   configLayout->addWidget(rowSkipDelta);
-  configLayout->addWidget(saveButton);
 
   QHBoxLayout *layout = new QHBoxLayout;
   layout->addLayout(configLayout);
@@ -109,7 +106,9 @@ bool Preferences::eventFilter(QObject *, QEvent *event)
     } else if(keyEvent->key() == Qt::Key_Down) {
       focusNextChild();
       return true;
-    } else if(keyEvent->key() == Qt::Key_R) {
+    } else if(keyEvent->key() == Qt::Key_Enter ||
+              keyEvent->key() == Qt::Key_Return ||
+              keyEvent->key() == Qt::Key_R) { // 'R' is the default enter key on the remote
       accept();
       return true;
     }
