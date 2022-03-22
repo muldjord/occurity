@@ -33,6 +33,7 @@
 #include <QMessageBox>
 #include <QDirIterator>
 #include <QDialogButtonBox>
+#include <QLabel>
 
 Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -76,6 +77,11 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
       }
       updFile.close();
     }
+  }
+
+  if(!foundUpdate) {
+    QLabel *noUpdate = new QLabel(tr("No updates found."));
+    updatesLayout->addWidget(noUpdate);
   }
 
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
