@@ -52,35 +52,23 @@ Preferences::Preferences(QSettings &config, QWidget *parent)
   About *tabWidget = new About(this);
   tabWidget->setMinimumWidth(600);
 
-  //QLabel *rulerWidthLabel = new QLabel(tr("Physical length of ruler (mm):"), this);
   Slider *rulerWidth = new Slider(config, "", "rulerWidth", tr("Physical length of ruler (mm):"), 50, 800, 138, 1, this);
   rulerWidth->setFocus();
   QLabel *rulerLabel = new QLabel(this);
   rulerLabel->setPixmap(QPixmap(":ruler.png"));
-  //QLabel *patientDistanceLabel = new QLabel(tr("Patient distance to monitor (cm):"), this);
   Slider *patientDistance = new Slider(config, "", "patientDistance", tr("Patient distance to monitor (cm):"), 50, 1000, 600, 10, this);
-  //QLabel *sizeResetTimeLabel = new QLabel(tr("Idle time before size reset (seconds):"), this);
   Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", tr("Idle time before size reset (seconds):"), 10, 3600, 240, 10, this);
-  //QLabel *hexRedLabel = new QLabel(tr("Red color value:"), this);
   Slider *hexRed = new Slider(config, "", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
-  //QLabel *hexGreenLabel = new QLabel(tr("Green color value:"), this);
   Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
-  //QLabel *rowSkipDeltaLabel = new QLabel(tr("Skip this many lines when using multiline row skipping:"), this);
   Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
   QVBoxLayout *configLayout = new QVBoxLayout;
-  //configLayout->addWidget(rulerWidthLabel);
   configLayout->addWidget(rulerWidth);
   configLayout->addWidget(rulerLabel, 0, Qt::AlignCenter);
-  //configLayout->addWidget(patientDistanceLabel);
   configLayout->addWidget(patientDistance);
-  //configLayout->addWidget(sizeResetTimeLabel);
   configLayout->addWidget(sizeResetTime);
-  //configLayout->addWidget(hexRedLabel);
   configLayout->addWidget(hexRed);
-  //configLayout->addWidget(hexGreenLabel);
   configLayout->addWidget(hexGreen);
-  //configLayout->addWidget(rowSkipDeltaLabel);
   configLayout->addWidget(rowSkipDelta);
 
   QHBoxLayout *layout = new QHBoxLayout;
