@@ -98,7 +98,7 @@ Preferences::~Preferences()
 
 bool Preferences::eventFilter(QObject *, QEvent *event)
 {
-  if (event->type() == QEvent::KeyPress) {
+  if(event->type() == QEvent::KeyPress) {
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
     if(keyEvent->key() == Qt::Key_Up) {
       focusPreviousChild();
