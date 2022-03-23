@@ -89,3 +89,9 @@ Copies a path, including subdirectories, from `sourcepath` to `destinationpath`.
 * Example 2: `cppath:optotypes;mypath` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path called `mypath` located at the path defined by `dstpath`.
 * Example 3: `cppath:/tmp/somepath;/home/pi/someotherpath` <-- This copies the source path `/tmp/somepath` to the destination path `/home/pi/someotherpath` ignoring the previously defined `srcpath` and `dstpath`.
 * Example 4: `cppath:somepath;/home/pi/someotherpath` <-- This copies the source path `somepath` to the destination path `/home/pi/someotherpath`. The source path is relative to the path defined by `srcpath` while `dstpath` is ignored.
+
+### version:x.x.x
+This command is optional. If set, the `x.x.x` will be shown before the title when displaying the update entry in the VisuTest updater dialog. The format of the version is undefined. A `x.x.x` format is suggested, but it can just as well be `May 2022`.
+
+* Example 1: `version:1.2.0`
+* Example 2: `version:May 2022 version`
