@@ -68,6 +68,7 @@ private:
   bool cpFile(Command &command);
   bool cpPath(Command &command);
   bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = false);
+  QString varsReplace(QString string);
 
   QMap<QString, QString> vars;
   

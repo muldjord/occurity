@@ -47,6 +47,8 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   updatesLayout->addWidget(new QLabel("<h3>Choose update / function:</h3>"), 0, Qt::AlignCenter);
   updatesButtons = new QButtonGroup;
   QList<QString> filters { "*.upd" };
+  // SEt %HOME% so it can be used in the .upd files
+  vars["%HOME%"] = QDir::homePath();
   QDirIterator dirIt(mainSettings.updatesFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
@@ -63,8 +65,10 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
         if(line.contains(":")) {
           if(line.split(":").first() == "title") {
             updTitle = line.split(":").last();
+            updTitle = varsReplace(updTitle);
           } else if(line.split(":").first() == "version") {
             updVersion = line.split(":").last();
+            updVersion = varsReplace(updVersion);
           }
         }
       }
@@ -104,7 +108,7 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
 
 void Updater::applyUpdate(const QString &filename)
 {
-  qInfo("Applying update from file: '%s'\n", filename.toStdString().c_str());
+  addStatus(INFO, "Applying update from file '" + filename + "'");
   QFileInfo updInfo(filename);
   if(!updInfo.exists()) {
     QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
@@ -164,10 +168,8 @@ void Updater::applyUpdate(const QString &filename)
         varsFile.close();
       }
       for(auto &replaceCommand: commands) {
-        for(int a = 0; a < vars.keys().length(); ++a) {
-          for(auto &parameter: replaceCommand.parameters) {
-            parameter.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
-          }
+        for(auto &parameter: replaceCommand.parameters) {
+          parameter = varsReplace(parameter);
         }
       }
     } else if(command.type == "srcpath" && command.parameters.length() == 1) {
@@ -376,4 +378,12 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
   }
 
   return true;
+}
+
+QString Updater::varsReplace(QString string)
+{
+  for(int a = 0; a < vars.keys().length(); ++a) {
+    string.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
+  }
+  return string;
 }
