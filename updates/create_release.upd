@@ -3,7 +3,7 @@ title:Create new release from build in '%HOME%/programming/visutest'
 
 # Set source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/visutest
-dstpath:/media/pi/USBPEN/visutest
+dstpath:%HOME%/visutestrelease
 
 # Copy required files from source to destination
 cpfile:AUTHORS
@@ -11,7 +11,6 @@ cpfile:charts_w_kids.xml
 cpfile:charts.xml
 cpfile:LICENSE
 cpfile:README.md
-cpfile:remote_guide_danish.pdf
 cpfile:VERSION
 cpfile:VisuTest
 cpfile:visutest_da_DK.qm

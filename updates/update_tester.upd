@@ -4,7 +4,7 @@ pretend:true
 setvars:%HOME%/programming/visutest/VERSION
 
 srcpath:%HOME%/programming/visutest
-dstpath:%HOME%/visutest_updates/%VERSION%
+dstpath:%HOME%/visutest_updates
 
 # Install necessary packages using Apt
 aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
@@ -16,7 +16,6 @@ cpfile:charts_w_kids.xml
 cpfile:charts.xml
 cpfile:LICENSE
 cpfile:README.md
-cpfile:remote_guide_danish.pdf
 cpfile:VERSION
 cpfile:VisuTest
 cpfile:visutest_da_DK.qm
