@@ -1,10 +1,9 @@
 # Set title that will be shown in the VisuTest updater
-title:Create new release from build in '/home/pi/programming/visutest'
-
-#setvars:/home/pi/programming/visutest/VERSION
+title:Create new release from build in '%HOME%/programming/visutest'
+pretend:true
 
 # Set source and destination paths. All cp* commands are relative to these
-srcpath:/home/pi/programming/visutest
+srcpath:%HOME%/programming/visutest
 dstpath:/media/pi/USBPEN/visutest
 
 # Copy required files from source to destination

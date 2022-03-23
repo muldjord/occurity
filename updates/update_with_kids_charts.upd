@@ -1,11 +1,11 @@
 # Set title that will be shown in the VisuTest updater
-title:Update with kids charts
+title:Update from USB to '%HOME%/visutest' with kids charts
 
 #setvars:/media/pi/USBPEN/visutest/VERSION
 
 # Set source and destination paths. All cp* commands are relative to these
 srcpath:/media/pi/USBPEN/visutest
-dstpath:/home/pi/visutest
+dstpath:%HOME%/visutest
 
 # Define excludes for cp* commands
 fileexclude:optotypes/copyrights.txt
