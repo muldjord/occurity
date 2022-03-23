@@ -57,7 +57,9 @@ protected:
 
 private:
   bool pretend = false;
-
+  QString updateSrcPath = "";
+  QString updateDstPath = "";
+  
   bool abortUpdate = false;
   QListWidget *statusList = nullptr;
   QProgressBar *progressBar = nullptr;

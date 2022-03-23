@@ -139,7 +139,6 @@ void Updater::applyUpdate(const QString &filename)
   for(auto &replaceCommand: commands) {
     for(auto &parameter: replaceCommand.parameters) {
       parameter = varsReplace(parameter);
-      printf("PARAMETER: '%s'\n", parameter.toStdString().c_str());
     }
   }
   
@@ -180,15 +179,34 @@ void Updater::applyUpdate(const QString &filename)
         }
       }
     } else if(command.type == "srcpath" && command.parameters.length() == 1) {
-      addStatus(INFO, "Setting source path to '" + command.parameters.at(0) + "'");
-      mainSettings.updateSrcPath = command.parameters.at(0);
-    } else if(command.type == "dstpath" && command.parameters.length() == 1) {
-      if(command.parameters.at(0).left(mainSettings.updateSrcPath.length()) ==
-         mainSettings.updateSrcPath) {
-        addStatus(FATAL, "Destination path is locatated beneath source path. This is not allowed.");
+      QString tempPath = command.parameters.at(0);
+      if(tempPath.right(1) == "/") {
+        tempPath = tempPath.left(tempPath.length() - 1);
+      }
+      if(!updateDstPath.isEmpty() && tempPath.left(updateDstPath.length()) == updateDstPath) {
+        addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
       } else {
-        addStatus(INFO, "Setting destination path to '" + command.parameters.at(0) + "'");
-        mainSettings.updateDstPath = command.parameters.at(0);
+        addStatus(INFO, "Setting source path to '" + tempPath + "'");
+        if(tempPath.left(1) != "/") {
+          addStatus(FATAL, "Update source path '" + tempPath + "' is relative. This is not allowed.");
+        } else {
+          updateSrcPath = tempPath;
+        }
+      }
+    } else if(command.type == "dstpath" && command.parameters.length() == 1) {
+      QString tempPath = command.parameters.at(0);
+      if(tempPath.right(1) == "/") {
+        tempPath = tempPath.left(tempPath.length() - 1);
+      }
+      if(!updateSrcPath.isEmpty() && tempPath.left(updateSrcPath.length()) == updateSrcPath) {
+        addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
+      } else {
+        addStatus(INFO, "Setting destination path to '" + tempPath + "'");
+        if(tempPath.left(1) != "/") {
+          addStatus(FATAL, "Update destination path '" + tempPath + "' is relative. This is not allowed.");
+        } else {
+          updateDstPath = tempPath;
+        }
       }
     } else if(command.type == "pretend" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "true") {
@@ -197,16 +215,26 @@ void Updater::applyUpdate(const QString &filename)
       }
     } else if(command.type == "cpfile" &&
               (command.parameters.length() == 1 || command.parameters.length() == 2)) {
+      if(command.parameters.first().left(1) != "/" && updateSrcPath.isEmpty()) {
+        addStatus(FATAL, "Update source path undefined. 'srcpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
+      }
+      if(command.parameters.last().left(1) != "/" && updateDstPath.isEmpty()) {
+        addStatus(FATAL, "Update destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
+      }
       cpFile(command);
     } else if(command.type == "cppath" &&
               command.parameters.length() == 1) {
+      if(command.parameters.first().left(1) != "/" && updateSrcPath.isEmpty()) {
+        addStatus(FATAL, "Update source path undefined. 'srcpath=PATH' has to be set when using relative paths with '" + command.type + "'");
+      }
+      if(command.parameters.last().left(1) != "/" && updateDstPath.isEmpty()) {
+        addStatus(FATAL, "Update destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
+      }
       cpPath(command);
-    } else if(command.type == "reboot" && command.parameters.length() == 1) {
-      if(!abortUpdate && !pretend) {
-        if(command.parameters.at(0) == "now") {
-          addStatus(INFO, "Rebooting now...");
-          QProcess::execute("reboot", {});
-        }
+    } else if(command.type == "reboot" && command.parameters.length() == 1 && !pretend) {
+      if(command.parameters.at(0) == "now") {
+        addStatus(INFO, "Rebooting now...");
+        QProcess::execute("reboot", {});
       }
     } else if(command.type == "message" && command.parameters.length() == 1) {
       addStatus(STATUS, command.parameters.at(0));
@@ -219,7 +247,10 @@ void Updater::applyUpdate(const QString &filename)
 
 bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
 {
-  for(const auto &exclude: excludes) {
+  for(auto exclude: excludes) {
+    if(exclude.left(1) != "/") {
+      exclude.prepend(updateSrcPath + "/");
+    }
     QFileInfo excludeInfo(exclude);
     if(src.left(excludeInfo.absoluteFilePath().length()) == excludeInfo.absoluteFilePath()) {
       return true;
@@ -256,41 +287,54 @@ void Updater::addStatus(const int &status, const QString &text)
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
-    item->setText((pretend?"INFO PRETEND: ":"INFO: ") + text);
+    item->setText((pretend?"INFO (pretend): ":"INFO: ") + text);
   } else if(status == STATUS) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::white));
-    item->setText((pretend?"STATUS PRETEND: ":"STATUS: ") + text);
+    item->setText((pretend?"STATUS (pretend): ":"STATUS: ") + text);
   } else if(status == WARNING) {
     qWarning("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::yellow));
-    item->setText((pretend?"WARNING PRETEND: ":"WARNING: ") + text);
+    item->setText((pretend?"WARNING (pretend): ":"WARNING: ") + text);
   } else if(status == FATAL) {
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
-    item->setText((pretend?"FATAL PRETEND: ":"FATAL: ") + text);
+    item->setText((pretend?"FATAL (pretend): ":"FATAL: ") + text);
     abortUpdate = true;
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
   QEventLoop waiter;
-  QTimer::singleShot(20, &waiter, &QEventLoop::quit);
+  QTimer::singleShot(10, &waiter, &QEventLoop::quit);
   waiter.exec();
 }
 
 bool Updater::cpFile(Command &command)
 {
-  QFileInfo src((command.parameters.at(0).left(1) == "/"?command.parameters.at(0):mainSettings.updateSrcPath + (mainSettings.updateSrcPath.right(1) == "/"?"":"/") + command.parameters.at(0)));
-  QFileInfo dst((command.parameters.last().left(1) == "/"?command.parameters.last():mainSettings.updateDstPath + (mainSettings.updateDstPath.right(1) == "/"?"":"/") + command.parameters.last()));
-  
-  addStatus(INFO, "Copying file '" + src.absoluteFilePath() + "' to '" + dst.absoluteFilePath() + "'");
+  if(abortUpdate) {
+    return false;
+  }
+  QString srcFileString = command.parameters.at(0);
+  if(srcFileString.left(1) != "/") {
+    srcFileString.prepend(updateSrcPath + "/");
+  }
+  QFileInfo srcInfo(srcFileString);
 
-  if(isExcluded(fileExcludes, src.absoluteFilePath())) {
-    addStatus(INFO, "File marked for exclusion, copy aborted.");
+  QString dstFileString = command.parameters.at(0);
+  if(dstFileString.left(1) != "/") {
+    dstFileString.prepend(updateDstPath + "/");
+  }
+
+  QFileInfo dst(dstFileString);
+  
+  addStatus(INFO, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dst.absoluteFilePath() + "'");
+
+  if(isExcluded(fileExcludes, srcInfo.absoluteFilePath())) {
+    addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
     return true;
   }
 
-  if(!QFile::exists(src.absoluteFilePath())) {
+  if(!QFile::exists(srcInfo.absoluteFilePath())) {
     addStatus(FATAL, "Source file not found!");
     return false;
   }
@@ -306,7 +350,7 @@ bool Updater::cpFile(Command &command)
       return false;
     }
   }
-  if(!pretend && !QFile::copy(src.absoluteFilePath(), dst.absoluteFilePath())) {
+  if(!pretend && !QFile::copy(srcInfo.absoluteFilePath(), dst.absoluteFilePath())) {
     addStatus(FATAL, "File copy failed!");
     return false;
   }
@@ -316,13 +360,25 @@ bool Updater::cpFile(Command &command)
 
 bool Updater::cpPath(Command &command)
 {
-  QDir srcDir((command.parameters.at(0).left(1) == "/"?command.parameters.at(0):mainSettings.updateSrcPath + (mainSettings.updateSrcPath.right(1) == "/"?"":"/") + command.parameters.at(0)));
-  QDir dstDir((command.parameters.last().left(1) == "/"?command.parameters.last():mainSettings.updateDstPath + (mainSettings.updateDstPath.right(1) == "/"?"":"/") + command.parameters.last()));
+  if(abortUpdate) {
+    return false;
+  }
+  QString srcDirString = command.parameters.at(0);
+  if(srcDirString.left(1) != "/") {
+    srcDirString.prepend(updateSrcPath + "/");
+  }
+  QDir srcDir(srcDirString);
+
+  QString dstDirString = command.parameters.at(0);
+  if(dstDirString.left(1) != "/") {
+    dstDirString.prepend(updateDstPath + "/");
+  }
+  QDir dstDir(dstDirString);
 
   addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
   if(!srcDir.exists()) {
-    addStatus(FATAL, "Source path does not exist!");
+    addStatus(FATAL, "Source file path does not exist!");
     return false;
   }
 
@@ -334,17 +390,14 @@ bool Updater::cpPath(Command &command)
     dirIt.next();
     QFileInfo itSrc = dirIt.fileInfo();
     QFileInfo itDst(dstDir.absolutePath() + "/" + itSrc.absoluteFilePath().mid(srcDir.absolutePath().length()));
-    if(isExcluded(fileExcludes, itSrc.absoluteFilePath())) {
-      addStatus(INFO, "File marked for exclusion, continuing without copying!");
-      return true;
-    }
-    if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
-      addStatus(INFO, "Path marked for exclusion, continuing without copying!");
-      return true;
-    }
     if(itSrc.isDir()) {
-      if(!pretend && !QDir::root().mkpath(itDst.absolutePath())) {
-        addStatus(FATAL, "Path '" + itDst.absolutePath() + "' could not be created");
+      addStatus(INFO, "Copying path '" + itSrc.absoluteFilePath() + "' to '" + itDst.absoluteFilePath() + "'");
+      if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
+        addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
+        return true;
+      }
+      if(!pretend && !QDir::root().mkpath(itDst.absoluteFilePath())) {
+        addStatus(FATAL, "Path '" + itDst.absoluteFilePath() + "' could not be created");
         return false;
       }
     } else if(itSrc.isFile()) {
@@ -365,7 +418,7 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
   }
   fullCommand = fullCommand.trimmed();
   
-  addStatus(INFO, "Running terminal command: '" + fullCommand + "'");
+  addStatus(STATUS, "Running terminal command: '" + fullCommand + "', please wait...");
   if(!pretend) {
     QProcess aptProc;
     aptProc.setProgram(program);
