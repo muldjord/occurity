@@ -7,10 +7,6 @@ title:Update from USB to '%HOME%/visutest' with kids charts
 srcpath:/media/pi/USBPEN/visutest
 dstpath:%HOME%/visutest
 
-# Define excludes for cp* commands
-fileexclude:optotypes/copyrights.txt
-pathexclude:optotypes/kids
-
 # Copy required files from source to destination
 cpfile:AUTHORS
 cpfile:charts_w_kids.xml;charts.xml
