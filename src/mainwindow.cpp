@@ -43,8 +43,6 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 {
   setCursor(Qt::BlankCursor);
   printf("Running VisuTest v." VERSION "\n");
-  //config = new QSettings("config.ini", QSettings::IniFormat);
-  //mainSettings = new MainSettings;
   setWindowTitle("VisuTest v" VERSION);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
