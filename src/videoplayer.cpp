@@ -43,7 +43,7 @@ VideoPlayer::VideoPlayer(const int &width, const int &height, QWidget *parent) :
     QFile videoFile("./video.mp4");
     if(videoFile.open(QIODevice::ReadOnly)) {
       videoData = videoFile.readAll();
-      printf("Video data: %d\n", videoData.length());
+      printf("Loaded video data from 'video.mp4': %d byte\n", videoData.length());
       videoFile.close();
     }
   }
