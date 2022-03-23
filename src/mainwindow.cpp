@@ -70,7 +70,9 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 
   installEventFilter(this);
 
-  videoPlayer = new VideoPlayer(mainSettings.width, mainSettings.height, this);
+  if(mainSettings.enableVideoPlayer) {
+    videoPlayer = new VideoPlayer(mainSettings.width, mainSettings.height, this);
+  }
 
   secretTimer.setInterval(400);
   secretTimer.setSingleShot(true);
@@ -94,7 +96,9 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 
 MainWindow::~MainWindow()
 {
-  delete videoPlayer;
+  if(videoPlayer != nullptr) {
+    delete videoPlayer;
+  }
 }
 
 void MainWindow::init()
@@ -296,10 +300,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         flipHibernate();
         return true;
       }
-    } else if(keyEvent->key() == Qt::Key_Z) {
+    } else if(keyEvent->key() == Qt::Key_Z && videoPlayer != nullptr) {
       videoPlayer->startVideo();
       return true;
-    } else if(keyEvent->key() == Qt::Key_X) {
+    } else if(keyEvent->key() == Qt::Key_X && videoPlayer != nullptr) {
       videoPlayer->stopVideo();
       return true;
     }
@@ -343,6 +347,9 @@ void MainWindow::updateFromConfig()
   if(!config.contains("pinCode")) {
     config.setValue("pinCode", "4242");
   }
+  if(!config.contains("enableVideoPlayer")) {
+    config.setValue("enableVideoPlayer", true);
+  }
   if(!config.contains("updatesFolder")) {
     config.setValue("updatesFolder", "./updates");
   }
@@ -353,6 +360,8 @@ void MainWindow::updateFromConfig()
   mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
   mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
+
+  mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
