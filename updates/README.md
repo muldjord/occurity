@@ -26,25 +26,30 @@ Add a message to the debug output of the VisuTest updater dialog. The message wi
 
 * Example 1: `pretend:This is a message!`
 
-### setvars:FILENAME
+### setvar:VARIABLE;VALUE
+Sets a variable for use in the `.upd` script. All variables will have a `%` prepended and appended to it.
+
+* Example 1: `setvar:MYVAR;My value` <-- This allows you to use `%MYVAR%` throughout the script command arguments / parameters where it will be replaced with `My value`.
+
+### loadvars:FILENAME
 Loads variables from a file and makes them available to the script for use in command parameters.
 
-* Example 1: `setvars:myvars.txt`
+* Example 1: `loadvars:myvars.txt`
 
 #### myvars.txt
 ```
 THIS=Something
 THAT=Other
 ```
-
-These two variables can now be used in the script command parameters using `%THIS%` and `%THAT%` which will be replaced with the corresponding text.
+These two variables can now be used in the script command arguments / parameters using `%THIS%` and `%THAT%` which will be replaced with the corresponding text.
 
 * Example 1: `cpfile:path1/%THIS%/somefile.dat` becomes `cpfile:path1/Something/somefile.dat`
 
-#### Hardcoded variables
-Some hardcoded variables are available. These can be used without setting them with `setvars`.
+### Hardcoded variables
+Some hardcoded variables are available. These can be used without setting them with `setvar` or `loadvars`.
 
 * %HOME%: The current user home directory (eg. `/home/pi`)
+* %WORKDIR%: The VisuTest working directory (eg. `/home/pi/visutest`)
 
 ### aptinstall:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
