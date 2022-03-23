@@ -38,7 +38,6 @@ VideoPlayer::VideoPlayer(const int &width, const int &height, QWidget *parent) :
   setFixedSize(width, height);
   setWindowFlags(Qt::WindowStaysOnTopHint);
   mediaPlayer = new QMediaPlayer();
-  mediaPlayer->setVideoOutput(this);
   if(QFileInfo::exists("./video.mp4")) {
     QFile videoFile("./video.mp4");
     if(videoFile.open(QIODevice::ReadOnly)) {
@@ -46,11 +45,12 @@ VideoPlayer::VideoPlayer(const int &width, const int &height, QWidget *parent) :
       printf("Loaded %d bytes of video data from 'video.mp4'\n", videoData.length());
       videoFile.close();
     }
+    mediaPlayer->setVideoOutput(this);
+    videoBuffer = new QBuffer();
+    videoBuffer->setData(videoData);
+    videoBuffer->open(QIODevice::ReadOnly);
+    mediaPlayer->setMedia(QMediaContent(), videoBuffer);
   }
-  videoBuffer = new QBuffer();
-  videoBuffer->setData(videoData);
-  videoBuffer->open(QIODevice::ReadOnly);
-  mediaPlayer->setMedia(QMediaContent(), videoBuffer);
   allowStopTimer.setInterval(4000);
   allowStopTimer.setSingleShot(true);
   connect(&allowStopTimer, &QTimer::timeout, this, &VideoPlayer::setAllowStop);
