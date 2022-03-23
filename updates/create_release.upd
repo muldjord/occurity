@@ -1,6 +1,5 @@
 # Set title that will be shown in the VisuTest updater
 title:Create new release from build in '%HOME%/programming/visutest'
-pretend:true
 
 # Set source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/visutest
