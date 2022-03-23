@@ -1,4 +1,4 @@
-title:Create new release from build in '%HOME%/programming/visutest'
+title:Create new release in '/media/%USER%/USBPEN/visutest' using build in '%HOME%/programming/visutest'
 
 message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/visutest
