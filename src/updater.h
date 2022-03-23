@@ -36,6 +36,7 @@
 #include <QListWidget>
 
 constexpr int INFO = 0;
+constexpr int STATUS = 1;
 constexpr int WARNING = 2;
 constexpr int FATAL = 3;
 
@@ -55,6 +56,8 @@ protected:
   bool eventFilter(QObject *, QEvent *event) override;
 
 private:
+  bool pretend = false;
+
   bool abortUpdate = false;
   QListWidget *statusList = nullptr;
   QProgressBar *progressBar = nullptr;

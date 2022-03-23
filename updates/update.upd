@@ -1,17 +1,14 @@
-# Set title that will be shown in the VisuTest updater
 title:Update from USB to '%HOME%/visutest'
 
-#setvars:/media/pi/USBPEN/visutest/VERSION
-
-# Set source and destination paths. All cp* commands are relative to these
+message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:/media/pi/USBPEN/visutest
 dstpath:%HOME%/visutest
 
-# Define excludes for cp* commands
+message:Defining excludes for cp* commands
 fileexclude:optotypes/copyrights.txt
 pathexclude:optotypes/kids
 
-# Copy required files from source to destination
+message:Copying required files from source to destination
 cpfile:AUTHORS
 cpfile:charts.xml
 cpfile:LICENSE
@@ -21,11 +18,11 @@ cpfile:VisuTest
 cpfile:visutest_da_DK.qm
 cpfile:video.mp4
 
-# Copy required paths, including subfolders, from source to destination
+message:Copying required paths, including subfolders, from source to destination
 cppath:icons
 cppath:optotypes
 cppath:scripts
 cppath:svg
 cppath:updates
 
-message:Release created succesfully!
+message:Release created successfully!

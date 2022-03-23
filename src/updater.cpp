@@ -108,7 +108,7 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
 
 void Updater::applyUpdate(const QString &filename)
 {
-  addStatus(INFO, "Applying update from file '" + filename + "'");
+  addStatus(STATUS, "Applying update from file '" + filename + "'");
   QFileInfo updInfo(filename);
   if(!updInfo.exists()) {
     QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
@@ -135,6 +135,13 @@ void Updater::applyUpdate(const QString &filename)
   }
   
   progressBar->setMaximum(commands.length());
+
+  for(auto &replaceCommand: commands) {
+    for(auto &parameter: replaceCommand.parameters) {
+      parameter = varsReplace(parameter);
+      printf("PARAMETER: '%s'\n", parameter.toStdString().c_str());
+    }
+  }
   
   for(auto &command: commands) {
     if(abortUpdate) {
@@ -147,13 +154,13 @@ void Updater::applyUpdate(const QString &filename)
       runCommand("sudo", { "apt-get", "-y", "update" });
       runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
     } else if(command.type == "fileexclude" && command.parameters.length() == 1) {
-      addStatus(INFO, "Adding file '" + command.parameters.at(0) + "'");
+      addStatus(INFO, "Adding file exclude '" + command.parameters.at(0) + "'");
       fileExcludes.append(command.parameters.at(0));
     } else if(command.type == "pathexclude" && command.parameters.length() == 1) {
       addStatus(INFO, "Adding path exclude '" + command.parameters.at(0) + "'");
       pathExcludes.append(command.parameters.at(0));
     } else if(command.type == "setvars" && command.parameters.length() == 1) {
-      addStatus(INFO, "Settings variables from file '" + command.parameters.at(0) + "'");
+      addStatus(INFO, "Setting variables from file '" + command.parameters.at(0) + "'");
       QFile varsFile(command.parameters.at(0));
       if(varsFile.open(QIODevice::ReadOnly)) {
         while(!varsFile.atEnd()) {
@@ -185,7 +192,7 @@ void Updater::applyUpdate(const QString &filename)
       }
     } else if(command.type == "pretend" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "true") {
-        mainSettings.updatePretend = true;
+        pretend = true;
         addStatus(INFO, "Pretend set, no file changes will occur!");
       }
     } else if(command.type == "cpfile" &&
@@ -195,14 +202,14 @@ void Updater::applyUpdate(const QString &filename)
               command.parameters.length() == 1) {
       cpPath(command);
     } else if(command.type == "reboot" && command.parameters.length() == 1) {
-      if(!abortUpdate && !mainSettings.updatePretend) {
+      if(!abortUpdate && !pretend) {
         if(command.parameters.at(0) == "now") {
           addStatus(INFO, "Rebooting now...");
           QProcess::execute("reboot", {});
         }
       }
     } else if(command.type == "message" && command.parameters.length() == 1) {
-      addStatus(INFO, command.parameters.at(0));
+      addStatus(STATUS, command.parameters.at(0));
     }
     progressBar->setValue(progressBar->value() + 1);
   }
@@ -249,15 +256,19 @@ void Updater::addStatus(const int &status, const QString &text)
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
-    item->setText((mainSettings.updatePretend?"INFO PRETEND: ":"INFO: ") + text);
+    item->setText((pretend?"INFO PRETEND: ":"INFO: ") + text);
+  } else if(status == STATUS) {
+    qInfo("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::white));
+    item->setText((pretend?"STATUS PRETEND: ":"STATUS: ") + text);
   } else if(status == WARNING) {
     qWarning("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::yellow));
-    item->setText((mainSettings.updatePretend?"WARNING PRETEND: ":"WARNING: ") + text);
+    item->setText((pretend?"WARNING PRETEND: ":"WARNING: ") + text);
   } else if(status == FATAL) {
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
-    item->setText((mainSettings.updatePretend?"FATAL PRETEND: ":"FATAL: ") + text);
+    item->setText((pretend?"FATAL PRETEND: ":"FATAL: ") + text);
     abortUpdate = true;
   }
   statusList->addItem(item);
@@ -284,18 +295,18 @@ bool Updater::cpFile(Command &command)
     return false;
   }
 
-  if(!mainSettings.updatePretend && !QDir::root().mkpath(dst.absolutePath())) {
+  if(!pretend && !QDir::root().mkpath(dst.absolutePath())) {
     addStatus(FATAL, "Path '" + dst.absolutePath() + "' for file could not be created!");
     return false;
   }
 
   if(QFile::exists(dst.absoluteFilePath())) {
-    if(!mainSettings.updatePretend && !QFile::remove(dst.absoluteFilePath())) {
+    if(!pretend && !QFile::remove(dst.absoluteFilePath())) {
       addStatus(FATAL, "Destination file could not be removed before copying!");
       return false;
     }
   }
-  if(!mainSettings.updatePretend && !QFile::copy(src.absoluteFilePath(), dst.absoluteFilePath())) {
+  if(!pretend && !QFile::copy(src.absoluteFilePath(), dst.absoluteFilePath())) {
     addStatus(FATAL, "File copy failed!");
     return false;
   }
@@ -332,7 +343,7 @@ bool Updater::cpPath(Command &command)
       return true;
     }
     if(itSrc.isDir()) {
-      if(!mainSettings.updatePretend && !QDir::root().mkpath(itDst.absolutePath())) {
+      if(!pretend && !QDir::root().mkpath(itDst.absolutePath())) {
         addStatus(FATAL, "Path '" + itDst.absolutePath() + "' could not be created");
         return false;
       }
@@ -355,7 +366,7 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
   fullCommand = fullCommand.trimmed();
   
   addStatus(INFO, "Running terminal command: '" + fullCommand + "'");
-  if(!mainSettings.updatePretend) {
+  if(!pretend) {
     QProcess aptProc;
     aptProc.setProgram(program);
     aptProc.setArguments(args);
@@ -372,7 +383,7 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
       return false;
     }
     
-    addStatus(INFO, "Terminal command completed succesfully with the following output:");
+    addStatus(INFO, "Terminal command completed successfully with the following output:");
     addStatus(INFO, aptProc.readAllStandardOutput().data());
     addStatus(INFO, aptProc.readAllStandardError().data());
   }

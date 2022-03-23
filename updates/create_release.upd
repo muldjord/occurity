@@ -1,11 +1,10 @@
-# Set title that will be shown in the VisuTest updater
 title:Create new release from build in '%HOME%/programming/visutest'
 
-# Set source and destination paths. All cp* commands are relative to these
+message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/visutest
 dstpath:%HOME%/visutestrelease
 
-# Copy required files from source to destination
+message:Copying required files from source to destination
 cpfile:AUTHORS
 cpfile:charts_w_kids.xml
 cpfile:charts.xml
@@ -16,11 +15,11 @@ cpfile:VisuTest
 cpfile:visutest_da_DK.qm
 cpfile:video.mp4
 
-# Copy required paths, including subfolders, from source to destination
+message:Copying required paths, including subfolders, from source to destination
 cppath:icons
 cppath:optotypes
 cppath:scripts
 cppath:svg
 cppath:updates
 
-message:Release created succesfully!
+message:Release created successfully!
