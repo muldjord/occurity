@@ -32,19 +32,22 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDirIterator>
-#include <QDialogButtonBox>
 #include <QLabel>
+#include <QKeyEvent>
+#include <QRadioButton>
+#include <QEventLoop>
 
 Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
 {
-  setWindowTitle(tr("VisuTest updater"));
-  setFixedSize(500, 200);
-
+  setWindowTitle("VisuTest v" VERSION" updater");
+  setFixedSize(1200, 700);
+  
   QVBoxLayout *updatesLayout = new QVBoxLayout;
+  updatesLayout->addWidget(new QLabel("<h3>Choose update / function:</h3>"), 0, Qt::AlignCenter);
   updatesButtons = new QButtonGroup;
   QList<QString> filters { "*.upd" };
-  QDirIterator dirIt(mainSettings.updateBaseFolder,
+  QDirIterator dirIt(mainSettings.updatesFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::Subdirectories);
@@ -79,32 +82,37 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
     }
   }
 
+  progressBar = new QProgressBar;
+  progressBar->setFormat("%p% completed");
+  progressBar->setAlignment(Qt::AlignCenter);
+  updatesLayout->addWidget(progressBar);
+
+  statusList = new QListWidget;
+  statusList->setStyleSheet("QListWidget {background-color: black;}");
+  updatesLayout->addWidget(statusList);
+
   if(!foundUpdate) {
-    QLabel *noUpdate = new QLabel(tr("No updates found."));
-    updatesLayout->addWidget(noUpdate);
+    QLabel *noUpdate = new QLabel("<h2>No updates found in updates folder:</h2><h3>" + mainSettings.updatesFolder + "</h3>");
+    updatesLayout->addWidget(noUpdate, 0, Qt::AlignCenter);
+    
   }
 
-  QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Cancel);
-  
-  QVBoxLayout *layout = new QVBoxLayout;
-  layout->addLayout(updatesLayout);
-  layout->addWidget(buttons);
+  setLayout(updatesLayout);
 
-  setLayout(layout);
+  installEventFilter(this);
 }
 
 void Updater::applyUpdate(const QString &filename)
 {
   qInfo("Applying update from file: '%s'\n", filename.toStdString().c_str());
   QFileInfo updInfo(filename);
-  mainSettings.updateBaseFolder = updInfo.absolutePath();
   if(!updInfo.exists()) {
-    QMessageBox::critical(this, tr("Error"), tr("The update file") + " '" + filename + "' " + tr("does not exist. Can't update, aborting!"));
+    QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
     return;
   }
   QList<Command> commands;
-  QList<QString> fileExcludes;
-  QList<QString> pathExcludes;
+  fileExcludes.clear();
+  pathExcludes.clear();
   QFile commandFile(filename);
   if(commandFile.open(QIODevice::ReadOnly)) {
     while(!commandFile.atEnd()) {
@@ -121,173 +129,251 @@ void Updater::applyUpdate(const QString &filename)
       commands.append(command);
     }
   }
-
-  for(const auto &command: commands) {
+  
+  progressBar->setMaximum(commands.length());
+  
+  for(auto &command: commands) {
+    if(abortUpdate) {
+      break;
+    }
     if(command.type == "aptinstall" && command.parameters.length()) {
-      qInfo("Running apt install...\n");
-      QProcess aptProc;
-      aptProc.setProgram("sudo");
-      aptProc.setArguments(QList<QString> {"apt-get", "update"});
-      aptProc.start();
-      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      QList<QString> parameters {"apt-get", "install", "--force-yes"};
-      parameters.append(command.parameters);
-      aptProc.setArguments(parameters);
-      aptProc.start();
-      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      if(aptProc.exitStatus() == QProcess::NormalExit) {
-        if(aptProc.exitCode() != 0) {
-          qWarning("Apt install process failed:\n%s\n", aptProc.readAllStandardError().data());
-          QMessageBox::critical(this, tr("Warning"), tr("The apt install command failed. See 'debug.log' for more information. Continuing anyway!"));
-        } else {
-          qInfo("%s\n", aptProc.readAllStandardError().data());
-          qInfo("%s\n", aptProc.readAllStandardOutput().data());
-        }
-      } else {
-        qCritical("Apt QProcess did not complete with 'QProcess::NormalExit' status!\n");
-        QMessageBox::critical(this, tr("Warning"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. See 'debug.log' for more information. Continuing anyway!"));
-      }
+      runCommand("sudo", { "apt-get", "-y", "update" });
+      runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
     } else if(command.type == "aptremove" && command.parameters.length()) {
-      qInfo("Running apt remove...\n");
-      QProcess aptProc;
-      aptProc.setProgram("sudo");
-      aptProc.setArguments(QList<QString> {"apt-get", "update"});
-      aptProc.start();
-      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      QList<QString> parameters {"apt-get", "remove", "--force-yes"};
-      parameters.append(command.parameters);
-      aptProc.setArguments(parameters);
-      aptProc.start();
-      aptProc.waitForFinished(30 * 60 * 1000); // 30 minutes
-      if(aptProc.exitStatus() == QProcess::NormalExit) {
-        if(aptProc.exitCode() != 0) {
-          qWarning("Apt remove process failed:\n%s\n", aptProc.readAllStandardError().data());
-          QMessageBox::critical(this, tr("Warning"), tr("The apt remove command failed. See 'debug.log' for more information. Continuing anyway!"));
-        } else {
-          qInfo("%s\n", aptProc.readAllStandardError().data());
-          qInfo("%s\n", aptProc.readAllStandardOutput().data());
-        }
-      } else {
-        qCritical("Apt QProcess did not complete with 'QProcess::NormalExit' status!\n");
-        QMessageBox::critical(this, tr("Warning"), tr("Apt QProcess did not complete with 'QProcess::NormalExit' status. See 'debug.log' for more information. Continuing anyway!"));
-      }
+      runCommand("sudo", { "apt-get", "-y", "update" });
+      runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
     } else if(command.type == "fileexclude" && command.parameters.length() == 1) {
-      qInfo("Adding to file excludes: '%s'\n", command.parameters.first().toStdString().c_str());
-      fileExcludes.append(command.parameters.first());
+      addStatus(INFO, "Adding file '" + command.parameters.at(0) + "'");
+      fileExcludes.append(command.parameters.at(0));
     } else if(command.type == "pathexclude" && command.parameters.length() == 1) {
-      qInfo("Adding to path excludes: '%s'\n", command.parameters.first().toStdString().c_str());
-      pathExcludes.append(command.parameters.first());
+      addStatus(INFO, "Adding path exclude '" + command.parameters.at(0) + "'");
+      pathExcludes.append(command.parameters.at(0));
+    } else if(command.type == "setvars" && command.parameters.length() == 1) {
+      addStatus(INFO, "Settings variables from file '" + command.parameters.at(0) + "'");
+      QFile varsFile(command.parameters.at(0));
+      if(varsFile.open(QIODevice::ReadOnly)) {
+        while(!varsFile.atEnd()) {
+          QByteArray line = varsFile.readLine().trimmed();
+          if(line.contains("=")) {
+            QString variable = "%" + line.split('=').first() + "%";
+            QString value = line.split('=').last();
+            vars[variable] = value;
+            addStatus(INFO, "'" + variable + "' set to '" + value + "'");
+          }
+        }
+        varsFile.close();
+      }
+      for(auto &replaceCommand: commands) {
+        for(int a = 0; a < vars.keys().length(); ++a) {
+          for(auto &parameter: replaceCommand.parameters) {
+            parameter.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
+          }
+        }
+      }
+    } else if(command.type == "srcpath" && command.parameters.length() == 1) {
+      addStatus(INFO, "Setting source path to '" + command.parameters.at(0) + "'");
+      mainSettings.updateSrcPath = command.parameters.at(0);
+    } else if(command.type == "dstpath" && command.parameters.length() == 1) {
+      if(command.parameters.at(0).left(mainSettings.updateSrcPath.length()) ==
+         mainSettings.updateSrcPath) {
+        addStatus(FATAL, "Destination path is locatated beneath source path. This is not allowed.");
+      } else {
+        addStatus(INFO, "Setting destination path to '" + command.parameters.at(0) + "'");
+        mainSettings.updateDstPath = command.parameters.at(0);
+      }
+    } else if(command.type == "pretend" && command.parameters.length() == 1) {
+      if(command.parameters.at(0) == "true") {
+        mainSettings.updatePretend = true;
+        addStatus(INFO, "Pretend set, no file changes will occur!");
+      }
     } else if(command.type == "cpfile" &&
               (command.parameters.length() == 1 || command.parameters.length() == 2)) {
-      QFileInfo src(mainSettings.updateBaseFolder + "/" + command.parameters.first());
-      QFileInfo dst(QDir::currentPath() + "/" + command.parameters.last());
-      qInfo("Preparing to copy file:\n  '%s'\n->'%s'\n",
-             src.absoluteFilePath().toStdString().c_str(),
-             dst.absoluteFilePath().toStdString().c_str());
-      if(isExcluded(fileExcludes, src.absoluteFilePath())) {
-        continue;
-      }
-      if(!QFile::exists(src.absoluteFilePath())) {
-        return;
-      }
-      QDir::current().mkpath(dst.absolutePath());
-      if(QFile::exists(dst.absoluteFilePath())) {
-        if(!QFile::remove(dst.absoluteFilePath())) {
-          qCritical("  Destination file could not be removed before copy. Update cancelled!\n");
-          QMessageBox::critical(this, tr("Error"), tr("Destination file could not be removed before copy. Update cancelled!"));
-          return;
-        }
-      }
-      if(QFile::copy(src.absoluteFilePath(), dst.absoluteFilePath())) {
-        qInfo("  File copied succesfully!\n");
-      } else {
-        qCritical("  File copy failed. Update cancelled!\n");
-        QMessageBox::critical(this, tr("Error"), tr("File copy failed. Update cancelled!"));
-        return;
-      }
+      cpFile(command);
     } else if(command.type == "cppath" &&
               command.parameters.length() == 1) {
-      QDir src(mainSettings.updateBaseFolder + "/" + command.parameters.first());
-      QDir dst(QDir::currentPath() + "/" + command.parameters.first());
-      qInfo("Preparing to copy path:\n  '%s'\n->'%s'\n",
-             src.absolutePath().toStdString().c_str(),
-             dst.absolutePath().toStdString().c_str());
-      if(!src.exists()) {
-        qWarning("  Path '%s' does not exist. Update cancelled!\n", src.absolutePath().toStdString().c_str());
-        QMessageBox::critical(this, tr("Error"), tr("Path '") + src.absolutePath() + tr("' does not exist. Update cancelled!"));
-        return;
-      }
-      QDirIterator dirIt(src.absolutePath(),
-                         {"*"},
-                         QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
-                         QDirIterator::Subdirectories);
-      while(dirIt.hasNext()) {
-        dirIt.next();
-        QFileInfo itSrc = dirIt.fileInfo();
-        QFileInfo itDst(QDir::currentPath() + "/" + itSrc.absoluteFilePath().mid(mainSettings.updateBaseFolder.length()));
-        if(isExcluded(fileExcludes, itSrc.absoluteFilePath())) {
-          continue;
-        }
-        if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
-          continue;
-        }
-        if(!QFileInfo::exists(itDst.absolutePath())) {
-          if(QDir::current().mkpath(itDst.absolutePath())) {
-            qInfo("  Path '%s' created succesfully!\n", itDst.absolutePath().toStdString().c_str());
-          } else {
-            qCritical("  Path '%s' could not be created. Update cancelled!\n", itDst.absolutePath().toStdString().c_str());
-            QMessageBox::critical(this, tr("Error"), tr("Path could not be created. Update cancelled!"));
-            return;
-          }
-        }
-        if(itSrc.isFile()) {
-          if(QFile::exists(itDst.absoluteFilePath())) { 
-            if(!QFile::remove(itDst.absoluteFilePath())) {
-              qCritical("  Destination file '%s' could not be removed before copy. Update cancelled!\n", itDst.absoluteFilePath().toStdString().c_str());
-              QMessageBox::critical(this, tr("Error"), tr("Destination file could not be removed before copy. Update cancelled!"));
-              return;
-            }
-          }
-          if(QFile::copy(itSrc.absoluteFilePath(), itDst.absoluteFilePath())) {
-            qInfo("  File '%s' copied succesfully!\n", itSrc.absoluteFilePath().toStdString().c_str());
-          } else {
-            qCritical("  File '%s' could not be copied. Update cancelled!\n", itSrc.absoluteFilePath().toStdString().c_str());
-            QMessageBox::critical(this, tr("Error"), tr("File copy failed. Update cancelled!"));
-            return;
-          }
+      cpPath(command);
+    } else if(command.type == "reboot" && command.parameters.length() == 1) {
+      if(!abortUpdate && !mainSettings.updatePretend) {
+        if(command.parameters.at(0) == "now") {
+          addStatus(INFO, "Rebooting now...");
+          QProcess::execute("reboot", {});
         }
       }
+    } else if(command.type == "message" && command.parameters.length() == 1) {
+      addStatus(INFO, command.parameters.at(0));
     }
+    progressBar->setValue(progressBar->value() + 1);
   }
-  qInfo("Update completed!\n");
-  QMessageBox::information(this, tr("Update completed"), tr("Update completed successfully!\n\nPress OK to reboot the system."));
-  QProcess::execute("reboot", {});
+  progressBar->setFormat("All steps completed!");
+  progressBar->setValue(progressBar->maximum());
 }
 
 bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
 {
-  QFileInfo srcInfo(src);
   for(const auto &exclude: excludes) {
-    QFileInfo excludeInfo(mainSettings.updateBaseFolder + "/" + exclude);
-    //qInfo("Source : '%s'\n", srcInfo.absoluteFilePath().toStdString().c_str());
-    //qInfo("Exclude: '%s'\n", excludeInfo.absoluteFilePath().toStdString().c_str());
-    if(srcInfo.absoluteFilePath().left(excludeInfo.absoluteFilePath().length()) == excludeInfo.absoluteFilePath()) {
-      qInfo("  Excluded: '%s'\n", src.toStdString().c_str());
+    QFileInfo excludeInfo(exclude);
+    if(src.left(excludeInfo.absoluteFilePath().length()) == excludeInfo.absoluteFilePath()) {
       return true;
     }
   }
   return false;
 }
 
-void Updater::accept()
+bool Updater::eventFilter(QObject *, QEvent *event)
 {
-  if(!updatesButtons->buttons().isEmpty()) {
-    for(const auto *button: updatesButtons->buttons()) {
-      if(button->isChecked()) {
-        applyUpdate(button->objectName());
-        break;
+  if(event->type() == QEvent::KeyPress) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+    if(keyEvent->key() == Qt::Key_Enter ||
+       keyEvent->key() == Qt::Key_Return ||
+       keyEvent->key() == Qt::Key_R) { // 'R' is the default enter key on the remote
+      if(!updatesButtons->buttons().isEmpty()) {
+        for(const auto *button: updatesButtons->buttons()) {
+          if(button->isChecked()) {
+            applyUpdate(button->objectName());
+            break;
+          }
+        }
       }
+      //accept();
+      return true;
     }
   }
-  QDialog::accept();
+  return false;
+}
+
+void Updater::addStatus(const int &status, const QString &text)
+{
+  QListWidgetItem *item = new QListWidgetItem;
+  if(status == INFO) {
+    qInfo("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::green));
+    item->setText((mainSettings.updatePretend?"INFO PRETEND: ":"INFO: ") + text);
+  } else if(status == WARNING) {
+    qWarning("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::yellow));
+    item->setText((mainSettings.updatePretend?"WARNING PRETEND: ":"WARNING: ") + text);
+  } else if(status == FATAL) {
+    qCritical("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::red));
+    item->setText((mainSettings.updatePretend?"FATAL PRETEND: ":"FATAL: ") + text);
+    abortUpdate = true;
+  }
+  statusList->addItem(item);
+  statusList->scrollToBottom();
+  QEventLoop waiter;
+  QTimer::singleShot(20, &waiter, &QEventLoop::quit);
+  waiter.exec();
+}
+
+bool Updater::cpFile(Command &command)
+{
+  QFileInfo src((command.parameters.at(0).left(1) == "/"?command.parameters.at(0):mainSettings.updateSrcPath + (mainSettings.updateSrcPath.right(1) == "/"?"":"/") + command.parameters.at(0)));
+  QFileInfo dst((command.parameters.last().left(1) == "/"?command.parameters.last():mainSettings.updateDstPath + (mainSettings.updateDstPath.right(1) == "/"?"":"/") + command.parameters.last()));
+  
+  addStatus(INFO, "Copying file '" + src.absoluteFilePath() + "' to '" + dst.absoluteFilePath() + "'");
+
+  if(isExcluded(fileExcludes, src.absoluteFilePath())) {
+    addStatus(INFO, "File marked for exclusion, copy aborted.");
+    return true;
+  }
+
+  if(!QFile::exists(src.absoluteFilePath())) {
+    addStatus(FATAL, "Source file not found!");
+    return false;
+  }
+
+  if(!mainSettings.updatePretend && !QDir::root().mkpath(dst.absolutePath())) {
+    addStatus(FATAL, "Path '" + dst.absolutePath() + "' for file could not be created!");
+    return false;
+  }
+
+  if(QFile::exists(dst.absoluteFilePath())) {
+    if(!mainSettings.updatePretend && !QFile::remove(dst.absoluteFilePath())) {
+      addStatus(FATAL, "Destination file could not be removed before copying!");
+      return false;
+    }
+  }
+  if(!mainSettings.updatePretend && !QFile::copy(src.absoluteFilePath(), dst.absoluteFilePath())) {
+    addStatus(FATAL, "File copy failed!");
+    return false;
+  }
+  addStatus(INFO, "File copy successful!");
+  return true;
+}
+
+bool Updater::cpPath(Command &command)
+{
+  QDir srcDir((command.parameters.at(0).left(1) == "/"?command.parameters.at(0):mainSettings.updateSrcPath + (mainSettings.updateSrcPath.right(1) == "/"?"":"/") + command.parameters.at(0)));
+  QDir dstDir((command.parameters.last().left(1) == "/"?command.parameters.last():mainSettings.updateDstPath + (mainSettings.updateDstPath.right(1) == "/"?"":"/") + command.parameters.last()));
+
+  addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
+
+  if(!srcDir.exists()) {
+    addStatus(FATAL, "Source path does not exist!");
+    return false;
+  }
+
+  QDirIterator dirIt(srcDir.absolutePath(),
+                     {"*"},
+                     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
+                     QDirIterator::Subdirectories);
+  while(dirIt.hasNext()) {
+    dirIt.next();
+    QFileInfo itSrc = dirIt.fileInfo();
+    QFileInfo itDst(dstDir.absolutePath() + "/" + itSrc.absoluteFilePath().mid(srcDir.absolutePath().length()));
+    if(isExcluded(fileExcludes, itSrc.absoluteFilePath())) {
+      addStatus(INFO, "File marked for exclusion, continuing without copying!");
+      return true;
+    }
+    if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
+      addStatus(INFO, "Path marked for exclusion, continuing without copying!");
+      return true;
+    }
+    if(itSrc.isDir()) {
+      if(!mainSettings.updatePretend && !QDir::root().mkpath(itDst.absolutePath())) {
+        addStatus(FATAL, "Path '" + itDst.absolutePath() + "' could not be created");
+        return false;
+      }
+    } else if(itSrc.isFile()) {
+      Command tempCommand;
+      tempCommand.type = "cpfile";
+      tempCommand.parameters = QList<QString> { itSrc.absoluteFilePath(), itDst.absoluteFilePath() };
+      cpFile(tempCommand);
+    }
+  }
+  return true;
+}
+
+bool Updater::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
+{
+  QString fullCommand = program + " ";
+  for(const auto &arg: args) {
+    fullCommand.append(arg + " ");
+  }
+  fullCommand = fullCommand.trimmed();
+  
+  addStatus(INFO, "Running terminal command: '" + fullCommand + "'");
+  if(!mainSettings.updatePretend) {
+    QProcess aptProc;
+    aptProc.setProgram(program);
+    aptProc.setArguments(args);
+    aptProc.start();
+    aptProc.waitForFinished(10 * 60 * 1000); // 10 minutes
+    if(aptProc.exitStatus() != QProcess::NormalExit && aptProc.exitCode() != 0) {
+      addStatus(WARNING, "Terminal command failed with the following output:\n");
+      addStatus(WARNING, aptProc.readAllStandardOutput().data());
+      if(critical) {
+        addStatus(FATAL, aptProc.readAllStandardError().data());
+      } else {
+        addStatus(WARNING, aptProc.readAllStandardError().data());
+      }
+      return false;
+    }
+    
+    addStatus(INFO, "Terminal command completed succesfully with the following output:");
+    addStatus(INFO, aptProc.readAllStandardOutput().data());
+    addStatus(INFO, aptProc.readAllStandardError().data());
+  }
+
+  return true;
 }

@@ -57,18 +57,21 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
     break;
   case QtFatalMsg:
     txt += QString(": Fatal: %1").arg(msg);
-    abort();
+    break;
   }
-  printf("%s", txt.toStdString().c_str());
 
+  printf("%s", txt.toStdString().c_str());
+  
   // Set debug file
   QFile outFile("debug.log");
-  outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+  outFile.open(QIODevice::Append);
   QTextStream ts(&outFile);
-  if (txt.right(1) == "\n")
+  if(txt.right(1) == "\n") {
     ts << txt;
-  else
+  } else {
     ts << txt << Qt::endl;
+    printf("\n");
+  }
   outFile.close();
 }
 

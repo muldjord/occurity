@@ -345,8 +345,8 @@ void MainWindow::updateFromConfig()
   if(!config.contains("pinCode")) {
     config.setValue("pinCode", "4242");
   }
-  if(!config.contains("updateBaseFolder")) {
-    config.setValue("updateBaseFolder", "/media/pi/USBPEN/visutest");
+  if(!config.contains("updatesFolder")) {
+    config.setValue("updatesFolder", "./updates");
   }
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
@@ -358,7 +358,7 @@ void MainWindow::updateFromConfig()
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
-  mainSettings.updateBaseFolder = config.value("updateBaseFolder").toString();
+  mainSettings.updatesFolder = config.value("updatesFolder").toString();
 
   mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
   mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm

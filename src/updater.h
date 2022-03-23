@@ -30,8 +30,14 @@
 #include "mainsettings.h"
 
 #include <QDialog>
-#include <QRadioButton>
+#include <QEvent>
 #include <QButtonGroup>
+#include <QProgressBar>
+#include <QListWidget>
+
+constexpr int INFO = 0;
+constexpr int WARNING = 2;
+constexpr int FATAL = 3;
 
 struct Command {
   QString type = "";
@@ -46,13 +52,24 @@ public:
   Updater(MainSettings &mainSettings, QWidget *parent);
 
 protected:
+  bool eventFilter(QObject *, QEvent *event) override;
 
 private:
-  void accept() override;
+  bool abortUpdate = false;
+  QListWidget *statusList = nullptr;
+  QProgressBar *progressBar = nullptr;
+  QList<QString> fileExcludes;
+  QList<QString> pathExcludes;
   QButtonGroup *updatesButtons = nullptr;
   MainSettings &mainSettings;
   bool isExcluded(const QList<QString> &excludes, const QString &source);
   void applyUpdate(const QString &filename);
+  void addStatus(const int &status, const QString &text);
+  bool cpFile(Command &command);
+  bool cpPath(Command &command);
+  bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = false);
+
+  QMap<QString, QString> vars;
   
 };
 #endif/*__VISUTEST_UPDATER_H__*/

@@ -37,7 +37,10 @@ struct MainSettings {
   int height = 1080;
   int rowSkipDelta = 4;
   QString pinCode = "4242";
-  QString updateBaseFolder = "/media/pi/USBPEN/visutest";
+  QString updatesFolder = "./updates";
+  QString updateSrcPath = "";
+  QString updateDstPath = "";
+  bool updatePretend = false;
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
   double rulerWidth = 138.0;
