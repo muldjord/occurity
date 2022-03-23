@@ -1,11 +1,13 @@
-# Set title that will be shown in the VisuTest updater
-title:Create new release from build in '/home/pi/programming/visutest'
+title:Test updater functions
 
-#setvars:/home/pi/programming/visutest/VERSION
+setvars:/home/muldjord/programming/visutest/VERSION
 
-# Set source and destination paths. All cp* commands are relative to these
-srcpath:/home/pi/programming/visutest
-dstpath:/media/pi/USBPEN/visutest
+srcpath:/home/muldjord/programming/visutest
+dstpath:/home/muldjord/visutest_updates/%VERSION%
+
+# Install necessary packages using Apt
+#aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
+#aptremove:gstreamer1.0-plugins-bad
 
 # Copy required files from source to destination
 cpfile:AUTHORS
@@ -20,10 +22,9 @@ cpfile:visutest_da_DK.qm
 cpfile:video.mp4
 
 # Copy required paths, including subfolders, from source to destination
-cppath:icons
 cppath:optotypes
 cppath:scripts
 cppath:svg
 cppath:updates
 
-message:Release created succesfully!
+reboot:now

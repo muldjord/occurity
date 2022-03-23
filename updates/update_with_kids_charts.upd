@@ -1,16 +1,19 @@
 # Set title that will be shown in the VisuTest updater
-title:Create new release from build in '/home/pi/programming/visutest'
+title:Update with kids charts
 
-#setvars:/home/pi/programming/visutest/VERSION
+#setvars:/media/pi/USBPEN/visutest/VERSION
 
 # Set source and destination paths. All cp* commands are relative to these
-srcpath:/home/pi/programming/visutest
-dstpath:/media/pi/USBPEN/visutest
+srcpath:/media/pi/USBPEN/visutest
+dstpath:/home/pi/visutest
+
+# Define excludes for cp* commands
+fileexclude:optotypes/copyrights.txt
+pathexclude:optotypes/kids
 
 # Copy required files from source to destination
 cpfile:AUTHORS
-cpfile:charts_w_kids.xml
-cpfile:charts.xml
+cpfile:charts_w_kids.xml;charts.xml
 cpfile:LICENSE
 cpfile:README.md
 cpfile:remote_guide_danish.pdf
