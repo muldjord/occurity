@@ -49,6 +49,8 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   QList<QString> filters { "*.upd" };
   // SEt %HOME% so it can be used in the .upd files
   vars["%HOME%"] = QDir::homePath();
+  // SEt %WORKDIR% so it can be used in the .upd files
+  vars["%WORKDIR%"] = QDir::currentPath();
   QDirIterator dirIt(mainSettings.updatesFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
@@ -114,7 +116,7 @@ void Updater::applyUpdate(const QString &filename)
     QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
     return;
   }
-  QList<Command> commands;
+  commands.clear();
   fileExcludes.clear();
   pathExcludes.clear();
   QFile commandFile(filename);
@@ -136,11 +138,7 @@ void Updater::applyUpdate(const QString &filename)
   
   progressBar->setMaximum(commands.length());
 
-  for(auto &replaceCommand: commands) {
-    for(auto &parameter: replaceCommand.parameters) {
-      parameter = varsReplace(parameter);
-    }
-  }
+  varsReplace();
   
   for(auto &command: commands) {
     if(abortUpdate) {
@@ -158,7 +156,16 @@ void Updater::applyUpdate(const QString &filename)
     } else if(command.type == "pathexclude" && command.parameters.length() == 1) {
       addStatus(INFO, "Adding path exclude '" + command.parameters.at(0) + "'");
       pathExcludes.append(command.parameters.at(0));
-    } else if(command.type == "setvars" && command.parameters.length() == 1) {
+    } else if(command.type == "setvar" && command.parameters.length() == 2) {
+      QString variable = "%" + command.parameters.at(0) + "%";
+      vars[variable] = command.parameters.at(1);
+      addStatus(INFO, "Variable '" + variable + "' set to value '" + command.parameters.at(1) + "'");
+      for(auto &replaceCommand: commands) {
+        for(auto &parameter: replaceCommand.parameters) {
+          parameter = varsReplace(parameter);
+        }
+      }
+    } else if(command.type == "loadvars" && command.parameters.length() == 1) {
       addStatus(INFO, "Setting variables from file '" + command.parameters.at(0) + "'");
       QFile varsFile(command.parameters.at(0));
       if(varsFile.open(QIODevice::ReadOnly)) {
@@ -168,7 +175,7 @@ void Updater::applyUpdate(const QString &filename)
             QString variable = "%" + line.split('=').first() + "%";
             QString value = line.split('=').last();
             vars[variable] = value;
-            addStatus(INFO, "'" + variable + "' set to '" + value + "'");
+            addStatus(INFO, "Variable '" + variable + "' set to value '" + value + "'");
           }
         }
         varsFile.close();
@@ -314,20 +321,20 @@ bool Updater::cpFile(Command &command)
   if(abortUpdate) {
     return false;
   }
-  QString srcFileString = command.parameters.at(0);
+  QString srcFileString = command.parameters.first();
   if(srcFileString.left(1) != "/") {
     srcFileString.prepend(updateSrcPath + "/");
   }
   QFileInfo srcInfo(srcFileString);
 
-  QString dstFileString = command.parameters.at(0);
+  QString dstFileString = command.parameters.last();
   if(dstFileString.left(1) != "/") {
     dstFileString.prepend(updateDstPath + "/");
   }
 
-  QFileInfo dst(dstFileString);
+  QFileInfo dstInfo(dstFileString);
   
-  addStatus(INFO, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dst.absoluteFilePath() + "'");
+  addStatus(INFO, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
 
   if(isExcluded(fileExcludes, srcInfo.absoluteFilePath())) {
     addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
@@ -339,18 +346,18 @@ bool Updater::cpFile(Command &command)
     return false;
   }
 
-  if(!pretend && !QDir::root().mkpath(dst.absolutePath())) {
-    addStatus(FATAL, "Path '" + dst.absolutePath() + "' for file could not be created!");
+  if(!pretend && !QDir::root().mkpath(dstInfo.absolutePath())) {
+    addStatus(FATAL, "Path '" + dstInfo.absolutePath() + "' for file could not be created!");
     return false;
   }
 
-  if(QFile::exists(dst.absoluteFilePath())) {
-    if(!pretend && !QFile::remove(dst.absoluteFilePath())) {
+  if(QFile::exists(dstInfo.absoluteFilePath())) {
+    if(!pretend && !QFile::remove(dstInfo.absoluteFilePath())) {
       addStatus(FATAL, "Destination file could not be removed before copying!");
       return false;
     }
   }
-  if(!pretend && !QFile::copy(srcInfo.absoluteFilePath(), dst.absoluteFilePath())) {
+  if(!pretend && !QFile::copy(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "File copy failed!");
     return false;
   }
@@ -379,6 +386,10 @@ bool Updater::cpPath(Command &command)
 
   if(!srcDir.exists()) {
     addStatus(FATAL, "Source file path does not exist!");
+    return false;
+  }
+  if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
+    addStatus(FATAL, "Path '" + dstDir.absolutePath() + "' could not be created");
     return false;
   }
 
@@ -447,7 +458,15 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
 QString Updater::varsReplace(QString string)
 {
   for(int a = 0; a < vars.keys().length(); ++a) {
-    string.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
+    if(!string.isEmpty()) {
+      string.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
+    } else {
+      for(auto &replaceCommand: commands) {
+        for(auto &parameter: replaceCommand.parameters) {
+          parameter.replace(vars.keys().at(a), vars[vars.keys().at(a)]);
+        }
+      }
+    }
   }
   return string;
 }
