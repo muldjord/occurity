@@ -2,7 +2,7 @@ title:Create new release from build in '%HOME%/programming/visutest'
 
 message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/visutest
-dstpath:%HOME%/visutestrelease
+dstpath:/media/%USER%/USBPEN/visutest
 
 message:Copying required files from source to destination
 cpfile:AUTHORS

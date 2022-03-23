@@ -1,10 +1,13 @@
 title:Test updater functions
 pretend:true
 
-setvars:%HOME%/programming/visutest/VERSION
+message:Setting variables
+loadvars:%HOME%/programming/visutest/VERSION
+setvar:TEST;This is a value
 
-srcpath:%HOME%/programming/visutest
-dstpath:%HOME%/visutest_updates
+message:Setting source and destination paths
+srcpath:%WORKDIR%
+dstpath:%HOME%/visutest_update_test
 
 message:Installing necessary packages using Apt
 aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
@@ -12,21 +15,16 @@ aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugin
 message:Removing unwanted packages using Apt
 aptremove:gstreamer1.0-plugins-bad
 
+message:Defining excludes for cp* commands
+fileexclude:README.md
+pathexclude:optotypes/sloan
+
 message:Copying required files from source to destination
 cpfile:AUTHORS
-cpfile:charts_w_kids.xml
-cpfile:charts.xml
-cpfile:LICENSE
 cpfile:README.md
-cpfile:VERSION
-cpfile:VisuTest
-cpfile:visutest_da_DK.qm
-cpfile:video.mp4
+cpfile:%WORKDIR%/LICENSE
 
 message:Copying required paths, including subfolders, from source to destination
 cppath:optotypes
-cppath:scripts
-cppath:svg
-cppath:updates
 
 message:All steps completed!

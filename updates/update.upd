@@ -1,7 +1,7 @@
 title:Update from USB to '%HOME%/visutest'
 
 message:Setting source and destination paths. All cp* commands are relative to these
-srcpath:/media/pi/USBPEN/visutest
+srcpath:/media/%USER%/USBPEN/visutest
 dstpath:%HOME%/visutest
 
 message:Defining excludes for cp* commands
