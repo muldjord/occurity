@@ -47,8 +47,12 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   updatesLayout->addWidget(new QLabel("<h3>Choose update / function:</h3>"), 0, Qt::AlignCenter);
   updatesButtons = new QButtonGroup;
   QList<QString> filters { "*.upd" };
-  // SEt %HOME% so it can be used in the .upd files
-  vars["%HOME%"] = QDir::homePath();
+  if(!QDir::homePath().isEmpty() && QDir::homePath().contains("/")) {
+    // SEt %USER% so it can be used in the .upd files
+    vars["%USER%"] = QDir::homePath().split("/").last();
+    // SEt %HOME% so it can be used in the .upd files
+    vars["%HOME%"] = QDir::homePath();
+  }
   // SEt %WORKDIR% so it can be used in the .upd files
   vars["%WORKDIR%"] = QDir::currentPath();
   QDirIterator dirIt(mainSettings.updatesFolder,
