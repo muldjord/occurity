@@ -26,6 +26,7 @@
  */
 
 #include "updater.h"
+#include "messagebox.h"
 
 #include <QVBoxLayout>
 #include <QFile>
@@ -122,7 +123,8 @@ void Updater::applyUpdate(const QString &filename)
   addStatus(STATUS, "Applying update from file '" + filename + "'");
   QFileInfo updInfo(filename);
   if(!updInfo.exists()) {
-    QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
+    MessageBox messageBox(QMessageBox::Critical, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!", QMessageBox::Ok, this);
+    messageBox.exec();
     return;
   }
 
@@ -251,10 +253,19 @@ void Updater::applyUpdate(const QString &filename)
         addStatus(FATAL, "Update destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
       }
       cpPath(command);
-    } else if(command.type == "reboot" && command.parameters.length() == 1 && !pretend) {
+    } else if(command.type == "reboot" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "now") {
-        addStatus(INFO, "Rebooting now...");
+        addStatus(INFO, "Forcing reboot now...");
         QProcess::execute("reboot", {});
+      } else if(command.parameters.at(0) == "ask") {
+        MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to reboot now?", QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.exec();
+        if(messageBox.result() == QDialog::Accepted) {
+          addStatus(INFO, "User requested reboot, rebooting now...");
+          //QProcess::execute("reboot", {});
+        } else {
+          addStatus(INFO, "User cancelled reboot.");
+        }
       }
     } else if(command.type == "message" && command.parameters.length() == 1) {
       addStatus(STATUS, command.parameters.at(0));
