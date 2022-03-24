@@ -20,6 +20,6 @@ cppath:icons
 cppath:optotypes
 cppath:scripts
 cppath:svg
-cppath:updates
+cppath:jobs
 
 message:Release created successfully!
