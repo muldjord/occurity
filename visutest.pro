@@ -21,7 +21,7 @@ HEADERS += src/mainwindow.h \
            src/abstractchart.h \
            src/svgchart.h \
            src/optotypechart.h \
-           src/updater.h \
+           src/jobrunner.h \
            src/messagebox.h
 
 SOURCES += src/main.cpp \
@@ -34,7 +34,7 @@ SOURCES += src/main.cpp \
            src/abstractchart.cpp \
            src/svgchart.cpp \
            src/optotypechart.cpp \
-           src/updater.cpp \
+           src/jobrunner.cpp \
            src/messagebox.cpp
 
 RESOURCES += visutest.qrc

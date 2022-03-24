@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            updater.cpp
+ *            jobrunner.cpp
  *
  *  Mon Feb 28 10:00:00 UTC+1 2022
  *  Copyright 2022 Lars Bisballe
@@ -25,7 +25,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "updater.h"
+#include "jobrunner.h"
 #include "messagebox.h"
 
 #include <QVBoxLayout>
@@ -38,29 +38,29 @@
 #include <QRadioButton>
 #include <QEventLoop>
 
-Updater::Updater(MainSettings &mainSettings, QWidget *parent)
+JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
 {
-  setWindowTitle("VisuTest v" VERSION" updater");
+  setWindowTitle("VisuTest v" VERSION" jobrunner");
   setFixedSize(1200, 700);
   
-  QVBoxLayout *updatesLayout = new QVBoxLayout;
-  updatesLayout->addWidget(new QLabel("<h3>Choose update / function:</h3>"), 0, Qt::AlignCenter);
-  updatesButtons = new QButtonGroup;
-  QList<QString> filters { "*.upd" };
+  QVBoxLayout *jobsLayout = new QVBoxLayout;
+  jobsLayout->addWidget(new QLabel("<h3>Choose job / function:</h3>"), 0, Qt::AlignCenter);
+  jobsButtons = new QButtonGroup;
+  QList<QString> filters { "*.job" };
   if(!QDir::homePath().isEmpty() && QDir::homePath().contains("/")) {
-    // SEt %USER% so it can be used in the .upd files
+    // SEt %USER% so it can be used in the .job files
     vars["%USER%"] = QDir::homePath().split("/").last();
-    // SEt %HOME% so it can be used in the .upd files
+    // SEt %HOME% so it can be used in the .job files
     vars["%HOME%"] = QDir::homePath();
   }
-  // SEt %WORKDIR% so it can be used in the .upd files
+  // SEt %WORKDIR% so it can be used in the .job files
   vars["%WORKDIR%"] = QDir::currentPath();
-  QDirIterator dirIt(mainSettings.updatesFolder,
+  QDirIterator dirIt(mainSettings.jobsFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::Subdirectories);
-  bool foundUpdate = false;
+  bool foundJob = false;
   while(dirIt.hasNext()) {
     dirIt.next();
     QFile updFile(dirIt.fileInfo().absoluteFilePath());
@@ -80,14 +80,14 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
         }
       }
       if(!updTitle.isEmpty()) {
-        QRadioButton *updateTypeButton = new QRadioButton((updVersion.isEmpty()?"":updVersion + ": ") + updTitle);
-        if(!foundUpdate) {
-          updateTypeButton->click();
+        QRadioButton *jobTypeButton = new QRadioButton((updVersion.isEmpty()?"":updVersion + ": ") + updTitle);
+        if(!foundJob) {
+          jobTypeButton->click();
         }
-        updateTypeButton->setObjectName(dirIt.fileInfo().absoluteFilePath());
-        updatesButtons->addButton(updateTypeButton);
-        updatesLayout->addWidget(updateTypeButton);
-        foundUpdate = true;
+        jobTypeButton->setObjectName(dirIt.fileInfo().absoluteFilePath());
+        jobsButtons->addButton(jobTypeButton);
+        jobsLayout->addWidget(jobTypeButton);
+        foundJob = true;
       }
       updFile.close();
     }
@@ -96,40 +96,40 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
   progressBar = new QProgressBar;
   progressBar->setFormat("%p% completed");
   progressBar->setAlignment(Qt::AlignCenter);
-  updatesLayout->addWidget(progressBar);
+  jobsLayout->addWidget(progressBar);
 
   statusList = new QListWidget;
   statusList->setStyleSheet("QListWidget {background-color: black;}");
-  updatesLayout->addWidget(statusList);
+  jobsLayout->addWidget(statusList);
 
-  if(!foundUpdate) {
-    QLabel *noUpdate = new QLabel("<h2>No updates found in updates folder:</h2><h3>" + mainSettings.updatesFolder + "</h3>");
-    updatesLayout->addWidget(noUpdate, 0, Qt::AlignCenter);
+  if(!foundJob) {
+    QLabel *noJob = new QLabel("<h2>No jobs found in jobs folder:</h2><h3>" + mainSettings.jobsFolder + "</h3>");
+    jobsLayout->addWidget(noJob, 0, Qt::AlignCenter);
     
   }
 
-  setLayout(updatesLayout);
+  setLayout(jobsLayout);
 
   installEventFilter(this);
 }
 
-void Updater::applyUpdate(const QString &filename)
+void JobRunner::runJob(const QString &filename)
 {
-  abortUpdate = false;
-  updateInProgress = true;
+  abortJob = false;
+  jobInProgress = true;
   progressBar->setFormat("%p% completed");
   progressBar->setValue(0);
   
-  addStatus(STATUS, "Applying update from file '" + filename + "'");
+  addStatus(STATUS, "Running script from file '" + filename + "'");
   QFileInfo updInfo(filename);
   if(!updInfo.exists()) {
-    MessageBox messageBox(QMessageBox::Critical, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!", QMessageBox::Ok, this);
+    MessageBox messageBox(QMessageBox::Critical, "Error", "The job file '" + filename + "' does not exist. Can't run, aborting!", QMessageBox::Ok, this);
     messageBox.exec();
     return;
   }
 
-  updateSrcPath.clear();
-  updateDstPath.clear();
+  jobSrcPath.clear();
+  jobDstPath.clear();
   fileExcludes.clear();
   pathExcludes.clear();
   commands.clear();
@@ -156,7 +156,7 @@ void Updater::applyUpdate(const QString &filename)
   varsReplace();
   
   for(auto &command: commands) {
-    if(abortUpdate) {
+    if(abortJob) {
       break;
     }
     if(command.type == "aptinstall" && command.parameters.length()) {
@@ -205,14 +205,14 @@ void Updater::applyUpdate(const QString &filename)
       if(tempPath.right(1) == "/") {
         tempPath = tempPath.left(tempPath.length() - 1);
       }
-      if(!updateDstPath.isEmpty() && tempPath.left(updateDstPath.length()) == updateDstPath) {
+      if(!jobDstPath.isEmpty() && tempPath.left(jobDstPath.length()) == jobDstPath) {
         addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
       } else {
         addStatus(INFO, "Setting source path to '" + tempPath + "'");
         if(tempPath.left(1) != "/") {
-          addStatus(FATAL, "Update source path '" + tempPath + "' is relative. This is not allowed.");
+          addStatus(FATAL, "Job source path '" + tempPath + "' is relative. This is not allowed.");
         } else {
-          updateSrcPath = tempPath;
+          jobSrcPath = tempPath;
         }
       }
     } else if(command.type == "dstpath" && command.parameters.length() == 1) {
@@ -220,14 +220,14 @@ void Updater::applyUpdate(const QString &filename)
       if(tempPath.right(1) == "/") {
         tempPath = tempPath.left(tempPath.length() - 1);
       }
-      if(!updateSrcPath.isEmpty() && tempPath.left(updateSrcPath.length()) == updateSrcPath) {
+      if(!jobSrcPath.isEmpty() && tempPath.left(jobSrcPath.length()) == jobSrcPath) {
         addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
       } else {
         addStatus(INFO, "Setting destination path to '" + tempPath + "'");
         if(tempPath.left(1) != "/") {
-          addStatus(FATAL, "Update destination path '" + tempPath + "' is relative. This is not allowed.");
+          addStatus(FATAL, "Job destination path '" + tempPath + "' is relative. This is not allowed.");
         } else {
-          updateDstPath = tempPath;
+          jobDstPath = tempPath;
         }
       }
     } else if(command.type == "pretend" && command.parameters.length() == 1) {
@@ -237,20 +237,35 @@ void Updater::applyUpdate(const QString &filename)
       }
     } else if(command.type == "cpfile" &&
               (command.parameters.length() == 1 || command.parameters.length() == 2)) {
-      if(command.parameters.first().left(1) != "/" && updateSrcPath.isEmpty()) {
-        addStatus(FATAL, "Update source path undefined. 'srcpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
+      if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
+        addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
       }
-      if(command.parameters.last().left(1) != "/" && updateDstPath.isEmpty()) {
-        addStatus(FATAL, "Update destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
+      if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
+        addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
       }
       cpFile(command);
+    } else if(command.type == "rmfile" && command.parameters.length() == 1) {
+      addStatus(INFO, "Removing file '" + command.parameters.first() + "'");
+      if(command.parameters.first().left(1) != "/") {
+        addStatus(FATAL, "'" + command.type + "' command requires a non-relative file path. File not removed");
+        continue;
+      }
+      if(!QFile::exists(command.parameters.first())) {
+        addStatus(FATAL, "File doesn't exist!");
+        continue;
+      }
+      if(QFile::remove(command.parameters.first())) {
+        addStatus(INFO, "File removed!");
+      } else {
+        addStatus(WARNING, "File could not be removed. Maybe a permission problem?");
+      }
     } else if(command.type == "cppath" &&
               command.parameters.length() == 1) {
-      if(command.parameters.first().left(1) != "/" && updateSrcPath.isEmpty()) {
-        addStatus(FATAL, "Update source path undefined. 'srcpath=PATH' has to be set when using relative paths with '" + command.type + "'");
+      if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
+        addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with '" + command.type + "'");
       }
-      if(command.parameters.last().left(1) != "/" && updateDstPath.isEmpty()) {
-        addStatus(FATAL, "Update destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
+      if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
+        addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
       }
       cpPath(command);
     } else if(command.type == "reboot" && command.parameters.length() == 1) {
@@ -262,7 +277,7 @@ void Updater::applyUpdate(const QString &filename)
         messageBox.exec();
         if(messageBox.result() == QDialog::Accepted) {
           addStatus(INFO, "User requested reboot, rebooting now...");
-          //QProcess::execute("reboot", {});
+          QProcess::execute("reboot", {});
         } else {
           addStatus(INFO, "User cancelled reboot.");
         }
@@ -274,14 +289,14 @@ void Updater::applyUpdate(const QString &filename)
   }
   progressBar->setFormat("All steps completed!");
   progressBar->setValue(progressBar->maximum());
-  updateInProgress = false;
+  jobInProgress = false;
 }
 
-bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
+bool JobRunner::isExcluded(const QList<QString> &excludes, const QString &src)
 {
   for(auto exclude: excludes) {
     if(exclude.left(1) != "/") {
-      exclude.prepend(updateSrcPath + "/");
+      exclude.prepend(jobSrcPath + "/");
     }
     QFileInfo excludeInfo(exclude);
     if(src.left(excludeInfo.absoluteFilePath().length()) == excludeInfo.absoluteFilePath()) {
@@ -291,20 +306,20 @@ bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
   return false;
 }
 
-bool Updater::eventFilter(QObject *, QEvent *event)
+bool JobRunner::eventFilter(QObject *, QEvent *event)
 {
   if(event->type() == QEvent::KeyPress) {
-    if(updateInProgress) {
+    if(jobInProgress) {
       return true;
     }
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
     if(keyEvent->key() == Qt::Key_Enter ||
        keyEvent->key() == Qt::Key_Return ||
        keyEvent->key() == Qt::Key_R) { // 'R' is the default enter key on the remote
-      if(!updatesButtons->buttons().isEmpty()) {
-        for(const auto *button: updatesButtons->buttons()) {
+      if(!jobsButtons->buttons().isEmpty()) {
+        for(const auto *button: jobsButtons->buttons()) {
           if(button->isChecked()) {
-            applyUpdate(button->objectName());
+            runJob(button->objectName());
             break;
           }
         }
@@ -318,7 +333,7 @@ bool Updater::eventFilter(QObject *, QEvent *event)
   return false;
 }
 
-void Updater::addStatus(const int &status, const QString &text)
+void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
   if(status == INFO) {
@@ -337,8 +352,8 @@ void Updater::addStatus(const int &status, const QString &text)
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
     item->setText((pretend?"FATAL (pretend): ":"FATAL: ") + text);
-    abortUpdate = true;
-    updateInProgress = false;
+    abortJob = true;
+    jobInProgress = false;
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
@@ -347,20 +362,20 @@ void Updater::addStatus(const int &status, const QString &text)
   waiter.exec();
 }
 
-bool Updater::cpFile(Command &command)
+bool JobRunner::cpFile(Command &command)
 {
-  if(abortUpdate) {
+  if(abortJob) {
     return false;
   }
   QString srcFileString = command.parameters.first();
   if(srcFileString.left(1) != "/") {
-    srcFileString.prepend(updateSrcPath + "/");
+    srcFileString.prepend(jobSrcPath + "/");
   }
   QFileInfo srcInfo(srcFileString);
 
   QString dstFileString = command.parameters.last();
   if(dstFileString.left(1) != "/") {
-    dstFileString.prepend(updateDstPath + "/");
+    dstFileString.prepend(jobDstPath + "/");
   }
 
   QFileInfo dstInfo(dstFileString);
@@ -396,20 +411,20 @@ bool Updater::cpFile(Command &command)
   return true;
 }
 
-bool Updater::cpPath(Command &command)
+bool JobRunner::cpPath(Command &command)
 {
-  if(abortUpdate) {
+  if(abortJob) {
     return false;
   }
   QString srcDirString = command.parameters.at(0);
   if(srcDirString.left(1) != "/") {
-    srcDirString.prepend(updateSrcPath + "/");
+    srcDirString.prepend(jobSrcPath + "/");
   }
   QDir srcDir(srcDirString);
 
   QString dstDirString = command.parameters.at(0);
   if(dstDirString.left(1) != "/") {
-    dstDirString.prepend(updateDstPath + "/");
+    dstDirString.prepend(jobDstPath + "/");
   }
   QDir dstDir(dstDirString);
 
@@ -452,7 +467,7 @@ bool Updater::cpPath(Command &command)
   return true;
 }
 
-bool Updater::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
+bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
 {
   QString fullCommand = program + " ";
   for(const auto &arg: args) {
@@ -486,7 +501,7 @@ bool Updater::runCommand(const QString &program, const QList<QString> &args, con
   return true;
 }
 
-QString Updater::varsReplace(QString string)
+QString JobRunner::varsReplace(QString string)
 {
   for(int a = 0; a < vars.keys().length(); ++a) {
     if(!string.isEmpty()) {

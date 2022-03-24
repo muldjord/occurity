@@ -66,7 +66,7 @@ private:
   void loadFonts(QString dirStr);
   bool loadCharts(QString chartsXml);
   void spawnPreferences();
-  void spawnUpdater();
+  void spawnJobRunner();
   void updateFromConfig();
   QList<AbstractChart*> charts;
 

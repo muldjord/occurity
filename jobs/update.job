@@ -1,12 +1,16 @@
-title:Update from USB to '%HOME%/visutest' with kids charts
+title:Update from USB to '%HOME%/visutest'
 
-message:Set source and destination paths. All cp* commands are relative to these
+message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:/media/%USER%/USBPEN/visutest
 dstpath:%HOME%/visutest
 
+message:Defining excludes for cp* commands
+fileexclude:optotypes/copyrights.txt
+pathexclude:optotypes/kids
+
 message:Copying required files from source to destination
 cpfile:AUTHORS
-cpfile:charts_w_kids.xml;charts.xml
+cpfile:charts.xml
 cpfile:LICENSE
 cpfile:README.md
 cpfile:VERSION
@@ -19,7 +23,7 @@ cppath:icons
 cppath:optotypes
 cppath:scripts
 cppath:svg
-cppath:updates
+cppath:jobs
 
 message:Release created successfully!
 

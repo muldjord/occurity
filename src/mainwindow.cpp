@@ -28,7 +28,7 @@
 #include "mainwindow.h"
 #include "pindialog.h"
 #include "preferences.h"
-#include "updater.h"
+#include "jobrunner.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -293,7 +293,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       updateFromConfig();
       return true;
     } else if(keyEvent->key() == Qt::Key_U) {
-      spawnUpdater();
+      spawnJobRunner();
       return true;
     } else if(keyEvent->key() == Qt::Key_Q) {
       if(allowHibernate) {
@@ -350,8 +350,8 @@ void MainWindow::updateFromConfig()
   if(!config.contains("enableVideoPlayer")) {
     config.setValue("enableVideoPlayer", true);
   }
-  if(!config.contains("updatesFolder")) {
-    config.setValue("updatesFolder", "./updates");
+  if(!config.contains("jobsFolder")) {
+    config.setValue("jobsFolder", "./jobs");
   }
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
@@ -365,7 +365,7 @@ void MainWindow::updateFromConfig()
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
-  mainSettings.updatesFolder = config.value("updatesFolder").toString();
+  mainSettings.jobsFolder = config.value("jobsFolder").toString();
 
   mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
   mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm
@@ -397,14 +397,14 @@ void MainWindow::spawnPreferences()
   }
 }
 
-void MainWindow::spawnUpdater()
+void MainWindow::spawnJobRunner()
 {
   PinDialog pinDialog(this);
   pinDialog.exec();
   if(pinDialog.getPin() == mainSettings.pinCode) {
-    printf("Spawning updater...\n");
-    Updater updater(mainSettings, this);
-    updater.exec();
+    printf("Spawning job runner...\n");
+    JobRunner jobRunner(mainSettings, this);
+    jobRunner.exec();
   }
 }
 

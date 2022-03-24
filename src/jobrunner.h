@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            updater.h
+ *            jobrunner.h
  *
  *  Mon Feb 28 10:00:00 UTC+1 2022
  *  Copyright 2022 Lars Bisballe
@@ -24,8 +24,8 @@
  *  along with VisuTest; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
-#ifndef __VISUTEST_UPDATER_H__
-#define __VISUTEST_UPDATER_H__
+#ifndef __VISUTEST_JOBRUNNER_H__
+#define __VISUTEST_JOBRUNNER_H__
 
 #include "mainsettings.h"
 
@@ -45,12 +45,12 @@ struct Command {
   QList<QString> parameters;
 };
 
-class Updater : public QDialog
+class JobRunner : public QDialog
 {
   Q_OBJECT
 
 public:
-  Updater(MainSettings &mainSettings, QWidget *parent);
+  JobRunner(MainSettings &mainSettings, QWidget *parent);
 
 protected:
   bool eventFilter(QObject *, QEvent *event) override;
@@ -58,20 +58,20 @@ protected:
 private:
   bool pretend = false;
   QList<Command> commands;
-  QString updateSrcPath = "";
-  QString updateDstPath = "";
+  QString jobSrcPath = "";
+  QString jobDstPath = "";
   
-  bool updateInProgress = false;
-  bool abortUpdate = false;
+  bool jobInProgress = false;
+  bool abortJob = false;
 
   QListWidget *statusList = nullptr;
   QProgressBar *progressBar = nullptr;
   QList<QString> fileExcludes;
   QList<QString> pathExcludes;
-  QButtonGroup *updatesButtons = nullptr;
+  QButtonGroup *jobsButtons = nullptr;
   MainSettings &mainSettings;
   bool isExcluded(const QList<QString> &excludes, const QString &source);
-  void applyUpdate(const QString &filename);
+  void runJob(const QString &filename);
   void addStatus(const int &status, const QString &text);
   bool cpFile(Command &command);
   bool cpPath(Command &command);
@@ -81,4 +81,4 @@ private:
   QMap<QString, QString> vars;
   
 };
-#endif/*__VISUTEST_UPDATER_H__*/
+#endif/*__VISUTEST_JOBRUNNER_H__*/

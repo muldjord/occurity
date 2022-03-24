@@ -37,7 +37,7 @@ struct MainSettings {
   int height = 1080;
   int rowSkipDelta = 4;
   QString pinCode = "4242";
-  QString updatesFolder = "./updates";
+  QString jobsFolder = "./jobs";
   bool updatePretend = false;
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
