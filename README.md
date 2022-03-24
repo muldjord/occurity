@@ -222,6 +222,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
+#### Version 0.9.5 (24mar2022)
+* Fixed 'update' to 'job' I missed in create_update.job
+
 #### Version 0.9.4 (24mar2022)
 * Changed 'update' to 'job' everywhere
 
