@@ -325,7 +325,7 @@ bool JobRunner::eventFilter(QObject *, QEvent *event)
         }
       }
       return true;
-    } else if(keyEvent->key() == Qt::Key_U) {
+    } else if(keyEvent->key() == Qt::Key_J) {
       accept();
       return true;
     }

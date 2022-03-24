@@ -1,7 +1,7 @@
-# VisuTest update scripting help
+# VisuTest job scripting help
 
 ## What is contained in this folder
-This folder contains `.upd` files which contain recipe's for updates, creating updates or other maintenance jobs. The `.upd` files within this folder are read and parsed through the integrated VisuTest updater dialog (initiated with `u` on the keyboard).
+This folder contains `.upd` files which contain recipe's for maintenance jobs. The `.job` files within this folder are read and parsed through the integrated VisuTest job runner dialog (initiated with `j` on the keyboard).
 
 Below follows a complete description of the available commands and syntax of the VisuText update scripting language.
 
@@ -55,7 +55,7 @@ Some hardcoded variables are available. These can be used without setting them w
 In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
 
 #### /etc/sudoers/sudoers.d/pi
-To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `u` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 
@@ -69,7 +69,7 @@ pi ALL = NOPASSWD : /usr/bin/apt-get
 In some cases it can be necessary to remove packages using the `sudo apt-get remove` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
 
 #### /etc/sudoers/sudoers.d/pi
-To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `u` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 

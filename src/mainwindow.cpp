@@ -292,7 +292,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       spawnPreferences();
       updateFromConfig();
       return true;
-    } else if(keyEvent->key() == Qt::Key_U) {
+    } else if(keyEvent->key() == Qt::Key_J) {
       spawnJobRunner();
       return true;
     } else if(keyEvent->key() == Qt::Key_Q) {
