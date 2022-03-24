@@ -298,7 +298,9 @@ bool Updater::eventFilter(QObject *, QEvent *event)
           }
         }
       }
-      //accept();
+      return true;
+    } else if(keyEvent->key() == Qt::Key_U) {
+      accept();
       return true;
     }
   }
