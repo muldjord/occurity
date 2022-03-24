@@ -126,6 +126,8 @@ void Updater::applyUpdate(const QString &filename)
     return;
   }
 
+  updateSrcPath.clear();
+  updateDstPath.clear();
   fileExcludes.clear();
   pathExcludes.clear();
   commands.clear();
