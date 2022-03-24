@@ -26,3 +26,6 @@ cppath:svg
 cppath:updates
 
 message:Release created successfully!
+
+# Reboot the system
+reboot:now
