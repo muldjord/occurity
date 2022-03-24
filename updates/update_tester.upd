@@ -28,3 +28,5 @@ message:Copying required paths, including subfolders, from source to destination
 cppath:optotypes
 
 message:All steps completed!
+
+reboot:ask

@@ -23,5 +23,5 @@ cppath:updates
 
 message:Release created successfully!
 
-# Reboot the system
-reboot:now
+# Ask for system reboot
+reboot:ask
