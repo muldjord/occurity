@@ -224,6 +224,7 @@ You can configure several options of VisuTest to fit your needs. The first time 
 
 #### Version 0.9.1 (24mar2022)
 * Fixed bug where `updateSrcPath` and `updateDstPath` weren't cleared when running two updates one after the other
+* Fixed bug where an excluded path copy would result in all subsequent paths not being investigated
 
 #### Version 0.9.0 (24mar2022)
 * Added attention gif animation option to 'optotype' chart. Show / hide with `a`. Set with `animation="file.gif"`
