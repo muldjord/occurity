@@ -96,7 +96,8 @@ bool Preferences::eventFilter(QObject *, QEvent *event)
       return true;
     } else if(keyEvent->key() == Qt::Key_Enter ||
               keyEvent->key() == Qt::Key_Return ||
-              keyEvent->key() == Qt::Key_R) { // 'R' is the default enter key on the remote
+              keyEvent->key() == Qt::Key_R ||
+              keyEvent->key() == Qt::Key_P) { // 'R' is the default enter key on the remote
       accept();
       return true;
     }
