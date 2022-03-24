@@ -423,7 +423,7 @@ bool Updater::cpPath(Command &command)
       addStatus(INFO, "Copying path '" + itSrc.absoluteFilePath() + "' to '" + itDst.absoluteFilePath() + "'");
       if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
         addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
-        return true;
+        continue;
       }
       if(!pretend && !QDir::root().mkpath(itDst.absoluteFilePath())) {
         addStatus(FATAL, "Path '" + itDst.absoluteFilePath() + "' could not be created");
