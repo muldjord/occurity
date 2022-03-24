@@ -222,6 +222,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
+#### Version 0.9.1 (24mar2022)
+* Fixed bug where `updateSrcPath` and `updateDstPath` weren't cleared when running two updates one after the other
+
 #### Version 0.9.0 (24mar2022)
 * Added attention gif animation option to 'optotype' chart. Show / hide with `a`. Set with `animation="file.gif"`
 * Added fullscreen attention video. Play / stop with `z` and `x`. Currently hardcoded to load and play `./video.mp4`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolutions are recommended
