@@ -62,7 +62,6 @@ I recommend applying the following settings on your Pi system to optimize it for
 To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `u` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
-
 ```
 
 #### raspi-config
@@ -104,6 +103,8 @@ This will autostart VisuTest when the system is logged in.
 Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it.
 ```
 $ cd
+$ mkdir programming
+$ cd programming
 $ git clone https://github.com/muldjord/visutest.git
 $ cd visutest
 $ qmake
