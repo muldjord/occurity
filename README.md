@@ -222,6 +222,9 @@ You can configure several options of VisuTest to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
+#### Version 0.9.3 (24mar2022)
+* Added custom MessageBox that works well with the remote control and keyboard controls
+
 #### Version 0.9.2 (24mar2022)
 * Preferences dialog can now be closed with 'p'
 * Updater dialog can now be closed with 'u'
