@@ -1,0 +1,2 @@
+title:Remove '%HOME%/visutest/config.ini'
+rmfile:%HOME%/visutest/config.ini
