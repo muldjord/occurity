@@ -61,7 +61,9 @@ private:
   QString updateSrcPath = "";
   QString updateDstPath = "";
   
+  bool updateInProgress = false;
   bool abortUpdate = false;
+
   QListWidget *statusList = nullptr;
   QProgressBar *progressBar = nullptr;
   QList<QString> fileExcludes;

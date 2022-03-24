@@ -114,15 +114,22 @@ Updater::Updater(MainSettings &mainSettings, QWidget *parent)
 
 void Updater::applyUpdate(const QString &filename)
 {
+  abortUpdate = false;
+  updateInProgress = true;
+  progressBar->setFormat("%p% completed");
+  progressBar->setValue(0);
+  
   addStatus(STATUS, "Applying update from file '" + filename + "'");
   QFileInfo updInfo(filename);
   if(!updInfo.exists()) {
     QMessageBox::critical(this, "Error", "The update file '" + filename + "' does not exist. Can't update, aborting!");
     return;
   }
-  commands.clear();
+
   fileExcludes.clear();
   pathExcludes.clear();
+  commands.clear();
+
   QFile commandFile(filename);
   if(commandFile.open(QIODevice::ReadOnly)) {
     while(!commandFile.atEnd()) {
@@ -254,6 +261,7 @@ void Updater::applyUpdate(const QString &filename)
   }
   progressBar->setFormat("All steps completed!");
   progressBar->setValue(progressBar->maximum());
+  updateInProgress = false;
 }
 
 bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
@@ -273,6 +281,9 @@ bool Updater::isExcluded(const QList<QString> &excludes, const QString &src)
 bool Updater::eventFilter(QObject *, QEvent *event)
 {
   if(event->type() == QEvent::KeyPress) {
+    if(updateInProgress) {
+      return true;
+    }
     QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
     if(keyEvent->key() == Qt::Key_Enter ||
        keyEvent->key() == Qt::Key_Return ||
@@ -312,6 +323,7 @@ void Updater::addStatus(const int &status, const QString &text)
     item->setForeground(QBrush(Qt::red));
     item->setText((pretend?"FATAL (pretend): ":"FATAL: ") + text);
     abortUpdate = true;
+    updateInProgress = false;
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
