@@ -61,35 +61,47 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::Subdirectories);
   bool foundJob = false;
+  setStyleSheet("QLabel {font-weight:bold;}");
+      QMap<QString, QVBoxLayout*> categories;
   while(dirIt.hasNext()) {
     dirIt.next();
-    QFile updFile(dirIt.fileInfo().absoluteFilePath());
-    if(updFile.open(QIODevice::ReadOnly)) {
-      QString updTitle = "";
-      QString updVersion = "";
-      while(!updFile.atEnd()) {
-        QString line = updFile.readLine().trimmed();
+    QFile jobFile(dirIt.fileInfo().absoluteFilePath());
+    if(jobFile.open(QIODevice::ReadOnly)) {
+      QString jobTitle = "";
+      QString jobVersion = "";
+      QString category = "Uncategorized";
+      while(!jobFile.atEnd()) {
+        QString line = jobFile.readLine().trimmed();
         if(line.contains(":")) {
           if(line.split(":").first() == "title") {
-            updTitle = line.split(":").last();
-            updTitle = varsReplace(updTitle);
+            jobTitle = line.split(":").last();
+            jobTitle = varsReplace(jobTitle);
           } else if(line.split(":").first() == "version") {
-            updVersion = line.split(":").last();
-            updVersion = varsReplace(updVersion);
+            jobVersion = line.split(":").last();
+            jobVersion = varsReplace(jobVersion);
+          } else if(line.split(":").first() == "category") {
+            category = line.split(":").last();
+            category = varsReplace(category);
           }
         }
       }
-      if(!updTitle.isEmpty()) {
-        QRadioButton *jobTypeButton = new QRadioButton((updVersion.isEmpty()?"":updVersion + ": ") + updTitle);
+      if(!jobTitle.isEmpty()) {
+        if(!categories.contains(category)) {
+          printf("Creating category '%s'\n", category.toStdString().c_str());
+          categories[category] = new QVBoxLayout;
+          categories[category]->addWidget(new QLabel(category));
+          jobsLayout->addLayout(categories[category]);
+        }
+        QRadioButton *jobTypeButton = new QRadioButton((jobVersion.isEmpty()?"":jobVersion + ": ") + jobTitle);
         if(!foundJob) {
           jobTypeButton->click();
         }
         jobTypeButton->setObjectName(dirIt.fileInfo().absoluteFilePath());
         jobsButtons->addButton(jobTypeButton);
-        jobsLayout->addWidget(jobTypeButton);
+        categories[category]->addWidget(jobTypeButton);
         foundJob = true;
       }
-      updFile.close();
+      jobFile.close();
     }
   }
 
@@ -121,8 +133,8 @@ void JobRunner::runJob(const QString &filename)
   progressBar->setValue(0);
   
   addStatus(STATUS, "Running script from file '" + filename + "'");
-  QFileInfo updInfo(filename);
-  if(!updInfo.exists()) {
+  QFileInfo jobInfo(filename);
+  if(!jobInfo.exists()) {
     MessageBox messageBox(QMessageBox::Critical, "Error", "The job file '" + filename + "' does not exist. Can't run, aborting!", QMessageBox::Ok, this);
     messageBox.exec();
     return;
@@ -273,13 +285,27 @@ void JobRunner::runJob(const QString &filename)
         addStatus(INFO, "Forcing reboot now...");
         QProcess::execute("reboot", {});
       } else if(command.parameters.at(0) == "ask") {
-        MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to reboot now?", QMessageBox::Yes | QMessageBox::No, this);
+        MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
         messageBox.exec();
         if(messageBox.result() == QDialog::Accepted) {
           addStatus(INFO, "User requested reboot, rebooting now...");
           QProcess::execute("reboot", {});
         } else {
           addStatus(INFO, "User cancelled reboot.");
+        }
+      }
+    } else if(command.type == "shutdown" && command.parameters.length() == 1) {
+      if(command.parameters.at(0) == "now") {
+        addStatus(INFO, "Forcing system shutdown now...");
+        QProcess::execute("halt", {});
+      } else if(command.parameters.at(0) == "ask") {
+        MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
+        messageBox.exec();
+        if(messageBox.result() == QDialog::Accepted) {
+          addStatus(INFO, "User requested shutdown, shutting down system now...");
+          QProcess::execute("halt", {});
+        } else {
+          addStatus(INFO, "User cancelled shutdown.");
         }
       }
     } else if(command.type == "message" && command.parameters.length() == 1) {
