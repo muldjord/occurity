@@ -36,6 +36,13 @@ MessageBox::MessageBox(const QMessageBox::Icon &icon, const QString &title, cons
   : QMessageBox(icon, title, text, buttons, parent)
 {
   installEventFilter(this);
+  for(auto *button: this->buttons()) {
+    if(buttonRole(button) == QMessageBox::NoRole ||
+       buttonRole(button) == QMessageBox::RejectRole) {
+      button->setFocus();
+      break;
+    }
+  }
 }
 
 bool MessageBox::eventFilter(QObject *, QEvent *event)
