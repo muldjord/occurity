@@ -191,7 +191,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * `greenValue=210`: Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
 * `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
 * `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
-* `rowSkipDelta=4`: The number of lines skipped when pressing 'w' and 's'.
+* `rowSkipDelta=4`: The number of lines skipped when pressing `w` and `s`.
 * `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. Default is `4242`.
 
 ## Keyboard control
@@ -222,25 +222,16 @@ You can configure several options of Occurity to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
-#### Version 0.9.5 (24mar2022)
-* Fixed 'update' to 'job' I missed in create_update.job
-
-#### Version 0.9.4 (24mar2022)
-* Changed 'update' to 'job' everywhere
-
-#### Version 0.9.3 (24mar2022)
+#### Version 1.0.0 (25mar2022)
+* Rename VisuTest to Occurity
+* Added category to jobs
+* Changed `update` to `job` everywhere
 * Added custom MessageBox that works well with the remote control and keyboard controls
-
-#### Version 0.9.2 (24mar2022)
-* Preferences dialog can now be closed with 'p'
-* Updater dialog can now be closed with 'u'
-
-#### Version 0.9.1 (24mar2022)
+* Preferences dialog can now be closed with `p`
+* Updater dialog can now be closed with `j`
 * Fixed bug where `updateSrcPath` and `updateDstPath` weren't cleared when running two updates one after the other
 * Fixed bug where an excluded path copy would result in all subsequent paths not being investigated
-
-#### Version 0.9.0 (24mar2022)
-* Added attention gif animation option to 'optotype' chart. Show / hide with `a`. Set with `animation="file.gif"`
+* Added attention gif animation option to `optotype` chart. Show / hide with `a`. Set with `animation="file.gif"`
 * Added fullscreen attention video. Play / stop with `z` and `x`. Currently hardcoded to load and play `./video.mp4`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolutions are recommended
 * Added option to skip multiple lines on `optotype` charts using `w` and `s`. Configure number of lines in Preferences
 * Added pincode dialog to preferences. Pincode can be set in config.ini with `pinCode=0000`
@@ -248,7 +239,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * Added scriptable updater allowing more update types than one
 
 #### Version 0.7.2 (27jan2022)
-* Implemented randomize row with 'r' key
+* Implemented randomize row with `r` key
 
 #### Version 0.7.1 (26jan2022)
 * Moved reset timer to mainwindow instead of each chart
