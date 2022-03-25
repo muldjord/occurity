@@ -613,6 +613,11 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
       }
     }
   }
+
+  if(!pretend && QDir::root().rmpath(rmDir.absolutePath())) {
+    addStatus(FATAL, "Base path could not be removed! Job cancelled.");
+  }
+
   addStatus(INFO, "Path removed!");
   return true;
 }
