@@ -544,7 +544,7 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
   {
     QDir rmDir(path);
     QDirIterator dirIt(rmDir.absolutePath(),
-                       {"*"},
+                       {"*.txt"},
                        QDir::Files | QDir::NoDotAndDotDot,
                        QDirIterator::Subdirectories);
     while(dirIt.hasNext()) {
