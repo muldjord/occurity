@@ -535,7 +535,7 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
   if(abortJob) {
     return false;
   }
-  addStatus(STATUS, "Removing path '" + jobDstPath + "' including subdirectories.");
+  addStatus(STATUS, "Removing path '" + path + "' including subdirectories.");
   if(path.isEmpty()) {
     addStatus(INFO, "Destination path not set, cleaning cancelled!");
     return true;
