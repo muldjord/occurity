@@ -1,4 +1,4 @@
-title:Update from USB to '%HOME%/occurity' with kids charts
+title:Apply update from '/media/%USER%/USBPEN/occurity' to '%HOME%/occurity' including kids charts
 category:Update jobs
 
 message:Set source and destination paths. All cp* commands are relative to these

@@ -1,4 +1,4 @@
-title:Update from USB to '%HOME%/occurity'
+title:Apply update from '/media/%USER%/USBPEN/occurity' to '%HOME%/occurity'
 category:Update jobs
 
 message:Setting source and destination paths. All cp* commands are relative to these
