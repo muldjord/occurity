@@ -537,11 +537,19 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
   if(abortJob) {
     return false;
   }
+
   addStatus(STATUS, "Removing path '" + path + "' including subdirectories.");
+
   if(path.isEmpty()) {
-    addStatus(INFO, "Destination path not set, cleaning cancelled!");
-    return true;
+    addStatus(FATAL, "Path not set, can't remove!");
+    return false;
   }
+
+  if(path.left(1) != "/") {
+    addStatus(FATAL, "A non-relative path is required. Path not removed!");
+    return false;
+  }
+
   QDir rmDir(path);
   bool ask = askPerFile;
   {
@@ -609,6 +617,10 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
         addStatus(WARNING, "Skipping path '" + dirIt.filePath() + "'");
       }
     }
+  }
+
+  if(!pretend && QDir::root().rmpath(rmDir.absolutePath())) {
+    addStatus(FATAL, "Base path could not be removed! Job cancelled.");
   }
 
   addStatus(INFO, "Path removed!");
