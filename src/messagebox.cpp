@@ -49,13 +49,7 @@ void MessageBox::keyPressEvent(QKeyEvent *event) {
   if(event->key() == Qt::Key_R) {
     for(auto *button: buttons()) {
       if(button->hasFocus()) {
-        if(buttonRole(button) == QMessageBox::YesRole ||
-           buttonRole(button) == QMessageBox::AcceptRole) {
-          button->click();
-        } else if(buttonRole(button) == QMessageBox::NoRole ||
-                  buttonRole(button) == QMessageBox::RejectRole) {
-          reject();
-        }
+        button->click();
         break;
       }
     }
