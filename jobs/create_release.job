@@ -1,5 +1,5 @@
 title:Create new release in '/media/%USER%/USBPEN/occurity' using build in '%HOME%/programming/occurity'
-
+category:Release creation
 message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:%HOME%/programming/occurity
 dstpath:/media/%USER%/USBPEN/occurity

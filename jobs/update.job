@@ -1,4 +1,5 @@
 title:Update from USB to '%HOME%/occurity'
+category:Update jobs
 
 message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:/media/%USER%/USBPEN/occurity
