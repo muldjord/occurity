@@ -70,11 +70,15 @@ private:
   QList<QString> pathExcludes;
   QButtonGroup *jobsButtons = nullptr;
   MainSettings &mainSettings;
-  bool isExcluded(const QList<QString> &excludes, const QString &source);
+
+  void setHardcodedVars();
+  bool isExcluded(const QList<QString> &excludes, const QString &src);
   void runJob(const QString &filename);
   void addStatus(const int &status, const QString &text);
-  bool cpFile(Command &command);
-  bool cpPath(Command &command);
+  bool cpFile(const QString &srcFile, const QString &dstFile);
+  bool cpPath(const QString &srcPath, const QString &dstPath);
+  bool rmFile(const QString &filePath);
+  bool rmPath(const bool &askPerFile, const QString &path);
   bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = false);
   QString varsReplace(QString string = "");
 

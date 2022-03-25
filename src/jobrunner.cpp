@@ -48,14 +48,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   jobsLayout->addWidget(new QLabel("<h3>Choose job / function:</h3>"), 0, Qt::AlignCenter);
   jobsButtons = new QButtonGroup;
   QList<QString> filters { "*.job" };
-  if(!QDir::homePath().isEmpty() && QDir::homePath().contains("/")) {
-    // SEt %USER% so it can be used in the .job files
-    vars["%USER%"] = QDir::homePath().split("/").last();
-    // SEt %HOME% so it can be used in the .job files
-    vars["%HOME%"] = QDir::homePath();
-  }
-  // SEt %WORKDIR% so it can be used in the .job files
-  vars["%WORKDIR%"] = QDir::currentPath();
+  setHardcodedVars();
   QDirIterator dirIt(mainSettings.jobsFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
@@ -140,6 +133,8 @@ void JobRunner::runJob(const QString &filename)
     return;
   }
 
+  vars.clear();
+  setHardcodedVars();
   jobSrcPath.clear();
   jobDstPath.clear();
   fileExcludes.clear();
@@ -227,6 +222,7 @@ void JobRunner::runJob(const QString &filename)
           addStatus(FATAL, "Job source path '" + tempPath + "' is relative. This is not allowed.");
         } else {
           jobSrcPath = tempPath;
+          vars["%SRCPATH%"] = jobSrcPath;
         }
       }
     } else if(command.type == "dstpath" && command.parameters.length() == 1) {
@@ -244,8 +240,11 @@ void JobRunner::runJob(const QString &filename)
           addStatus(FATAL, "Job destination path '" + tempPath + "' is relative. This is not allowed.");
         } else {
           jobDstPath = tempPath;
+          vars["%DSTPATH%"] = jobDstPath;
         }
       }
+    } else if(command.type == "rmpath" && command.parameters.length() == 2) {
+      rmPath((command.parameters.at(0) == "ask"?true:false), command.parameters.at(1));
     } else if(command.type == "pretend" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "true") {
         pretend = true;
@@ -259,22 +258,9 @@ void JobRunner::runJob(const QString &filename)
       if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
         addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
       }
-      cpFile(command);
+      cpFile(command.parameters.first(), command.parameters.last());
     } else if(command.type == "rmfile" && command.parameters.length() == 1) {
-      addStatus(INFO, "Removing file '" + command.parameters.first() + "'");
-      if(command.parameters.first().left(1) != "/") {
-        addStatus(FATAL, "'" + command.type + "' command requires a non-relative file path. File not removed");
-        continue;
-      }
-      if(!QFile::exists(command.parameters.first())) {
-        addStatus(FATAL, "File doesn't exist!");
-        continue;
-      }
-      if(QFile::remove(command.parameters.first())) {
-        addStatus(INFO, "File removed!");
-      } else {
-        addStatus(WARNING, "File could not be removed. Maybe a permission problem?");
-      }
+      rmFile(command.parameters.at(0));
     } else if(command.type == "cppath" &&
               command.parameters.length() == 1) {
       if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
@@ -283,7 +269,7 @@ void JobRunner::runJob(const QString &filename)
       if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
         addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
       }
-      cpPath(command);
+      cpPath(command.parameters.first(), command.parameters.last());
     } else if(command.type == "reboot" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "now") {
         addStatus(INFO, "Forcing reboot now...");
@@ -392,18 +378,18 @@ void JobRunner::addStatus(const int &status, const QString &text)
   waiter.exec();
 }
 
-bool JobRunner::cpFile(Command &command)
+bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
 {
   if(abortJob) {
     return false;
   }
-  QString srcFileString = command.parameters.first();
+  QString srcFileString = srcFile;
   if(srcFileString.left(1) != "/") {
     srcFileString.prepend(jobSrcPath + "/");
   }
   QFileInfo srcInfo(srcFileString);
 
-  QString dstFileString = command.parameters.last();
+  QString dstFileString = dstFile;
   if(dstFileString.left(1) != "/") {
     dstFileString.prepend(jobDstPath + "/");
   }
@@ -441,18 +427,18 @@ bool JobRunner::cpFile(Command &command)
   return true;
 }
 
-bool JobRunner::cpPath(Command &command)
+bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
 {
   if(abortJob) {
     return false;
   }
-  QString srcDirString = command.parameters.at(0);
+  QString srcDirString = srcPath;
   if(srcDirString.left(1) != "/") {
     srcDirString.prepend(jobSrcPath + "/");
   }
   QDir srcDir(srcDirString);
 
-  QString dstDirString = command.parameters.at(0);
+  QString dstDirString = dstPath;
   if(dstDirString.left(1) != "/") {
     dstDirString.prepend(jobDstPath + "/");
   }
@@ -461,7 +447,7 @@ bool JobRunner::cpPath(Command &command)
   addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
   if(!srcDir.exists()) {
-    addStatus(FATAL, "Source file path does not exist!");
+    addStatus(FATAL, "Source path does not exist!");
     return false;
   }
   if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
@@ -488,10 +474,7 @@ bool JobRunner::cpPath(Command &command)
         return false;
       }
     } else if(itSrc.isFile()) {
-      Command tempCommand;
-      tempCommand.type = "cpfile";
-      tempCommand.parameters = QList<QString> { itSrc.absoluteFilePath(), itDst.absoluteFilePath() };
-      cpFile(tempCommand);
+      cpFile(itSrc.absoluteFilePath(), itDst.absoluteFilePath());
     }
   }
   return true;
@@ -545,4 +528,123 @@ QString JobRunner::varsReplace(QString string)
     }
   }
   return string;
+}
+
+bool JobRunner::rmPath(const bool &askPerFile, const QString &path)
+{
+  if(abortJob) {
+    return false;
+  }
+  addStatus(STATUS, "Removing path '" + jobDstPath + "' including subdirectories.");
+  if(path.isEmpty()) {
+    addStatus(INFO, "Destination path not set, cleaning cancelled!");
+    return true;
+  }
+  bool ask = askPerFile;
+  {
+    QDir rmDir(path);
+    QDirIterator dirIt(rmDir.absolutePath(),
+                       {"*"},
+                       QDir::Files | QDir::NoDotAndDotDot,
+                       QDirIterator::Subdirectories);
+    while(dirIt.hasNext()) {
+      bool remove = true;
+      if(ask) {
+        MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete file '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
+        messageBox.exec();
+        if(messageBox.result() == QMessageBox::Yes ||
+           messageBox.result() == QMessageBox::YesToAll) {
+          if(messageBox.result() == QMessageBox::YesToAll) {
+            ask = false;
+          }
+          remove = true;
+        } else {
+          remove = false;
+        }
+      }
+      if(remove) {
+        addStatus(INFO, "Removing file '" + dirIt.filePath() + "'");
+        if(!pretend) {
+          if(!rmFile(dirIt.filePath())) {
+            addStatus(FATAL, "File could not be removed! Job cancelled.");
+            return false;
+          }
+        }
+      } else {
+        addStatus(WARNING, "Skipping file '" + dirIt.filePath() + "'");
+      }
+      dirIt.next();
+    }
+  }
+  {
+    QDir rmDir(path);
+    QDirIterator dirIt(rmDir.absolutePath(),
+                       {"*"},
+                       QDir::Dirs | QDir::NoDotAndDotDot,
+                       QDirIterator::Subdirectories);
+    while(dirIt.hasNext()) {
+      bool remove = true;
+      if(ask) {
+        MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete path '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
+        messageBox.exec();
+        if(messageBox.result() == QMessageBox::Yes ||
+           messageBox.result() == QMessageBox::YesToAll) {
+          if(messageBox.result() == QMessageBox::YesToAll) {
+            ask = false;
+          }
+          remove = true;
+        } else {
+          remove = false;
+        }
+      }
+      if(remove) {
+        addStatus(INFO, "Removing path '" + dirIt.filePath() + "'");
+        if(!pretend) {
+          if(!QDir::root().rmpath(dirIt.filePath())) {
+            addStatus(FATAL, "Path could not be removed! Job cancelled.");
+            return false;
+          }
+        }
+      } else {
+        addStatus(WARNING, "Skipping path '" + dirIt.filePath() + "'");
+      }
+      dirIt.next();
+    }
+  }
+  addStatus(INFO, "Path removed!");
+  return true;
+}
+
+bool JobRunner::rmFile(const QString &filePath)
+{
+  if(abortJob) {
+    return false;
+  }
+  addStatus(INFO, "Removing file '" + filePath + "'");
+  if(filePath.left(1) != "/") {
+    addStatus(FATAL, "A non-relative file path is required. File not removed!");
+    return false;
+  }
+  if(!QFile::exists(filePath)) {
+    addStatus(FATAL, "File doesn't exist!");
+    return false;
+  }
+  if(!QFile::remove(filePath)) {
+    addStatus(FATAL, "File could not be removed. Maybe a permission problem?");
+    return false;
+  }
+  addStatus(INFO, "File removed!");
+  return true;
+}
+
+void JobRunner::setHardcodedVars()
+{
+  if(!QDir::homePath().isEmpty() && QDir::homePath().contains("/")) {
+    // SEt %USER% so it can be used in the .job files
+    vars["%USER%"] = QDir::homePath().split("/").last();
+    // SEt %HOME% so it can be used in the .job files
+    vars["%HOME%"] = QDir::homePath();
+  }
+  // SEt %WORKDIR% so it can be used in the .job files
+  vars["%WORKDIR%"] = QDir::currentPath();
 }
