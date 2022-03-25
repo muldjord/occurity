@@ -48,14 +48,16 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   jobsLayout->addWidget(new QLabel("<h3>Choose job / function:</h3>"), 0, Qt::AlignCenter);
   jobsButtons = new QButtonGroup;
   QList<QString> filters { "*.job" };
+
   setHardcodedVars();
+
+  bool foundJob = false;
+  setStyleSheet("QLabel {font-weight:bold;}");
+  QMap<QString, QVBoxLayout*> categories;
   QDirIterator dirIt(mainSettings.jobsFolder,
                      filters,
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::Subdirectories);
-  bool foundJob = false;
-  setStyleSheet("QLabel {font-weight:bold;}");
-      QMap<QString, QVBoxLayout*> categories;
   while(dirIt.hasNext()) {
     dirIt.next();
     QFile jobFile(dirIt.fileInfo().absoluteFilePath());
@@ -544,10 +546,11 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
   {
     QDir rmDir(path);
     QDirIterator dirIt(rmDir.absolutePath(),
-                       {"*.txt"},
+                       {"*"},
                        QDir::Files | QDir::NoDotAndDotDot,
                        QDirIterator::Subdirectories);
     while(dirIt.hasNext()) {
+      dirIt.next();
       bool remove = true;
       if(ask) {
         MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete file '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
@@ -573,7 +576,6 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
       } else {
         addStatus(WARNING, "Skipping file '" + dirIt.filePath() + "'");
       }
-      dirIt.next();
     }
   }
   {
@@ -583,6 +585,7 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
                        QDir::Dirs | QDir::NoDotAndDotDot,
                        QDirIterator::Subdirectories);
     while(dirIt.hasNext()) {
+      dirIt.next();
       bool remove = true;
       if(ask) {
         MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete path '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
@@ -608,7 +611,6 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
       } else {
         addStatus(WARNING, "Skipping path '" + dirIt.filePath() + "'");
       }
-      dirIt.next();
     }
   }
   addStatus(INFO, "Path removed!");
