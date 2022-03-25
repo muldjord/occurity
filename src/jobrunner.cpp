@@ -217,10 +217,10 @@ void JobRunner::runJob(const QString &filename)
       if(tempPath.right(1) == "/") {
         tempPath = tempPath.left(tempPath.length() - 1);
       }
+      addStatus(INFO, "Setting source path to '" + tempPath + "'");
       if(!jobDstPath.isEmpty() && tempPath.left(jobDstPath.length()) == jobDstPath) {
         addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
       } else {
-        addStatus(INFO, "Setting source path to '" + tempPath + "'");
         if(tempPath.left(1) != "/") {
           addStatus(FATAL, "Job source path '" + tempPath + "' is relative. This is not allowed.");
         } else {
@@ -232,10 +232,10 @@ void JobRunner::runJob(const QString &filename)
       if(tempPath.right(1) == "/") {
         tempPath = tempPath.left(tempPath.length() - 1);
       }
+      addStatus(INFO, "Setting destination path to '" + tempPath + "'");
       if(!jobSrcPath.isEmpty() && tempPath.left(jobSrcPath.length()) == jobSrcPath) {
         addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
       } else {
-        addStatus(INFO, "Setting destination path to '" + tempPath + "'");
         if(tempPath.left(1) != "/") {
           addStatus(FATAL, "Job destination path '" + tempPath + "' is relative. This is not allowed.");
         } else {
