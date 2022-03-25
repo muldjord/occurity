@@ -566,10 +566,8 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
         }
       }
       if(remove) {
-        addStatus(INFO, "Removing file '" + dirIt.filePath() + "'");
         if(!pretend) {
           if(!rmFile(dirIt.filePath())) {
-            addStatus(FATAL, "File could not be removed! Job cancelled.");
             return false;
           }
         }
