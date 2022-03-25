@@ -287,7 +287,7 @@ void JobRunner::runJob(const QString &filename)
       } else if(command.parameters.at(0) == "ask") {
         MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
         messageBox.exec();
-        if(messageBox.result() == QDialog::Accepted) {
+        if(messageBox.result() == QMessageBox::Yes) {
           addStatus(INFO, "User requested reboot, rebooting now...");
           QProcess::execute("reboot", {});
         } else {
@@ -301,7 +301,7 @@ void JobRunner::runJob(const QString &filename)
       } else if(command.parameters.at(0) == "ask") {
         MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
         messageBox.exec();
-        if(messageBox.result() == QDialog::Accepted) {
+        if(messageBox.result() == QMessageBox::Yes) {
           addStatus(INFO, "User requested shutdown, shutting down system now...");
           QProcess::execute("halt", {});
         } else {

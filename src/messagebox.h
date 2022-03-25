@@ -28,7 +28,7 @@
 #define __OCCURITY_MESSAGEBOX_H__
 
 #include <QMessageBox>
-#include <QEvent>
+#include <QKeyEvent>
 
 class MessageBox : public QMessageBox
 {
@@ -38,7 +38,7 @@ public:
   MessageBox(const QMessageBox::Icon &icon, const QString &title, const QString &text, const QMessageBox::StandardButtons &buttons, QWidget *parent);
 
 protected:
-  bool eventFilter(QObject *, QEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
   
 };
 #endif/*__OCCURITY_MESSAGEBOX_H__*/

@@ -35,7 +35,6 @@
 MessageBox::MessageBox(const QMessageBox::Icon &icon, const QString &title, const QString &text, const QMessageBox::StandardButtons &buttons, QWidget *parent)
   : QMessageBox(icon, title, text, buttons, parent)
 {
-  installEventFilter(this);
   for(auto *button: this->buttons()) {
     if(buttonRole(button) == QMessageBox::NoRole ||
        buttonRole(button) == QMessageBox::RejectRole) {
@@ -45,31 +44,22 @@ MessageBox::MessageBox(const QMessageBox::Icon &icon, const QString &title, cons
   }
 }
 
-bool MessageBox::eventFilter(QObject *, QEvent *event)
-{
-  if(event->type() == QEvent::KeyPress) {
-    QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-    if(keyEvent->key() == Qt::Key_Enter ||
-       keyEvent->key() == Qt::Key_Return ||
-       keyEvent->key() == Qt::Key_R) {
-      for(auto *button: buttons()) {
-        if(button->hasFocus()) {
-          if(buttonRole(button) == QMessageBox::YesRole ||
-             buttonRole(button) == QMessageBox::AcceptRole) {
-            accept();
-            return true;
-          } else if(buttonRole(button) == QMessageBox::NoRole ||
-                    buttonRole(button) == QMessageBox::RejectRole) {
-            reject();
-            return false;
-          }
-          break;
+void MessageBox::keyPressEvent(QKeyEvent *event) {
+  //We don't need Qt::Key_Enter and Qt::Key_Return here since they are already connected
+  if(event->key() == Qt::Key_R) {
+    for(auto *button: buttons()) {
+      if(button->hasFocus()) {
+        if(buttonRole(button) == QMessageBox::YesRole ||
+           buttonRole(button) == QMessageBox::AcceptRole) {
+          button->click();
+        } else if(buttonRole(button) == QMessageBox::NoRole ||
+                  buttonRole(button) == QMessageBox::RejectRole) {
+          reject();
         }
+        break;
       }
-    } else if(keyEvent->key() == Qt::Key_Escape) { // 'R' is the default enter key on the remote
-      reject();
-      return true;
     }
+  } else if(event->key() == Qt::Key_Escape) {
+    reject();
   }
-  return false;
 }
