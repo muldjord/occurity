@@ -542,9 +542,9 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
     addStatus(INFO, "Destination path not set, cleaning cancelled!");
     return true;
   }
+  QDir rmDir(path);
   bool ask = askPerFile;
   {
-    QDir rmDir(path);
     QDirIterator dirIt(rmDir.absolutePath(),
                        {"*"},
                        QDir::Files | QDir::NoDotAndDotDot,
@@ -579,7 +579,6 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
     }
   }
   {
-    QDir rmDir(path);
     QDirIterator dirIt(rmDir.absolutePath(),
                        {"*"},
                        QDir::Dirs | QDir::NoDotAndDotDot,
