@@ -243,8 +243,8 @@ void JobRunner::runJob(const QString &filename)
           vars["%DSTPATH%"] = jobDstPath;
         }
       }
-    } else if(command.type == "rmpath" && command.parameters.length() == 2) {
-      rmPath((command.parameters.at(0) == "ask"?true:false), command.parameters.at(1));
+    } else if(command.type == "rmpath" && (command.parameters.length() == 1 || command.parameters.length() == 2)) {
+      rmPath(command.parameters.at(0), (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false));
     } else if(command.type == "pretend" && command.parameters.length() == 1) {
       if(command.parameters.at(0) == "true") {
         pretend = true;
@@ -530,7 +530,7 @@ QString JobRunner::varsReplace(QString string)
   return string;
 }
 
-bool JobRunner::rmPath(const bool &askPerFile, const QString &path)
+bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
 {
   if(abortJob) {
     return false;
