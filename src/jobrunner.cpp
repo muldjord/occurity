@@ -262,7 +262,7 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "rmfile" && command.parameters.length() == 1) {
       rmFile(command.parameters.at(0));
     } else if(command.type == "cppath" &&
-              command.parameters.length() == 1) {
+              (command.parameters.length() == 1 || command.parameters.length() == 2)) {
       if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
         addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with '" + command.type + "'");
       }
