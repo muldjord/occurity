@@ -446,7 +446,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   }
   QDir dstDir(dstDirString);
 
-  addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
+  addStatus(STATUS, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
   if(!srcDir.exists()) {
     addStatus(FATAL, "Source path does not exist!");
