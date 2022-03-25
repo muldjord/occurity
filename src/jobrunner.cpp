@@ -42,7 +42,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
 {
   setWindowTitle("Occurity v" VERSION" jobrunner");
-  setFixedSize(1200, 700);
+  setFixedSize(1200, 800);
   
   QVBoxLayout *jobsLayout = new QVBoxLayout;
   jobsLayout->addWidget(new QLabel("<h3>Choose job / function:</h3>"), 0, Qt::AlignCenter);
