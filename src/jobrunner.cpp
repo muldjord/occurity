@@ -218,7 +218,9 @@ void JobRunner::runJob(const QString &filename)
         tempPath = tempPath.left(tempPath.length() - 1);
       }
       addStatus(INFO, "Setting source path to '" + tempPath + "'");
-      if(!jobDstPath.isEmpty() && tempPath.left(jobDstPath.length()) == jobDstPath) {
+      if(!jobDstPath.isEmpty() &&
+         tempPath.left(jobDstPath.length()) == jobDstPath &&
+         jobDstPath.at(tempPath.length()) == "/") {
         addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
       } else {
         if(tempPath.left(1) != "/") {
@@ -233,7 +235,9 @@ void JobRunner::runJob(const QString &filename)
         tempPath = tempPath.left(tempPath.length() - 1);
       }
       addStatus(INFO, "Setting destination path to '" + tempPath + "'");
-      if(!jobSrcPath.isEmpty() && tempPath.left(jobSrcPath.length()) == jobSrcPath) {
+      if(!jobSrcPath.isEmpty() &&
+         tempPath.left(jobSrcPath.length()) == jobSrcPath &&
+         jobSrcPath.at(tempPath.length()) == "/") {
         addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
       } else {
         if(tempPath.left(1) != "/") {
