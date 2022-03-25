@@ -1,10 +1,10 @@
 TEMPLATE = app
-TARGET = VisuTest
+TARGET = Occurity
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += widgets xml svg multimediawidgets multimedia
 CONFIG += release
-TRANSLATIONS = visutest_da_DK.ts
+TRANSLATIONS = occurity_da_DK.ts
 QMAKE_CXXFLAGS += -std=c++11
 
 include(./VERSION)
@@ -37,6 +37,6 @@ SOURCES += src/main.cpp \
            src/jobrunner.cpp \
            src/messagebox.cpp
 
-RESOURCES += visutest.qrc
-RC_FILE = visutest.rc
+RESOURCES += occurity.qrc
+RC_FILE = occurity.rc
 ICON = icon.icns
