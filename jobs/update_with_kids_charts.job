@@ -1,8 +1,8 @@
-title:Update from USB to '%HOME%/visutest' with kids charts
+title:Update from USB to '%HOME%/occurity' with kids charts
 
 message:Set source and destination paths. All cp* commands are relative to these
-srcpath:/media/%USER%/USBPEN/visutest
-dstpath:%HOME%/visutest
+srcpath:/media/%USER%/USBPEN/occurity
+dstpath:%HOME%/occurity
 
 message:Copying required files from source to destination
 cpfile:AUTHORS
@@ -10,8 +10,8 @@ cpfile:charts_w_kids.xml;charts.xml
 cpfile:LICENSE
 cpfile:README.md
 cpfile:VERSION
-cpfile:VisuTest
-cpfile:visutest_da_DK.qm
+cpfile:Occurity
+cpfile:occurity_da_DK.qm
 cpfile:video.mp4
 
 message:Copying required paths, including subfolders, from source to destination

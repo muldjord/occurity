@@ -1,17 +1,17 @@
-# VisuTest
+# Occurity
 
 ## What it is
-VisuTest is a visual acuity test software designed for use on the RaspBerry Pi hardware platform. It enables you to built an affordable visual acuity test system using a few pieces of hardware and basically any remote control. If you do not have the option to buy the infrared receiver, it can also be used with a keyboard.
+Occurity is a visual acuity test software designed for use on the RaspBerry Pi hardware platform. It enables you to built an affordable visual acuity test system using a few pieces of hardware and basically any remote control. If you do not have the option to buy the infrared receiver, it can also be used with a keyboard.
 
 ## License
-VisuTest is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+Occurity is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
-VisuTest is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 ## What you need
 
 ### Hardware
-In order to install a system using VisuTest you need the following hardware
+In order to install a system using Occurity you need the following hardware
 * A Raspberry Pi (preferably a 3B+, but older models should work just fine)
   * At least an 8 GB SD flash card
   * A Raspberry Pi case (recommended, but you might have plans to built it into a monitor)
@@ -23,11 +23,11 @@ In order to install a system using VisuTest you need the following hardware
 ### Monitor
 
 #### Resolution
-VisuTest should display correctly on any monitor using any resolution provided the following two requirements are met:
-* The physical length of the ruler must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
-* The physical distance from the patients eyes to the monitor must be set correctly in the VisuTest configuration (Press `p` on the keyboard and use arrow keys to set it).
+Occurity should display correctly on any monitor using any resolution provided the following two requirements are met:
+* The physical length of the ruler must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
+* The physical distance from the patients eyes to the monitor must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
 
-To test if the monitor you are using reports its resolution correctly to the VisuTest software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype letters at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with VisuTest. To test if your monitor scales correctly, you can also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype letter must be 58 mm at 0.1 and 23 at 0.25.
+To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype letters at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with Occurity. To test if your monitor scales correctly, you can also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype letter must be 58 mm at 0.1 and 23 at 0.25.
 
 #### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
@@ -56,10 +56,10 @@ $ sudo apt remove gstreamer1.0-plugins-bad
 ```
 
 ### System configurations
-I recommend applying the following settings on your Pi system to optimize it for use with VisuTest.
+I recommend applying the following settings on your Pi system to optimize it for use with Occurity.
 
 #### /etc/sudoers/sudoers.d/pi
-To allow the use of the `apt*` commands from the VisuTest updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run VisuTest) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 ```
@@ -77,9 +77,9 @@ Run `sudo raspi-config` in a terminal and set the following options:
 #### /etc/xdg/lxsession/LXDE-pi/autostart
 Add the following line to the bottom of the file:
 ```
-@/home/pi/visutest/VisuTest
+@/home/pi/occurity/Occurity
 ```
-This will autostart VisuTest when the system is logged in.
+This will autostart Occurity when the system is logged in.
 
 #### Appearance Settings
 * Raspberry menu->Preferences->Appearance Settings
@@ -99,23 +99,23 @@ This will autostart VisuTest when the system is logged in.
 #### Update notifications
 * Right-click panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
 
-### Getting and compiling VisuTest
-Open a terminal on the Pi and run the following commands. This will fetch the VisuTest source code and compile it.
+### Getting and compiling Occurity
+Open a terminal on the Pi and run the following commands. This will fetch the Occurity source code and compile it.
 ```
 $ cd
 $ mkdir programming
 $ cd programming
-$ git clone https://github.com/muldjord/visutest.git
-$ cd visutest
+$ git clone https://github.com/muldjord/occurity.git
+$ cd occurity
 $ qmake
 $ make
 ```
 
 ### Optotypes
-VisuTest comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
+Occurity comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
 
 ### charts.xml
-All of the charts displayed in the VisuTest software are customizable. Edit the `charts.xml` file in any basic text/xml editor. The format is as follows:
+All of the charts displayed in the Occurity software are customizable. Edit the `charts.xml` file in any basic text/xml editor. The format is as follows:
 
 #### 'xml' node
 ```
@@ -147,7 +147,7 @@ This groups several charts together on the same number key. It supports the foll
 </chart>
 ```
 Must be nested in the `group` node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
-* caption="Caption" <-- The caption that is shown on-screen in VisuTest.
+* caption="Caption" <-- The caption that is shown on-screen in Occurity.
 * type="optotype" (required) <-- The chart type. Currently supports `optotype` and `svg`.
 * bgcolor="white" <-- Sets the background color of the chart (can be `black`, `white` or hex as `#AABBCC`).
 * sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes.
@@ -179,12 +179,12 @@ Must be nested inside a `chart` node. Defines a layer from inside an SVG to be d
 ```
 <layer id="layername"/>
 ```
-You can add as many layer nodes as you'd like. VisuTest can then switch between them with the left/right arrow keys. SVG's and their layers can be created with the open source software [Inkscape](https://inkscape.org/).
+You can add as many layer nodes as you'd like. Occurity can then switch between them with the left/right arrow keys. SVG's and their layers can be created with the open source software [Inkscape](https://inkscape.org/).
 
 ### config.ini
-You can configure several options of VisuTest to fit your needs. The first time VisuTest is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
-* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
-* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for VisuTest to show the optotypes at their correct sizes.
+You can configure several options of Occurity to fit your needs. The first time Occurity is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
+* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
+* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
 * `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
 * `optotypesDir="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `optotypes`.
 * `redValue=210`: Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.

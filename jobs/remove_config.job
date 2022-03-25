@@ -1,2 +1,2 @@
-title:Remove '%HOME%/visutest/config.ini'
-rmfile:%HOME%/visutest/config.ini
+title:Remove '%HOME%/occurity/config.ini'
+rmfile:%HOME%/occurity/config.ini

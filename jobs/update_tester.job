@@ -2,12 +2,12 @@ title:Test updater functions
 pretend:true
 
 message:Setting variables
-loadvars:%HOME%/programming/visutest/VERSION
+loadvars:%HOME%/programming/occurity/VERSION
 setvar:TEST;This is a value
 
 message:Setting source and destination paths
 srcpath:%WORKDIR%
-dstpath:%HOME%/visutest_update_test
+dstpath:%HOME%/occurity_update_test
 
 message:Installing necessary packages using Apt
 aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins

@@ -1,8 +1,8 @@
-title:Create new release in '/media/%USER%/USBPEN/visutest' using build in '%HOME%/programming/visutest'
+title:Create new release in '/media/%USER%/USBPEN/occurity' using build in '%HOME%/programming/occurity'
 
 message:Setting source and destination paths. All cp* commands are relative to these
-srcpath:%HOME%/programming/visutest
-dstpath:/media/%USER%/USBPEN/visutest
+srcpath:%HOME%/programming/occurity
+dstpath:/media/%USER%/USBPEN/occurity
 
 message:Copying required files from source to destination
 cpfile:AUTHORS
@@ -11,8 +11,8 @@ cpfile:charts.xml
 cpfile:LICENSE
 cpfile:README.md
 cpfile:VERSION
-cpfile:VisuTest
-cpfile:visutest_da_DK.qm
+cpfile:Occurity
+cpfile:occurity_da_DK.qm
 cpfile:video.mp4
 
 message:Copying required paths, including subfolders, from source to destination
