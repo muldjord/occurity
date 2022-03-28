@@ -48,8 +48,9 @@ These two variables can now be used in the script command arguments / parameters
 ### Hardcoded variables
 Some hardcoded variables are available. These can be used without setting them with `setvar` or `loadvars`.
 
-* %HOME%: The current user home directory (eg. `/home/pi`)
-* %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`)
+* %HOME%: The current user home directory (eg. `/home/pi`).
+* %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
+* %USER%: The user name of the currently logged in user (eg. `pi`).
 
 ### aptinstall:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
@@ -60,10 +61,9 @@ To allow the use of the `apt*` commands from the Occurity updater scripting lang
 pi ALL = NOPASSWD : /usr/bin/apt-get
 
 ```
-
 * Example 1: `aptinstall:qtmultimedia5-dev;libqt5multimedia5-plugins`
 
-`sudo apt-get update` will automatically be run before installing any new packages.
+Note! `sudo apt-get update` will automatically be run before installing any new packages.
 
 ### aptremove:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to remove packages using the `sudo apt-get remove` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
@@ -74,10 +74,9 @@ To allow the use of the `apt*` commands from the Occurity updater scripting lang
 pi ALL = NOPASSWD : /usr/bin/apt-get
 
 ```
-
 * Example 1: `aptremove:gstreamer1.0-plugins-bad`
 
-`sudo apt-get update` will automatically be run before removing any packages.
+Note! `sudo apt-get update` will automatically be run before removing any packages.
 
 ### cpfile:sourcefile;destinationfile
 Copies a file from `sourcefile` to `destinationfile`. If `destinationfile` is left out it will copy the file using the filename from `sourcefile`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
@@ -112,3 +111,23 @@ Shuts down the computer. `force` will shutdown without asking the user. `ask` wi
 
 * Example 1: `shutdown:force`
 * Example 2: `shutdown:ask`
+
+### category:CATEGORY
+This defines the category applied to the job when adding it to the Job runner dialog. More jobs can share the same category.
+
+* Example 1: `category:Tools`
+* Example 2: `category:Update jobs`
+
+### rmpath:PATH[;ask]
+Removes an entire path, including contained files and subdirectories. If `;ask` is added after the path, it will ask before deleting each file and directory.
+
+WARNING! This command can be dangerous to use. If you mistype the path, you can end up deleting entire directory trees you didn't mean to delete. So BEWARE! And run it with `pretend:true` (documented elsewhere in this document) to test it.
+
+* Example 1: `rmpath:%HOME%/occurity/optotypes`
+* Example 2: `rmpath:/tmp/tempdir`
+
+### rmfile:FILEPATH
+Removes a single file. A non-relative file path is required (it has to start with a `/`).
+
+* Example 1: `rmpath:%HOME%/occurity/config.ini`
+* Example 2: `rmpath:/media/%USER%/USBPEN/occurity/config.ini`
