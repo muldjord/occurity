@@ -155,6 +155,11 @@ void JobRunner::runJob(const QString &filename)
       }
       Command command;
       command.type = line.split(':').first().trimmed();
+      if(command.type == "title" ||
+         command.type == "version" ||
+         command.type == "category") {
+        continue;
+      }
       command.parameters = line.split(':').last().split(';');
       commands.append(command);
     }
@@ -165,143 +170,99 @@ void JobRunner::runJob(const QString &filename)
   varsReplace();
   
   for(auto &command: commands) {
+
     if(abortJob) {
       break;
     }
-    if(command.type == "aptinstall" && command.parameters.length()) {
-      runCommand("sudo", { "apt-get", "-y", "update" });
-      runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
-    } else if(command.type == "aptremove" && command.parameters.length()) {
-      runCommand("sudo", { "apt-get", "-y", "update" });
-      runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
-    } else if(command.type == "fileexclude" && command.parameters.length() == 1) {
-      addStatus(INFO, "Adding file exclude '" + command.parameters.at(0) + "'");
-      fileExcludes.append(command.parameters.at(0));
-    } else if(command.type == "pathexclude" && command.parameters.length() == 1) {
-      addStatus(INFO, "Adding path exclude '" + command.parameters.at(0) + "'");
-      pathExcludes.append(command.parameters.at(0));
-    } else if(command.type == "setvar" && command.parameters.length() == 2) {
-      QString variable = "%" + command.parameters.at(0) + "%";
-      vars[variable] = command.parameters.at(1);
-      addStatus(INFO, "Variable '" + variable + "' set to value '" + command.parameters.at(1) + "'");
-      for(auto &replaceCommand: commands) {
-        for(auto &parameter: replaceCommand.parameters) {
-          parameter = varsReplace(parameter);
+
+    // Add entire command string to debug output
+    addStatus(COMMAND, getCommandString(command));
+    
+    if(command.type == "aptinstall") {
+      if(command.parameters.length() == 1) {
+        runCommand("sudo", { "apt-get", "-y", "update" });
+        runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+      }
+
+    } else if(command.type == "aptremove") {
+      if(command.parameters.length() == 1) {
+        runCommand("sudo", { "apt-get", "-y", "update" });
+        runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+      }
+
+    } else if(command.type == "fileexclude") {
+      if(command.parameters.length() == 1) {
+        fileExclude(command.parameters.at(0));
+      }
+
+    } else if(command.type == "pathexclude") {
+      if(command.parameters.length() == 1) {
+        pathExclude(command.parameters.at(0));
+      }
+
+    } else if(command.type == "setvar") {
+      if(command.parameters.length() == 2) {
+        setVar(command.parameters.at(0), command.parameters.at(1));
+      }
+
+    } else if(command.type == "loadvars") {
+      if(command.parameters.length() == 1) {
+        loadVars(command.parameters.at(0));
+      }
+
+    } else if(command.type == "srcpath") {
+      if(command.parameters.length() == 1) {
+        srcPath(command.parameters.at(0));
+      }
+
+    } else if(command.type == "dstpath") {
+      if(command.parameters.length() == 1) {
+        dstPath(command.parameters.at(0));
+      }
+
+    } else if(command.type == "rmpath") {
+      if((command.parameters.length() == 1 || command.parameters.length() == 2)) {
+        rmPath(command.parameters.at(0), (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false));
+      }
+
+    } else if(command.type == "pretend") {
+      if(command.parameters.length() == 1) {
+        if(command.parameters.at(0) == "true") {
+          addStatus(STATUS, "Setting pretend! No path or file changes will occur while processing this job.");
+          pretend = true;
         }
       }
-    } else if(command.type == "loadvars" && command.parameters.length() == 1) {
-      addStatus(INFO, "Setting variables from file '" + command.parameters.at(0) + "'");
-      QFile varsFile(command.parameters.at(0));
-      if(varsFile.open(QIODevice::ReadOnly)) {
-        while(!varsFile.atEnd()) {
-          QByteArray line = varsFile.readLine().trimmed();
-          if(line.contains("=")) {
-            QString variable = "%" + line.split('=').first() + "%";
-            QString value = line.split('=').last();
-            vars[variable] = value;
-            addStatus(INFO, "Variable '" + variable + "' set to value '" + value + "'");
-          }
-        }
-        varsFile.close();
+
+    } else if(command.type == "cpfile") {
+      if(command.parameters.length() == 1 || command.parameters.length() == 2) {
+        cpFile(command.parameters.first(), command.parameters.last());
       }
-      for(auto &replaceCommand: commands) {
-        for(auto &parameter: replaceCommand.parameters) {
-          parameter = varsReplace(parameter);
-        }
+
+    } else if(command.type == "rmfile") {
+      if(command.parameters.length() == 1) {
+        rmFile(command.parameters.at(0));
       }
-    } else if(command.type == "srcpath" && command.parameters.length() == 1) {
-      QString tempPath = command.parameters.at(0);
-      if(tempPath.right(1) == "/") {
-        tempPath = tempPath.left(tempPath.length() - 1);
+
+    } else if(command.type == "cppath") {
+      if(command.parameters.length() == 1 || command.parameters.length() == 2) {
+        cpPath(command.parameters.at(0), command.parameters.last());
       }
-      addStatus(INFO, "Setting source path to '" + tempPath + "'");
-      if(!jobDstPath.isEmpty() &&
-         tempPath.left(jobDstPath.length()) == jobDstPath &&
-         jobDstPath.at(tempPath.length()) == "/") {
-        addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
-      } else {
-        if(tempPath.left(1) != "/") {
-          addStatus(FATAL, "Job source path '" + tempPath + "' is relative. This is not allowed.");
-        } else {
-          jobSrcPath = tempPath;
-          vars["%SRCPATH%"] = jobSrcPath;
-        }
+
+    } else if(command.type == "reboot") {
+      if(command.parameters.length() == 1) {
+        reboot(command.parameters.at(0));
       }
-    } else if(command.type == "dstpath" && command.parameters.length() == 1) {
-      QString tempPath = command.parameters.at(0);
-      if(tempPath.right(1) == "/") {
-        tempPath = tempPath.left(tempPath.length() - 1);
+
+    } else if(command.type == "shutdown") {
+      if(command.parameters.length() == 1) {
+        shutdown(command.parameters.at(0));
       }
-      addStatus(INFO, "Setting destination path to '" + tempPath + "'");
-      if(!jobSrcPath.isEmpty() &&
-         tempPath.left(jobSrcPath.length()) == jobSrcPath &&
-         jobSrcPath.at(tempPath.length()) == "/") {
-        addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
-      } else {
-        if(tempPath.left(1) != "/") {
-          addStatus(FATAL, "Job destination path '" + tempPath + "' is relative. This is not allowed.");
-        } else {
-          jobDstPath = tempPath;
-          vars["%DSTPATH%"] = jobDstPath;
-        }
+
+    } else if(command.type == "message") {
+      if(command.parameters.length() == 1) {
+        addStatus(STATUS, command.parameters.at(0));
       }
-    } else if(command.type == "rmpath" && (command.parameters.length() == 1 || command.parameters.length() == 2)) {
-      rmPath(command.parameters.at(0), (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false));
-    } else if(command.type == "pretend" && command.parameters.length() == 1) {
-      if(command.parameters.at(0) == "true") {
-        pretend = true;
-        addStatus(INFO, "Pretend set, no file changes will occur!");
-      }
-    } else if(command.type == "cpfile" &&
-              (command.parameters.length() == 1 || command.parameters.length() == 2)) {
-      if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
-        addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
-      }
-      if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
-        addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with '" + command.type + "'");
-      }
-      cpFile(command.parameters.first(), command.parameters.last());
-    } else if(command.type == "rmfile" && command.parameters.length() == 1) {
-      rmFile(command.parameters.at(0));
-    } else if(command.type == "cppath" &&
-              (command.parameters.length() == 1 || command.parameters.length() == 2)) {
-      if(command.parameters.first().left(1) != "/" && jobSrcPath.isEmpty()) {
-        addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with '" + command.type + "'");
-      }
-      if(command.parameters.last().left(1) != "/" && jobDstPath.isEmpty()) {
-        addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with '" + command.type + "'");
-      }
-      cpPath(command.parameters.first(), command.parameters.last());
-    } else if(command.type == "reboot" && command.parameters.length() == 1) {
-      if(command.parameters.at(0) == "now") {
-        addStatus(INFO, "Forcing reboot now...");
-        QProcess::execute("reboot", {});
-      } else if(command.parameters.at(0) == "ask") {
-        MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
-        messageBox.exec();
-        if(messageBox.result() == QMessageBox::Yes) {
-          addStatus(INFO, "User requested reboot, rebooting now...");
-          QProcess::execute("reboot", {});
-        } else {
-          addStatus(INFO, "User cancelled reboot.");
-        }
-      }
-    } else if(command.type == "shutdown" && command.parameters.length() == 1) {
-      if(command.parameters.at(0) == "now") {
-        addStatus(INFO, "Forcing system shutdown now...");
-        QProcess::execute("halt", {});
-      } else if(command.parameters.at(0) == "ask") {
-        MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
-        messageBox.exec();
-        if(messageBox.result() == QMessageBox::Yes) {
-          addStatus(INFO, "User requested shutdown, shutting down system now...");
-          QProcess::execute("halt", {});
-        } else {
-          addStatus(INFO, "User cancelled shutdown.");
-        }
-      }
-    } else if(command.type == "message" && command.parameters.length() == 1) {
-      addStatus(STATUS, command.parameters.at(0));
+
     }
     progressBar->setValue(progressBar->value() + 1);
   }
@@ -354,24 +315,30 @@ bool JobRunner::eventFilter(QObject *, QEvent *event)
 void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
+  QFont itemFont("monospace");
+  item->setFont(itemFont);
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
-    item->setText((pretend?"INFO (pretend): ":"INFO: ") + text);
+    item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
   } else if(status == STATUS) {
     qInfo("%s", text.toUtf8().data());
-    item->setForeground(QBrush(Qt::white));
-    item->setText((pretend?"STATUS (pretend): ":"STATUS: ") + text);
+    item->setForeground(QBrush(Qt::cyan));
+    item->setText((pretend?"pretend: ":"") + text);
   } else if(status == WARNING) {
     qWarning("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::yellow));
-    item->setText((pretend?"WARNING (pretend): ":"WARNING: ") + text);
+    item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
   } else if(status == FATAL) {
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
-    item->setText((pretend?"FATAL (pretend): ":"FATAL: ") + text);
+    item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
     abortJob = true;
     jobInProgress = false;
+  } else if(status == COMMAND) {
+    qInfo("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::white));
+    item->setText((pretend?"pretend: ":"") + text);
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
@@ -385,6 +352,17 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
   if(abortJob) {
     return false;
   }
+
+  if(srcFile.left(1) != "/" && jobSrcPath.isEmpty()) {
+    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with 'cpfile'");
+    return false;
+  }
+  
+  if(dstFile.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with 'cpfile'");
+    return false;
+  }
+
   QString srcFileString = srcFile;
   if(srcFileString.left(1) != "/") {
     srcFileString.prepend(jobSrcPath + "/");
@@ -434,6 +412,16 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   if(abortJob) {
     return false;
   }
+
+  if(srcPath.left(1) != "/" && jobSrcPath.isEmpty()) {
+    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'cppath'");
+    return false;
+  }
+  if(dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'cppath'");
+    return false;
+  }
+
   QString srcDirString = srcPath;
   if(srcDirString.left(1) != "/") {
     srcDirString.prepend(jobSrcPath + "/");
@@ -490,20 +478,22 @@ bool JobRunner::runCommand(const QString &program, const QList<QString> &args, c
   }
   fullCommand = fullCommand.trimmed();
   
-  addStatus(STATUS, "Running terminal command: '" + fullCommand + "', please wait...");
+  addStatus(STATUS, "Running terminal command '" + fullCommand + "', please wait...");
   if(!pretend) {
     QProcess aptProc;
     aptProc.setProgram(program);
     aptProc.setArguments(args);
     aptProc.start();
     aptProc.waitForFinished(10 * 60 * 1000); // 10 minutes
-    if(aptProc.exitStatus() != QProcess::NormalExit && aptProc.exitCode() != 0) {
-      addStatus(WARNING, "Terminal command failed with the following output:\n");
-      addStatus(WARNING, aptProc.readAllStandardOutput().data());
+    if(aptProc.exitStatus() != QProcess::NormalExit ||
+       aptProc.exitCode() != 0) {
+      addStatus(WARNING, "Terminal command failed!\n");
+      addStatus(WARNING, "StdOut:\n" + aptProc.readAllStandardOutput());
       if(critical) {
-        addStatus(FATAL, aptProc.readAllStandardError().data());
+        addStatus(FATAL, "StdError:\n" + aptProc.readAllStandardError());
+        return false;
       } else {
-        addStatus(WARNING, aptProc.readAllStandardError().data());
+        addStatus(WARNING, "StdError:\n" + aptProc.readAllStandardError());
       }
       return false;
     }
@@ -661,4 +651,143 @@ void JobRunner::setHardcodedVars()
   }
   // SEt %WORKDIR% so it can be used in the .job files
   vars["%WORKDIR%"] = QDir::currentPath();
+}
+
+QString JobRunner::getCommandString(const Command &command)
+{
+  QString commandString = command.type + ":";
+  for(const auto &parameter: command.parameters) {
+    commandString.append(parameter + ";");
+  }
+  commandString = commandString.left(commandString.length() - 1);
+  return commandString;
+}
+
+bool JobRunner::fileExclude(const QString &filename)
+{
+  addStatus(INFO, "Adding file exclude '" + filename + "'");
+  fileExcludes.append(filename);
+  return true;
+}
+
+bool JobRunner::pathExclude(const QString &path)
+{
+  addStatus(INFO, "Adding path exclude '" + path + "'");
+  pathExcludes.append(path);
+  return true;
+}
+
+bool JobRunner::setVar(const QString &key, const QString &value)
+{
+  QString variable = "%" + key + "%";
+  addStatus(INFO, "Setting variable '" + variable + "' to value '" + value + "'");
+  vars[variable] = value;
+  varsReplace();
+  return true;
+}
+
+bool JobRunner::loadVars(const QString &filename)
+{
+  addStatus(INFO, "Setting variables from file '" + filename + "'");
+  QFile varsFile(filename);
+  if(varsFile.open(QIODevice::ReadOnly)) {
+    while(!varsFile.atEnd()) {
+      QByteArray line = varsFile.readLine().trimmed();
+      if(line.contains("=")) {
+        setVar("%" + line.split('=').first() + "%", line.split('=').last());
+      }
+    }
+    varsFile.close();
+  } else {
+    addStatus(FATAL, "Variable file '" + filename + "' could not be opened for reading!");
+  }
+  varsReplace();
+  return true;
+}
+
+bool JobRunner::srcPath(const QString &path)
+{
+  QString tempPath = path;
+  if(tempPath.right(1) == "/") {
+    tempPath = tempPath.left(tempPath.length() - 1);
+  }
+  addStatus(INFO, "Setting source path to '" + tempPath + "'");
+  if(!jobDstPath.isEmpty() &&
+     tempPath.left(jobDstPath.length()) == jobDstPath &&
+     jobDstPath.at(tempPath.length()) == "/") {
+    addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
+    return false;
+  } else {
+    if(tempPath.left(1) != "/") {
+      addStatus(FATAL, "Job source path '" + tempPath + "' is relative. This is not allowed.");
+      return false;
+    }
+  }
+
+  jobSrcPath = tempPath;
+  vars["%SRCPATH%"] = jobSrcPath;
+  varsReplace();
+  return true;
+}
+
+
+bool JobRunner::dstPath(const QString &path)
+{
+  QString tempPath = path;
+  if(tempPath.right(1) == "/") {
+    tempPath = tempPath.left(tempPath.length() - 1);
+  }
+  addStatus(INFO, "Setting destination path to '" + tempPath + "'");
+  if(!jobSrcPath.isEmpty() &&
+     tempPath.left(jobSrcPath.length()) == jobSrcPath &&
+     jobSrcPath.at(tempPath.length()) == "/") {
+    addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
+    return false;
+  } else {
+    if(tempPath.left(1) != "/") {
+      addStatus(FATAL, "Job destination path '" + tempPath + "' is relative. This is not allowed.");
+      return false;
+    }
+  }
+
+  jobDstPath = tempPath;
+  vars["%DSTPATH%"] = jobDstPath;
+  varsReplace();
+  return true;
+}
+
+bool JobRunner::reboot(const QString &argument)
+{
+  if(argument == "force") {
+    addStatus(INFO, "Forcing reboot now...");
+    QProcess::execute("reboot", {});
+  } else if(argument == "ask") {
+    MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.exec();
+    if(messageBox.result() == QMessageBox::Yes) {
+      addStatus(INFO, "User requested reboot, rebooting now...");
+      QProcess::execute("reboot", {});
+    } else {
+      addStatus(INFO, "User cancelled reboot.");
+    }
+  }
+  return true;
+}
+
+bool JobRunner::shutdown(const QString &argument)
+{
+  if(argument == "force") {
+    addStatus(INFO, "Forcing system shutdown now...");
+    QProcess::execute("halt", {});
+  } else if(argument == "ask") {
+    MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.exec();
+    if(messageBox.result() == QMessageBox::Yes) {
+      addStatus(INFO, "User requested shutdown, shutting down system now...");
+      QProcess::execute("halt", {});
+    } else {
+      addStatus(INFO, "User cancelled shutdown.");
+    }
+  }
+  return true;
 }
