@@ -100,3 +100,15 @@ This command is optional. If set, the `x.x.x` will be shown before the title whe
 
 * Example 1: `version:1.2.0`
 * Example 2: `version:May 2022 version`
+
+### reboot:force|ask
+Reboots the computer. `force` will restart without asking the user. `ask` will allow the user to cancel the reboot through a dialog.
+
+* Example 1: `reboot:force`
+* Example 2: `reboot:ask`
+
+### shutdown:force|ask
+Shuts down the computer. `force` will shutdown without asking the user. `ask` will allow the user to cancel the shutdown through a dialog.
+
+* Example 1: `shutdown:force`
+* Example 2: `shutdown:ask`
