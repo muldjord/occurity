@@ -135,6 +135,7 @@ void JobRunner::runJob(const QString &filename)
     return;
   }
 
+  statusList->clear();
   vars.clear();
   setHardcodedVars();
   jobSrcPath.clear();
@@ -142,7 +143,8 @@ void JobRunner::runJob(const QString &filename)
   fileExcludes.clear();
   pathExcludes.clear();
   commands.clear();
-
+  pretend = false;
+  
   QFile commandFile(filename);
   if(commandFile.open(QIODevice::ReadOnly)) {
     while(!commandFile.atEnd()) {
@@ -316,19 +318,23 @@ void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
   QFont itemFont("monospace");
+  int delay = 5;
   item->setFont(itemFont);
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
     item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
+    delay = 10;
   } else if(status == STATUS) {
     qInfo("%s", text.toUtf8().data());
-    item->setForeground(QBrush(Qt::cyan));
+    item->setForeground(QBrush(Qt::white));
     item->setText((pretend?"pretend: ":"") + text);
+    delay = 250;
   } else if(status == WARNING) {
     qWarning("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::yellow));
     item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
+    delay = 500;
   } else if(status == FATAL) {
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
@@ -337,13 +343,13 @@ void JobRunner::addStatus(const int &status, const QString &text)
     jobInProgress = false;
   } else if(status == COMMAND) {
     qInfo("%s", text.toUtf8().data());
-    item->setForeground(QBrush(Qt::white));
+    item->setForeground(QBrush(Qt::gray));
     item->setText((pretend?"pretend: ":"") + text);
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
   QEventLoop waiter;
-  QTimer::singleShot(10, &waiter, &QEventLoop::quit);
+  QTimer::singleShot(delay, &waiter, &QEventLoop::quit);
   waiter.exec();
 }
 
