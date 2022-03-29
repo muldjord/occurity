@@ -1,12 +1,12 @@
 # Occurity job scripting help
 
 ## What is contained in this folder
-This folder contains `.upd` files which contain recipe's for maintenance jobs. The `.job` files within this folder are read and parsed through the integrated Occurity job runner dialog (initiated with `j` on the keyboard).
+This folder contains `.job` files which consist of commands to be executed for custom maintenance jobs. The `.job` files within this folder are read and parsed through the integrated Occurity job runner dialog (initiated with `j` on the keyboard).
 
 Below follows a complete description of the available commands and syntax of the VisuText update scripting language.
 
 ## Scripting language overview
-A single line of the scripting language is made up of the command type, followed by a `:`, followed by the required arguments. If more arguments are allowed, they are separated by `;`.
+A single line of the scripting language is made up of the command type, followed by a `:`, followed by the required arguments. If more arguments are allowed / required, they are separated by `;`.
 
 ## Available commands
 
