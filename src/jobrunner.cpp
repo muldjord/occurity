@@ -219,7 +219,9 @@ void JobRunner::runJob(const QString &filename)
     }
 
     // Add entire command string to debug output
-    addStatus(COMMAND, getCommandString(command));
+    if(command.type != "message") {
+      addStatus(COMMAND, getCommandString(command));
+    }
     
     if(command.type == "aptinstall") {
       if(command.parameters.length() == 1) {
@@ -438,7 +440,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
   }
 
   if(!pretend && !QDir::root().mkpath(dstInfo.absolutePath())) {
-    addStatus(FATAL, "Path '" + dstInfo.absolutePath() + "' for file could not be created!");
+    addStatus(FATAL, "Path '" + dstInfo.absolutePath() + "' could not be created!");
     return false;
   }
 
