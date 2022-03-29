@@ -817,7 +817,7 @@ bool JobRunner::reboot(const QString &argument)
       addStatus(INFO, "User requested reboot, rebooting now...");
       QProcess::execute("reboot", {});
     } else {
-      addStatus(INFO, "User cancelled reboot.");
+      addStatus(WARNING, "User cancelled reboot.");
     }
   }
   return true;
@@ -835,7 +835,7 @@ bool JobRunner::shutdown(const QString &argument)
       addStatus(INFO, "User requested shutdown, shutting down system now...");
       QProcess::execute("halt", {});
     } else {
-      addStatus(INFO, "User cancelled shutdown.");
+      addStatus(WARNING, "User cancelled shutdown.");
     }
   }
   return true;
