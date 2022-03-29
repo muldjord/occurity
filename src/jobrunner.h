@@ -69,7 +69,7 @@ private:
   QProgressBar *progressBar = nullptr;
   QList<QString> fileExcludes;
   QList<QString> pathExcludes;
-  QButtonGroup *jobsButtons = nullptr;
+  QButtonGroup *jobButtons = nullptr;
   MainSettings &mainSettings;
 
   void setHardcodedVars();

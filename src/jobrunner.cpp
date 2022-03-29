@@ -43,28 +43,22 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
 {
   setWindowTitle("Occurity v" VERSION" jobrunner");
   setFixedSize(1200, 800);
+
+  setStyleSheet("QLabel {font-weight:bold;} QRadioButton {margin-left: 10px;}");
   
-  QVBoxLayout *jobsLayout = new QVBoxLayout;
-  jobsLayout->addWidget(new QLabel("<h3>Choose job / function:</h3>"), 0, Qt::AlignCenter);
-  jobsButtons = new QButtonGroup;
-  QList<QString> filters { "*.job" };
+  jobButtons = new QButtonGroup;
 
   setHardcodedVars();
 
-  bool foundJob = false;
-  setStyleSheet("QLabel {font-weight:bold;}");
-  QMap<QString, QVBoxLayout*> categories;
-  QDirIterator dirIt(mainSettings.jobsFolder,
-                     filters,
-                     QDir::Files | QDir::NoDotAndDotDot,
-                     QDirIterator::Subdirectories);
-  while(dirIt.hasNext()) {
-    dirIt.next();
-    QFile jobFile(dirIt.fileInfo().absoluteFilePath());
+  QList<QVBoxLayout*> categoryLayouts;
+  QList<QRadioButton *> jobButtonsList;
+  QDir jobDir(mainSettings.jobsFolder, "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+  for(const auto &jobInfo: jobDir.entryInfoList()) {
+    QFile jobFile(jobInfo.absoluteFilePath());
     if(jobFile.open(QIODevice::ReadOnly)) {
       QString jobTitle = "";
       QString jobVersion = "";
-      QString category = "Uncategorized";
+      QString categoryString = "Uncategorized";
       while(!jobFile.atEnd()) {
         QString line = jobFile.readLine().trimmed();
         if(line.contains(":")) {
@@ -75,44 +69,85 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
             jobVersion = line.split(":").last();
             jobVersion = varsReplace(jobVersion);
           } else if(line.split(":").first() == "category") {
-            category = line.split(":").last();
-            category = varsReplace(category);
+            categoryString = line.split(":").last();
+            categoryString = varsReplace(categoryString);
           }
         }
       }
       if(!jobTitle.isEmpty()) {
-        if(!categories.contains(category)) {
-          printf("Creating category '%s'\n", category.toStdString().c_str());
-          categories[category] = new QVBoxLayout;
-          categories[category]->addWidget(new QLabel(category));
-          jobsLayout->addLayout(categories[category]);
+        QVBoxLayout *categoryLayout = nullptr;
+        for(auto *existingCategoryLayout: categoryLayouts) {
+          if(existingCategoryLayout->objectName() == categoryString) {
+            categoryLayout = existingCategoryLayout;
+            break;
+          }
+        }
+        if(categoryLayout == nullptr) {
+          printf("Creating category '%s'\n", categoryString.toStdString().c_str());
+          categoryLayout = new QVBoxLayout;
+          categoryLayout->setObjectName(categoryString);
+          categoryLayout->addWidget(new QLabel(categoryString));
+          categoryLayouts.append(categoryLayout);
         }
         QRadioButton *jobTypeButton = new QRadioButton((jobVersion.isEmpty()?"":jobVersion + ": ") + jobTitle);
-        if(!foundJob) {
-          jobTypeButton->click();
-        }
-        jobTypeButton->setObjectName(dirIt.fileInfo().absoluteFilePath());
-        jobsButtons->addButton(jobTypeButton);
-        categories[category]->addWidget(jobTypeButton);
-        foundJob = true;
+        jobTypeButton->setObjectName(jobInfo.absoluteFilePath());
+        jobTypeButton->setAccessibleName(categoryString);
+        jobButtons->addButton(jobTypeButton);
+        jobButtonsList.append(jobTypeButton);
       }
       jobFile.close();
     }
   }
+  std::sort(jobButtonsList.begin(), jobButtonsList.end(),	[](const QRadioButton *a, const QRadioButton *b) -> bool { return a->objectName().toLower() < b->objectName().toLower();});
 
-  progressBar = new QProgressBar;
-  progressBar->setFormat("%p% completed");
-  progressBar->setAlignment(Qt::AlignCenter);
-  jobsLayout->addWidget(progressBar);
+  std::sort(categoryLayouts.begin(), categoryLayouts.end(),	[](const QVBoxLayout *a, const QVBoxLayout *b) -> bool { return a->objectName().toLower() < b->objectName().toLower();});    
 
-  statusList = new QListWidget;
-  statusList->setStyleSheet("QListWidget {background-color: black;}");
-  jobsLayout->addWidget(statusList);
+  bool firstClicked = false;
+  for(auto *categoryLayout: categoryLayouts) {
+    for(auto *jobButton: jobButtonsList) {
+      if(jobButton->accessibleName() == categoryLayout->objectName()) {
+        if(!firstClicked) {
+          jobButton->click();
+          firstClicked = true;
+        }
+        categoryLayout->addWidget(jobButton);
+      }
+    }
+  }
+  /*
+    QList<QPair<QString, QList<QVBoxLayout *> > categoryLayouts;
+  for(const auto &key: categoryLayouts.keys()) {
+    categoryLayouts.append(QPair<QString, QVBoxLayout *>(key, categoryLayouts[key]));
+    QObjectList jobButtonsLists = categoryLayouts[key]->children();
+    categoryLayouts[key]->clear();
+    for(auto &jobButtonsList: jobButtonsLists) {
+      categoryLayouts[key]->addWidget(reinterpret_cast<QRadioButton*>(jobButtonsList));
+    }
+  }
 
-  if(!foundJob) {
+  std::sort(categoryLayouts.begin(), categoryLayouts.end(),	[](const QPair<QString, QVBoxLayout *> a, const QPair<QString, QVBoxLayout *> b) -> bool { return a.first.toLower() < b.first.toLower();});
+    */
+
+  QVBoxLayout *jobsLayout = new QVBoxLayout;
+
+  if(!firstClicked) {
     QLabel *noJob = new QLabel("<h2>No jobs found in jobs folder:</h2><h3>" + mainSettings.jobsFolder + "</h3>");
-    jobsLayout->addWidget(noJob, 0, Qt::AlignCenter);
+    jobsLayout->addWidget(noJob, 2, Qt::AlignCenter);
     
+  } else {
+    jobsLayout->addWidget(new QLabel("<h3>Choose job to run:</h3>"), 0, Qt::AlignCenter);
+    for(auto *categoryLayout: categoryLayouts) {
+      jobsLayout->addLayout(categoryLayout);
+    }
+    progressBar = new QProgressBar;
+    progressBar->setFormat("%p% completed");
+    progressBar->setAlignment(Qt::AlignCenter);
+    jobsLayout->addWidget(progressBar);
+    
+    statusList = new QListWidget;
+    statusList->setWordWrap(true);
+    statusList->setStyleSheet("QListWidget {background-color: black;}");
+    jobsLayout->addWidget(statusList);
   }
 
   setLayout(jobsLayout);
@@ -127,23 +162,29 @@ void JobRunner::runJob(const QString &filename)
   progressBar->setFormat("%p% completed");
   progressBar->setValue(0);
   
+  statusList->clear();
+
+  vars.clear();
+  setHardcodedVars();
+
+  jobSrcPath.clear();
+  jobDstPath.clear();
+
+  fileExcludes.clear();
+  pathExcludes.clear();
+
+  commands.clear();
+
+  pretend = false;
+
   addStatus(STATUS, "Running script from file '" + filename + "'");
+
   QFileInfo jobInfo(filename);
   if(!jobInfo.exists()) {
     MessageBox messageBox(QMessageBox::Critical, "Error", "The job file '" + filename + "' does not exist. Can't run, aborting!", QMessageBox::Ok, this);
     messageBox.exec();
     return;
   }
-
-  statusList->clear();
-  vars.clear();
-  setHardcodedVars();
-  jobSrcPath.clear();
-  jobDstPath.clear();
-  fileExcludes.clear();
-  pathExcludes.clear();
-  commands.clear();
-  pretend = false;
   
   QFile commandFile(filename);
   if(commandFile.open(QIODevice::ReadOnly)) {
@@ -297,10 +338,10 @@ bool JobRunner::eventFilter(QObject *, QEvent *event)
     if(keyEvent->key() == Qt::Key_Enter ||
        keyEvent->key() == Qt::Key_Return ||
        keyEvent->key() == Qt::Key_R) { // 'R' is the default enter key on the remote
-      if(!jobsButtons->buttons().isEmpty()) {
-        for(const auto *button: jobsButtons->buttons()) {
-          if(button->isChecked()) {
-            runJob(button->objectName());
+      if(!jobButtons->buttons().isEmpty()) {
+        for(const auto *jobButton: jobButtons->buttons()) {
+          if(jobButton->isChecked()) {
+            runJob(jobButton->objectName());
             break;
           }
         }
@@ -324,17 +365,19 @@ void JobRunner::addStatus(const int &status, const QString &text)
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
     item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
-    delay = 10;
+    //delay = 10;
   } else if(status == STATUS) {
     qInfo("%s", text.toUtf8().data());
+    itemFont.setPixelSize(20);
+    item->setFont(itemFont);
     item->setForeground(QBrush(Qt::white));
     item->setText((pretend?"pretend: ":"") + text);
-    delay = 250;
+    //delay = 250;
   } else if(status == WARNING) {
     qWarning("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::yellow));
     item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
-    delay = 500;
+    //delay = 500;
   } else if(status == FATAL) {
     qCritical("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::red));
