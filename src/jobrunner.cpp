@@ -444,7 +444,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
     return false;
   }
 
-  if(srcInfo.absoluteFilePath() == srcInfo.absoluteFilePath()) {
+  if(srcInfo.absoluteFilePath() == dstInfo.absoluteFilePath()) {
     addStatus(WARNING, "Source and destination are the same! Ignoring.");
     return false;
   }
