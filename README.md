@@ -192,7 +192,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
 * `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
 * `rowSkipDelta=4`: The number of lines skipped when pressing `w` and `s`.
-* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. Default is `4242`.
+* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. It can be any length as long as it only contains numbers. Default is `4242`.
 
 ## Keyboard control
 * q: Hibernate / turn monitor off
