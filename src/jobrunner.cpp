@@ -493,12 +493,12 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
 
   QDir srcDir(srcDirString, "*", QDir::Name, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
   QDir dstDir(dstDirString);
+  addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
   if(!pretend && !isExcluded(pathExcludes, dstDir.absolutePath()) && !QDir::root().mkpath(dstDir.absolutePath())) {
     return false;
   }
   for(const auto &dirInfo: srcDir.entryInfoList()) {
     if(dirInfo.isDir()) {
-      addStatus(INFO, "Copying path '" + dirInfo.absoluteFilePath() + "' to '" + dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1) + "'");
       if(!cpPath(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1))) {
         addStatus(FATAL, "Path could not be copied!");
         return false;
