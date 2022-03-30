@@ -39,7 +39,8 @@ constexpr int INFO = 0;
 constexpr int STATUS = 1;
 constexpr int WARNING = 2;
 constexpr int FATAL = 3;
-constexpr int COMMAND = 4;
+constexpr int CODE = 4;
+constexpr int INIT = 5;
 
 struct Command {
   QString type = "";
@@ -85,7 +86,7 @@ private:
   bool cpFile(const QString &srcFile, const QString &dstFile);
   bool cpPath(const QString &srcPath, const QString &dstPath);
   bool rmFile(const QString &filePath);
-  bool rmPath(const QString &path, const bool &askPerFile = false);
+  bool rmPath(const QString &path, bool &askPerPath);
   bool hasInternet(const QString &command);
   bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = true);
   bool reboot(const QString &argument);

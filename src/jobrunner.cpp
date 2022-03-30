@@ -57,7 +57,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   for(const auto &jobInfo: jobDir.entryInfoList()) {
     QFile jobFile(jobInfo.absoluteFilePath());
     if(jobFile.open(QIODevice::ReadOnly)) {
-      QString jobTitle = "";
+      QString jobTitle = jobInfo.fileName();
       QString jobVersion = "";
       QString categoryString = "Uncategorized";
       while(!jobFile.atEnd()) {
@@ -115,19 +115,6 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
       }
     }
   }
-  /*
-    QList<QPair<QString, QList<QVBoxLayout *> > categoryLayouts;
-  for(const auto &key: categoryLayouts.keys()) {
-    categoryLayouts.append(QPair<QString, QVBoxLayout *>(key, categoryLayouts[key]));
-    QObjectList jobButtonsLists = categoryLayouts[key]->children();
-    categoryLayouts[key]->clear();
-    for(auto &jobButtonsList: jobButtonsLists) {
-      categoryLayouts[key]->addWidget(reinterpret_cast<QRadioButton*>(jobButtonsList));
-    }
-  }
-
-  std::sort(categoryLayouts.begin(), categoryLayouts.end(),	[](const QPair<QString, QVBoxLayout *> a, const QPair<QString, QVBoxLayout *> b) -> bool { return a.first.toLower() < b.first.toLower();});
-    */
 
   QVBoxLayout *jobsLayout = new QVBoxLayout;
 
@@ -221,7 +208,7 @@ void JobRunner::runJob(const QString &filename)
 
     // Add entire command string to debug output
     if(command.type != "message") {
-      addStatus(COMMAND, getCommandString(command));
+      addStatus(CODE, getCommandString(command));
     }
     
     if(command.type == "aptinstall") {
@@ -270,11 +257,6 @@ void JobRunner::runJob(const QString &filename)
         dstPath(command.parameters.at(0));
       }
 
-    } else if(command.type == "rmpath") {
-      if((command.parameters.length() == 1 || command.parameters.length() == 2)) {
-        rmPath(command.parameters.at(0), (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false));
-      }
-
     } else if(command.type == "pretend") {
       if(command.parameters.length() == 1) {
         if(command.parameters.at(0) == "true") {
@@ -296,6 +278,12 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "cppath") {
       if(command.parameters.length() == 1 || command.parameters.length() == 2) {
         cpPath(command.parameters.at(0), command.parameters.last());
+      }
+
+    } else if(command.type == "rmpath") {
+      if((command.parameters.length() == 1 || command.parameters.length() == 2)) {
+        bool askPerPath = (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false);
+        rmPath(command.parameters.at(0), askPerPath);
       }
 
     } else if(command.type == "reboot") {
@@ -366,7 +354,7 @@ void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
   QFont itemFont("monospace");
-  int delay = 50;
+  int delay = 10;
   item->setFont(itemFont);
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
@@ -391,10 +379,14 @@ void JobRunner::addStatus(const int &status, const QString &text)
     item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
     abortJob = true;
     jobInProgress = false;
-  } else if(status == COMMAND) {
+  } else if(status == CODE) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::gray));
-    item->setText((pretend?"pretend: ":"") + text);
+    item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
+  } else if(status == INIT) {
+    qInfo("%s", text.toUtf8().data());
+    item->setForeground(QBrush(Qt::cyan));
+    item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
   }
   statusList->addItem(item);
   statusList->scrollToBottom();
@@ -432,7 +424,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
 
   QFileInfo dstInfo(dstFileString);
   
-  addStatus(INFO, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+  addStatus(INIT, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
 
   if(isExcluded(fileExcludes, srcInfo.absoluteFilePath())) {
     addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
@@ -494,7 +486,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   QDir srcDir(srcDirString, "*", QDir::Name, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
   QDir dstDir(dstDirString);
 
-  addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
+  addStatus(INIT, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
   if(isExcluded(pathExcludes, srcDir.absolutePath())) {
     addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
@@ -502,77 +494,24 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   }
   
   if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
+    addStatus(FATAL, "Path '" + dstDir.absolutePath() + "' could not be copied!");
     return false;
   }
 
   for(const auto &dirInfo: srcDir.entryInfoList()) {
     if(dirInfo.isDir()) {
       if(!cpPath(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1))) {
-        addStatus(FATAL, "Path could not be copied!");
         return false;
       }
     } else if(dirInfo.isFile()) {
       if(!cpFile(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1))) {
-        addStatus(FATAL, "File could not be copied!");
         return false;
       }
-      /*
-      addStatus(INFO, "Copying file '" + dirInfo.absoluteFilePath() + "' to '" + dstDir.absolutePath() + "/" + dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() - 1) + "'");
-      if(!cpFile(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() - 1))) {
-        addStatus(FATAL, "File could not be copied!");
-        return false;
-      }
-      */
     }
   }
-  addStatus(INFO, "Path copied successfully!");
+
+  addStatus(INFO, "Path '" + srcDir.absolutePath() + "' copied successfully!");
   return true;
-
-  /*
-  addStatus(STATUS, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
-  if(isExcluded(pathExcludes, srcDir.absolutePath())) {
-    addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
-    return false;
-  }
-
-  if(!srcDir.exists()) {
-    addStatus(FATAL, "Source path does not exist!");
-    return false;
-  }
-  if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
-    addStatus(FATAL, "Path '" + dstDir.absolutePath() + "' could not be created");
-    return false;
-  }
-
-  QDirIterator dirIt(srcDir.absolutePath(),
-                     {"*"},
-                     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
-                     QDirIterator::Subdirectories);
-  while(dirIt.hasNext()) {
-    dirIt.next();
-    QFileInfo itSrc = dirIt.fileInfo();
-    QFileInfo itDst(dstDir.absolutePath() + "/" + itSrc.absoluteFilePath().mid(srcDir.absolutePath().length()));
-    if(itSrc.isDir()) {
-      addStatus(INFO, "Copying path '" + itSrc.absoluteFilePath() + "' to '" + itDst.absoluteFilePath() + "'");
-      if(isExcluded(pathExcludes, itSrc.absolutePath())) {
-        addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
-        continue;
-      }
-      if(!pretend && !QDir::root().mkpath(itDst.absoluteFilePath())) {
-        addStatus(FATAL, "Path '" + itDst.absoluteFilePath() + "' could not be created");
-        return false;
-      }
-    } else if(itSrc.isFile()) {
-      if(isExcluded(fileExcludes, itSrc.absoluteFilePath()) ||
-         isExcluded(pathExcludes, itSrc.absolutePath())) {
-        addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
-        continue;
-      }
-      cpFile(itSrc.absoluteFilePath(), itDst.absoluteFilePath());
-    }
-  }
-  return true;
-  */
 }
 
 bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
@@ -583,7 +522,7 @@ bool JobRunner::runCommand(const QString &program, const QList<QString> &args, c
   }
   fullCommand = fullCommand.trimmed();
   
-  addStatus(STATUS, "Running terminal command '" + fullCommand + "', please wait...");
+  addStatus(INIT, "Running terminal command '" + fullCommand + "', please wait...");
   if(!pretend) {
     QProcess aptProc;
     aptProc.setProgram(program);
@@ -628,73 +567,40 @@ QString JobRunner::varsReplace(QString string)
   return string;
 }
 
-bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
+bool JobRunner::rmPath(const QString &path, bool &askPerPath)
 {
   if(abortJob) {
     return false;
   }
 
-  addStatus(STATUS, "Removing path '" + path + "' including subdirectories.");
-
-  if(path.isEmpty()) {
-    addStatus(FATAL, "Path not set, can't remove!");
-    return false;
-  }
+  addStatus(INIT, "Entering path '" + path + "'");
 
   if(path.left(1) != "/") {
     addStatus(FATAL, "A non-relative path is required. Path not removed!");
     return false;
   }
 
-  QDir rmDir(path);
-  bool ask = askPerFile;
-  {
-    QDirIterator dirIt(rmDir.absolutePath(),
-                       {"*"},
-                       QDir::Files | QDir::NoDotAndDotDot,
-                       QDirIterator::Subdirectories);
-    while(dirIt.hasNext()) {
-      dirIt.next();
-      bool remove = true;
-      if(ask) {
-        MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete file '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
-        messageBox.exec();
-        if(messageBox.result() == QMessageBox::Yes ||
-           messageBox.result() == QMessageBox::YesToAll) {
-          if(messageBox.result() == QMessageBox::YesToAll) {
-            ask = false;
-          }
-          remove = true;
-        } else {
-          remove = false;
-        }
-      }
-      if(remove) {
-        if(!pretend) {
-          if(!rmFile(dirIt.filePath())) {
-            return false;
-          }
-        }
-      } else {
-        addStatus(WARNING, "Skipping file '" + dirIt.filePath() + "'");
-      }
-    }
+  QDir srcDir(path, "*", QDir::Name, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+
+  if(isExcluded(pathExcludes, srcDir.absolutePath())) {
+    addStatus(WARNING, "Path marked for exclusion, continuing without removing!");
+    return true;
   }
-  {
-    QDirIterator dirIt(rmDir.absolutePath(),
-                       {"*"},
-                       QDir::Dirs | QDir::NoDotAndDotDot,
-                       QDirIterator::Subdirectories);
-    while(dirIt.hasNext()) {
-      dirIt.next();
+  if(!srcDir.exists()) {
+    addStatus(WARNING, "Path already doesn't exist, continuing!");
+    return true;
+  }
+  
+  for(const auto &dirInfo: srcDir.entryInfoList()) {
+    if(dirInfo.isDir()) {
       bool remove = true;
-      if(ask) {
-        MessageBox messageBox(QMessageBox::Question, "Delete?", "Delete path '" + dirIt.filePath() + "'?", QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::NoToAll, this);
+      if(askPerPath) {
+        MessageBox messageBox(QMessageBox::Question, "Delete?", "Do you want to delete path '" + dirInfo.absoluteFilePath() + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
         messageBox.exec();
         if(messageBox.result() == QMessageBox::Yes ||
            messageBox.result() == QMessageBox::YesToAll) {
           if(messageBox.result() == QMessageBox::YesToAll) {
-            ask = false;
+            askPerPath = false;
           }
           remove = true;
         } else {
@@ -702,26 +608,33 @@ bool JobRunner::rmPath(const QString &path, const bool &askPerFile)
         }
       }
       if(remove) {
-        addStatus(INFO, "Removing path '" + dirIt.filePath() + "'");
-        if(!pretend) {
-          if(!QDir::root().rmpath(dirIt.filePath())) {
-            addStatus(FATAL, "Path could not be removed! Job cancelled.");
-            return false;
-          }
+        if(!rmPath(dirInfo.absoluteFilePath(), askPerPath)) {
+          return false;
         }
-      } else {
-        addStatus(WARNING, "Skipping path '" + dirIt.filePath() + "'");
+      }
+    } else if(dirInfo.isFile()) {
+      if(!rmFile(dirInfo.absoluteFilePath())) {
+        return false;
       }
     }
   }
 
+  addStatus(INIT, "Removing path '" + path + "'");
   if(!pretend) {
-    if(!QDir::root().rmpath(rmDir.absolutePath())) {
-      addStatus(FATAL, "Base path could not be removed! Job cancelled.");
+    srcDir.refresh();
+    if(srcDir.count()) {
+      for(const auto &tempInfo: srcDir.entryInfoList()) {
+        printf("FOUND: %s\n", tempInfo.absoluteFilePath().toStdString().c_str());
+      }
+      addStatus(FATAL, "Path '" + srcDir.absolutePath() + "' is not empty, can't remove!");
+      return false;
+    } else if(!QDir::root().rmdir(srcDir.absolutePath())) {
+      addStatus(FATAL, "Path '" + srcDir.absolutePath() + "' could not be removed! Perhaps a permission problem?");
+      return false;
     }
   }
 
-  addStatus(INFO, "Path removed!");
+  addStatus(INFO, "Path '" + srcDir.absolutePath() + "' removed successfully!");
   return true;
 }
 
@@ -730,20 +643,25 @@ bool JobRunner::rmFile(const QString &filePath)
   if(abortJob) {
     return false;
   }
-  addStatus(INFO, "Removing file '" + filePath + "'");
+
+  addStatus(INIT, "Removing file '" + filePath + "'");
+
   if(filePath.left(1) != "/") {
     addStatus(FATAL, "A non-relative file path is required. File not removed!");
     return false;
   }
+
   if(!QFile::exists(filePath)) {
     addStatus(FATAL, "File doesn't exist!");
     return false;
   }
+
   if(!QFile::remove(filePath)) {
-    addStatus(FATAL, "File could not be removed. Maybe a permission problem?");
+    addStatus(FATAL, "File could not be removed!");
     return false;
   }
-  addStatus(INFO, "File removed!");
+
+  addStatus(INFO, "File removed successfully!");
   return true;
 }
 
@@ -771,14 +689,14 @@ QString JobRunner::getCommandString(const Command &command)
 
 bool JobRunner::fileExclude(const QString &filename)
 {
-  addStatus(INFO, "Adding file exclude '" + filename + "'");
+  addStatus(INIT, "Adding file exclude '" + filename + "'");
   fileExcludes.append(filename);
   return true;
 }
 
 bool JobRunner::pathExclude(const QString &path)
 {
-  addStatus(INFO, "Adding path exclude '" + path + "'");
+  addStatus(INIT, "Adding path exclude '" + path + "'");
   pathExcludes.append(path);
   return true;
 }
@@ -786,21 +704,22 @@ bool JobRunner::pathExclude(const QString &path)
 bool JobRunner::setVar(const QString &key, const QString &value)
 {
   QString variable = "%" + key + "%";
-  addStatus(INFO, "Setting variable '" + variable + "' to value '" + value + "'");
+  addStatus(INIT, "Setting variable '" + variable + "' to value '" + value + "'");
   vars[variable] = value;
   varsReplace();
+  addStatus(INFO, "Variable set succesfully!");
   return true;
 }
 
 bool JobRunner::loadVars(const QString &filename)
 {
-  addStatus(INFO, "Setting variables from file '" + filename + "'");
+  addStatus(INIT, "Setting variables from file '" + filename + "'");
   QFile varsFile(filename);
   if(varsFile.open(QIODevice::ReadOnly)) {
     while(!varsFile.atEnd()) {
       QByteArray line = varsFile.readLine().trimmed();
       if(line.contains("=")) {
-        setVar("%" + line.split('=').first() + "%", line.split('=').last());
+        setVar(line.split('=').first(), line.split('=').last());
       }
     }
     varsFile.close();
@@ -817,7 +736,7 @@ bool JobRunner::srcPath(const QString &path)
   if(tempPath.right(1) == "/") {
     tempPath = tempPath.left(tempPath.length() - 1);
   }
-  addStatus(INFO, "Setting source path to '" + tempPath + "'");
+  addStatus(INIT, "Setting source path to '" + tempPath + "'");
   if(!jobDstPath.isEmpty() &&
      tempPath.left(jobDstPath.length()) == jobDstPath &&
      jobDstPath.at(tempPath.length()) == "/") {
@@ -843,7 +762,7 @@ bool JobRunner::dstPath(const QString &path)
   if(tempPath.right(1) == "/") {
     tempPath = tempPath.left(tempPath.length() - 1);
   }
-  addStatus(INFO, "Setting destination path to '" + tempPath + "'");
+  addStatus(INIT, "Setting destination path to '" + tempPath + "'");
   if(!jobSrcPath.isEmpty() &&
      tempPath.left(jobSrcPath.length()) == jobSrcPath &&
      jobSrcPath.at(tempPath.length()) == "/") {
@@ -864,17 +783,18 @@ bool JobRunner::dstPath(const QString &path)
 
 bool JobRunner::reboot(const QString &argument)
 {
+  addStatus(INIT, "System reboot requested...");
   if(argument == "force") {
-    addStatus(INFO, "Forcing reboot now...");
+    addStatus(INFO, "Forcing reboot now!");
     QProcess::execute("reboot", {});
   } else if(argument == "ask") {
     MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
     messageBox.exec();
     if(messageBox.result() == QMessageBox::Yes) {
-      addStatus(INFO, "User requested reboot, rebooting now...");
+      addStatus(INFO, "Accepted by user, rebooting now...");
       QProcess::execute("reboot", {});
     } else {
-      addStatus(WARNING, "User cancelled reboot.");
+      addStatus(WARNING, "Cancelled by user!");
     }
   }
   return true;
@@ -882,17 +802,18 @@ bool JobRunner::reboot(const QString &argument)
 
 bool JobRunner::shutdown(const QString &argument)
 {
+  addStatus(INIT, "System shutdown requested...");
   if(argument == "force") {
-    addStatus(INFO, "Forcing system shutdown now...");
+    addStatus(INFO, "Forcing shutdown now!");
     QProcess::execute("halt", {});
   } else if(argument == "ask") {
     MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
     messageBox.exec();
     if(messageBox.result() == QMessageBox::Yes) {
-      addStatus(INFO, "User requested shutdown, shutting down system now...");
+      addStatus(INFO, "Accepted by user, shutting system down now...");
       QProcess::execute("halt", {});
     } else {
-      addStatus(WARNING, "User cancelled shutdown.");
+      addStatus(WARNING, "Cancelled by user!");
     }
   }
   return true;
