@@ -1,7 +1,13 @@
 title:Apply update from '/media/%USER%/USBPEN/occurity' to '%HOME%/occurity' including kids charts
 category:Update jobs
 
-message:Set source and destination paths. All cp* commands are relative to these
+message:Installing required system packages
+aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
+
+message:Removing unwanted system packages
+aptremove:gstreamer1.0-plugins-bad
+
+message:Setting source and destination paths. All cp* commands are relative to these
 srcpath:/media/%USER%/USBPEN/occurity
 dstpath:%HOME%/occurity
 
