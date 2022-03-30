@@ -388,7 +388,7 @@ void MainWindow::updateFromConfig()
 
 void MainWindow::spawnPreferences()
 {
-  PinDialog pinDialog(this);
+  PinDialog pinDialog(mainSettings.pinCode.length(), this);
   pinDialog.exec();
   if(pinDialog.getPin() == mainSettings.pinCode) {
     printf("Spawning Preferences...\n");
@@ -399,7 +399,7 @@ void MainWindow::spawnPreferences()
 
 void MainWindow::spawnJobRunner()
 {
-  PinDialog pinDialog(this);
+  PinDialog pinDialog(mainSettings.pinCode.length(), this);
   pinDialog.exec();
   if(pinDialog.getPin() == mainSettings.pinCode) {
     printf("Spawning job runner...\n");
