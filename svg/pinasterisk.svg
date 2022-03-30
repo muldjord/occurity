@@ -7,7 +7,7 @@
    viewBox="0 0 33.866666 33.866668"
    version="1.1"
    id="svg5"
-   inkscape:export-filename="/home/muldjord/programming/occurity/icons/pinblank.png"
+   inkscape:export-filename="/home/muldjord/programming/occurity/icons/pinfilled.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
@@ -36,7 +36,7 @@
      inkscape:window-x="68"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer2" />
+     inkscape:current-layer="layer1" />
   <defs
      id="defs2">
     <rect
@@ -53,16 +53,31 @@
        id="rect5885" />
   </defs>
   <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Background"
+     style="display:inline"
+     sodipodi:insensitive="true">
+    <rect
+       style="display:inline;fill:#ffffff;stroke-width:0.983923;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect937"
+       width="30"
+       height="30"
+       x="1.9333333"
+       y="1.9333333"
+       ry="4.1942973" />
+  </g>
+  <g
      inkscape:label="Blank"
      inkscape:groupmode="layer"
      id="layer1"
      style="display:none">
     <circle
-       style="fill:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       style="fill:#000000;stroke-width:0.715614;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
        id="path1049"
        cx="16.933332"
        cy="16.933332"
-       r="3.2269742" />
+       r="2.3092694" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -71,7 +86,7 @@
      style="display:inline">
     <g
        aria-label="*"
-       transform="matrix(0.79019841,0,0,0.79019841,223.77855,223.74924)"
+       transform="matrix(0.62990126,0,0,0.62990126,181.81858,181.79522)"
        id="text13352"
        style="font-size:96px;line-height:1.25;white-space:pre;shape-inside:url(#rect13354)"
        inkscape:export-filename="/home/muldjord/programming/occurity/icons/pinfilled.png"
