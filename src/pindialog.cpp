@@ -28,17 +28,22 @@
 #include "pindialog.h"
 
 #include <QKeyEvent>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 
-PinDialog::PinDialog(QWidget *parent) : QDialog(parent)
+PinDialog::PinDialog(const int &pinLength, QWidget *parent)
+  : QDialog(parent), pinLength(pinLength)
 {
   setWindowTitle(tr("Pincode:"));
-  setFixedSize(200, 80);
-  pinLabel = new QLabel(tr(""));
-  pinLabel->setStyleSheet("QLabel {background-color: white; font-size: 70px;}");
-  pinLabel->setAlignment(Qt::AlignCenter);
-  QVBoxLayout *layout = new QVBoxLayout;
-  layout->addWidget(pinLabel);
+  setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+  //setFixedSize(200, 80);
+
+  QHBoxLayout *layout = new QHBoxLayout;
+  for(int a = 0; a < pinLength; ++a) {
+    QLabel *asteriskLabel = new QLabel;
+    asteriskLabel->setPixmap(QPixmap(":pinblank.png"));
+    asterisks.append(asteriskLabel);
+    layout->addWidget(asterisks.last());
+  }
   setLayout(layout);
 }
 
@@ -75,9 +80,9 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
     } else if(event->key() == Qt::Key_9) {
       pinCode.append("9");
     }
-    pinLabel->setText(pinLabel->text() + "*");
+    asterisks.at(pinCode.length() - 1)->setPixmap(QPixmap(":pinfilled.png"));
   }
-  if(pinCode.length() == 4) {
+  if(pinCode.length() == pinLength) {
     accept();
   }
 }
