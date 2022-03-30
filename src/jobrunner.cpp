@@ -366,7 +366,7 @@ void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
   QFont itemFont("monospace");
-  int delay = 5;
+  int delay = 50;
   item->setFont(itemFont);
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
@@ -469,28 +469,58 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
     return false;
   }
 
-  if(srcPath.left(1) != "/" && jobSrcPath.isEmpty()) {
-    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'cppath'");
-    return false;
-  }
-  if(dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
-    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'cppath'");
-    return false;
-  }
-
   QString srcDirString = srcPath;
   if(srcDirString.left(1) != "/") {
+    if(jobSrcPath.isEmpty()) {
+      addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'cppath'");
+      return false;
+    }
     srcDirString.prepend(jobSrcPath + "/");
   }
-  QDir srcDir(srcDirString);
-
   QString dstDirString = dstPath;
   if(dstDirString.left(1) != "/") {
+    if(jobDstPath.isEmpty()) {
+      addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'cppath'");
+      return false;
+    }
     dstDirString.prepend(jobDstPath + "/");
   }
-  QDir dstDir(dstDirString);
 
+  QDir srcDir(srcDirString, "*", QDir::Name, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
+  QDir dstDir(dstDirString);
+  if(!pretend && !isExcluded(pathExcludes, dstDir.absolutePath()) && !QDir::root().mkpath(dstDir.absolutePath())) {
+    return false;
+  }
+  for(const auto &dirInfo: srcDir.entryInfoList()) {
+    if(dirInfo.isDir()) {
+      addStatus(INFO, "Copying path '" + dirInfo.absoluteFilePath() + "' to '" + dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1) + "'");
+      if(!cpPath(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1))) {
+        addStatus(FATAL, "Path could not be copied!");
+        return false;
+      }
+    } else if(dirInfo.isFile()) {
+      if(!cpFile(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() + 1))) {
+        addStatus(FATAL, "File could not be copied!");
+        return false;
+      }
+      /*
+      addStatus(INFO, "Copying file '" + dirInfo.absoluteFilePath() + "' to '" + dstDir.absolutePath() + "/" + dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() - 1) + "'");
+      if(!cpFile(dirInfo.absoluteFilePath(), dstDir.absolutePath() + "/" + dirInfo.absoluteFilePath().mid(srcDirString.length() - 1))) {
+        addStatus(FATAL, "File could not be copied!");
+        return false;
+      }
+      */
+    }
+  }
+  addStatus(INFO, "Path copied successfully!");
+  return true;
+
+  /*
   addStatus(STATUS, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
+  if(isExcluded(pathExcludes, srcDir.absolutePath())) {
+    addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
+    return false;
+  }
 
   if(!srcDir.exists()) {
     addStatus(FATAL, "Source path does not exist!");
@@ -529,6 +559,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
     }
   }
   return true;
+  */
 }
 
 bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
