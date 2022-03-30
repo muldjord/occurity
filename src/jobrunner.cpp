@@ -496,8 +496,9 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
 
   addStatus(INFO, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
-  if(isExcluded(pathExcludes, dstDir.absolutePath())) {
-    return false;
+  if(isExcluded(pathExcludes, srcDir.absolutePath())) {
+    addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
+    return true;
   }
   
   if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
