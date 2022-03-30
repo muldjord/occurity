@@ -511,7 +511,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
     QFileInfo itDst(dstDir.absolutePath() + "/" + itSrc.absoluteFilePath().mid(srcDir.absolutePath().length()));
     if(itSrc.isDir()) {
       addStatus(INFO, "Copying path '" + itSrc.absoluteFilePath() + "' to '" + itDst.absoluteFilePath() + "'");
-      if(isExcluded(pathExcludes, itSrc.absoluteFilePath())) {
+      if(isExcluded(pathExcludes, itSrc.absolutePath())) {
         addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
         continue;
       }
@@ -520,6 +520,11 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
         return false;
       }
     } else if(itSrc.isFile()) {
+      if(isExcluded(fileExcludes, itSrc.absoluteFilePath()) ||
+         isExcluded(pathExcludes, itSrc.absolutePath())) {
+        addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
+        continue;
+      }
       cpFile(itSrc.absoluteFilePath(), itDst.absoluteFilePath());
     }
   }
