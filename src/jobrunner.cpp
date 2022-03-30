@@ -37,6 +37,7 @@
 #include <QKeyEvent>
 #include <QRadioButton>
 #include <QEventLoop>
+#include <QNetworkInterface>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -225,14 +226,18 @@ void JobRunner::runJob(const QString &filename)
     
     if(command.type == "aptinstall") {
       if(command.parameters.length() == 1) {
-        runCommand("sudo", { "apt-get", "-y", "update" });
-        runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+        if(hasInternet(getCommandString(command))) {
+          runCommand("sudo", { "apt-get", "-y", "update" });
+          runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+        }
       }
 
     } else if(command.type == "aptremove") {
       if(command.parameters.length() == 1) {
-        runCommand("sudo", { "apt-get", "-y", "update" });
-        runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+        if(hasInternet(getCommandString(command))) {
+          runCommand("sudo", { "apt-get", "-y", "update" });
+          runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+        }
       }
 
     } else if(command.type == "fileexclude") {
@@ -538,13 +543,14 @@ bool JobRunner::runCommand(const QString &program, const QList<QString> &args, c
     aptProc.waitForFinished(10 * 60 * 1000); // 10 minutes
     if(aptProc.exitStatus() != QProcess::NormalExit ||
        aptProc.exitCode() != 0) {
-      addStatus(WARNING, "Terminal command failed!\n");
-      addStatus(WARNING, "StdOut:\n" + aptProc.readAllStandardOutput());
+      addStatus(INFO, "StdOut:\n" + aptProc.readAllStandardOutput());
       if(critical) {
-        addStatus(FATAL, "StdError:\n" + aptProc.readAllStandardError());
+        addStatus(WARNING, "StdError:\n" + aptProc.readAllStandardError());
+        addStatus(FATAL, "Terminal command failed!");
         return false;
       } else {
         addStatus(WARNING, "StdError:\n" + aptProc.readAllStandardError());
+        addStatus(WARNING, "Terminal command failed, but is not critical!");
       }
       return false;
     }
@@ -841,4 +847,21 @@ bool JobRunner::shutdown(const QString &argument)
     }
   }
   return true;
+}
+
+bool JobRunner::hasInternet(const QString &command)
+{
+  for(const auto &addr: QNetworkInterface::allAddresses()) {
+    if(addr.isGlobal()) {
+      return true;
+    }
+  }
+  MessageBox messageBox(QMessageBox::Question, "No internet", "No internet connection found while processing the command:\n'" + command + "'\n\nIs this command critical for this job procedure to proceed?", QMessageBox::Yes | QMessageBox::No, this);
+  messageBox.exec();
+  if(messageBox.result() == QMessageBox::Yes) {
+    addStatus(FATAL, "Job cancelled due to missing internet connection!");
+  } else {
+    addStatus(WARNING, "No internet connection detected, continuing anyway!");
+  }
+  return false;
 }
