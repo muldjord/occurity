@@ -444,6 +444,11 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
     return false;
   }
 
+  if(srcFile == dstFile) {
+    addStatus(WARNING, "Source and destination are the same! Ignoring.");
+    return false;
+  }
+
   if(!pretend && !QDir::root().mkpath(dstInfo.absolutePath())) {
     addStatus(FATAL, "Path '" + dstInfo.absolutePath() + "' could not be created!");
     return false;
