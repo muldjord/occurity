@@ -15,11 +15,22 @@ Sets the title that will be used to select and execute this particular `.upd` en
 
 * Example 1: `title:This is a title`
 
+### category:CATEGORY
+This defines the category applied to the job when adding it to the Job runner dialog. More jobs can share the same category.
+
+* Example 1: `category:Tools`
+* Example 2: `category:Update jobs`
+
+### version:x.x.x
+This command is optional. If set, the `x.x.x` will be shown before the title when displaying the update entry in the Occurity updater dialog. The format of the version is undefined. A `x.x.x` format is suggested, but it can just as well be `May 2022`.
+
+* Example 1: `version:1.2.0`
+* Example 2: `version:May 2022`
+
 ### pretend:TRUE|FALSE
 Setting this to true will ensure that no files or directories are manipulated while executing the script lines following this line. Default is `false`. Useful while testing / debugging a script.
 
 * Example 1: `pretend:true`
-
 
 ### message:MESSAGE
 Add a message to the debug output of the Occurity updater dialog. The message will be white and is useful for providing status / progress messages while processing a script.
@@ -45,12 +56,42 @@ These two variables can now be used in the script command arguments / parameters
 
 * Example 1: `cpfile:path1/%THIS%/somefile.dat` becomes `cpfile:path1/Something/somefile.dat`
 
-### Hardcoded variables
+#### Hardcoded variables
 Some hardcoded variables are available. These can be used without setting them with `setvar` or `loadvars`.
 
 * %HOME%: The current user home directory (eg. `/home/pi`).
 * %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
 * %USER%: The user name of the currently logged in user (eg. `pi`).
+
+### cpfile:sourcefile;destinationfile
+Copies a file from `sourcefile` to `destinationfile`. If `destinationfile` is left out it will copy the file using the filename from `sourcefile`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
+
+* Example 1: `cpfile:Occurity` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file of the same name located at the path defined by `dstpath`.
+* Example 2: `cpfile:Occurity;OtherName` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file called `OtherName` located at the path defined by `dstpath`.
+* Example 3: `cpfile:/tmp/somefilename;/home/pi/someotherfilename` <-- This copies the source file `/tmp/somefilename` to the destination file `/home/pi/someotherfilename` ignoring the previously defined `srcpath` and `dstpath`.
+* Example 4: `cpfile:somefilename;/home/pi/someotherfilename` <-- This copies the source file `somefilename` to the destination file `/home/pi/someotherfilename`. The source file is relative to the path defined by `srcpath` while `dstpath` is ignored.
+
+### rmfile:FILEPATH
+Removes a single file. A non-relative file path is required.
+
+* Example 1: `rmpath:%HOME%/occurity/config.ini`
+* Example 2: `rmpath:/media/%USER%/USBPEN/occurity/config.ini`
+
+### cppath:sourcepath;destinationpath
+Copies a path, including subdirectories, from `sourcepath` to `destinationpath`. If `destinationpath` is left out it will copy the path using the path name from `sourcepath`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the path name starts with a `/`.
+
+* Example 1: `cppath:optotypes` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path of the same name located at the path defined by `dstpath`.
+* Example 2: `cppath:optotypes;mypath` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path called `mypath` located at the path defined by `dstpath`.
+* Example 3: `cppath:/tmp/somepath;/home/pi/someotherpath` <-- This copies the source path `/tmp/somepath` to the destination path `/home/pi/someotherpath` ignoring the previously defined `srcpath` and `dstpath`.
+* Example 4: `cppath:somepath;/home/pi/someotherpath` <-- This copies the source path `somepath` to the destination path `/home/pi/someotherpath`. The source path is relative to the path defined by `srcpath` while `dstpath` is ignored.
+
+### rmpath:PATH[;ask]
+Recursively removes an entire non-relative path. If `;ask` is added after the path, it will ask before deleting each subdirectory.
+
+WARNING! This command can be dangerous to use! It removes ENTIRE directory trees, including all files and subdirectories. So BEWARE! Consider running it with `pretend:true` (documented elsewhere in this document) to test it.
+
+* Example 1: `rmpath:%HOME%/occurity/optotypes`
+* Example 2: `rmpath:/tmp/tempdir`
 
 ### aptinstall:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
@@ -78,28 +119,6 @@ pi ALL = NOPASSWD : /usr/bin/apt-get
 
 Note! `sudo apt-get update` will automatically be run before removing any packages.
 
-### cpfile:sourcefile;destinationfile
-Copies a file from `sourcefile` to `destinationfile`. If `destinationfile` is left out it will copy the file using the filename from `sourcefile`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
-
-* Example 1: `cpfile:Occurity` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file of the same name located at the path defined by `dstpath`.
-* Example 2: `cpfile:Occurity;OtherName` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file called `OtherName` located at the path defined by `dstpath`.
-* Example 3: `cpfile:/tmp/somefilename;/home/pi/someotherfilename` <-- This copies the source file `/tmp/somefilename` to the destination file `/home/pi/someotherfilename` ignoring the previously defined `srcpath` and `dstpath`.
-* Example 4: `cpfile:somefilename;/home/pi/someotherfilename` <-- This copies the source file `somefilename` to the destination file `/home/pi/someotherfilename`. The source file is relative to the path defined by `srcpath` while `dstpath` is ignored.
-
-### cppath:sourcepath;destinationpath
-Copies a path, including subdirectories, from `sourcepath` to `destinationpath`. If `destinationpath` is left out it will copy the path using the path name from `sourcepath`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the path name starts with a `/`.
-
-* Example 1: `cppath:optotypes` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path of the same name located at the path defined by `dstpath`.
-* Example 2: `cppath:optotypes;mypath` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path called `mypath` located at the path defined by `dstpath`.
-* Example 3: `cppath:/tmp/somepath;/home/pi/someotherpath` <-- This copies the source path `/tmp/somepath` to the destination path `/home/pi/someotherpath` ignoring the previously defined `srcpath` and `dstpath`.
-* Example 4: `cppath:somepath;/home/pi/someotherpath` <-- This copies the source path `somepath` to the destination path `/home/pi/someotherpath`. The source path is relative to the path defined by `srcpath` while `dstpath` is ignored.
-
-### version:x.x.x
-This command is optional. If set, the `x.x.x` will be shown before the title when displaying the update entry in the Occurity updater dialog. The format of the version is undefined. A `x.x.x` format is suggested, but it can just as well be `May 2022`.
-
-* Example 1: `version:1.2.0`
-* Example 2: `version:May 2022 version`
-
 ### reboot:force|ask
 Reboots the computer. `force` will restart without asking the user. `ask` will allow the user to cancel the reboot through a dialog.
 
@@ -111,23 +130,3 @@ Shuts down the computer. `force` will shutdown without asking the user. `ask` wi
 
 * Example 1: `shutdown:force`
 * Example 2: `shutdown:ask`
-
-### category:CATEGORY
-This defines the category applied to the job when adding it to the Job runner dialog. More jobs can share the same category.
-
-* Example 1: `category:Tools`
-* Example 2: `category:Update jobs`
-
-### rmpath:PATH[;ask]
-Removes an entire path, including contained files and subdirectories. If `;ask` is added after the path, it will ask before deleting each file and directory.
-
-WARNING! This command can be dangerous to use. If you mistype the path, you can end up deleting entire directory trees you didn't mean to delete. So BEWARE! And run it with `pretend:true` (documented elsewhere in this document) to test it.
-
-* Example 1: `rmpath:%HOME%/occurity/optotypes`
-* Example 2: `rmpath:/tmp/tempdir`
-
-### rmfile:FILEPATH
-Removes a single file. A non-relative file path is required (it has to start with a `/`).
-
-* Example 1: `rmpath:%HOME%/occurity/config.ini`
-* Example 2: `rmpath:/media/%USER%/USBPEN/occurity/config.ini`
