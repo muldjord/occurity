@@ -225,7 +225,7 @@ void JobRunner::runJob(const QString &filename)
     }
     
     if(command.type == "aptinstall") {
-      if(command.parameters.length() == 1) {
+      if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
           runCommand("sudo", { "apt-get", "-y", "update" });
           runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
