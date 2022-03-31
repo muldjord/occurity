@@ -33,11 +33,10 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QDirIterator>
-#include <QLabel>
 #include <QKeyEvent>
-#include <QRadioButton>
 #include <QEventLoop>
 #include <QNetworkInterface>
+#include <QScrollBar>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -45,10 +44,24 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   setWindowTitle("Occurity v" VERSION" jobrunner");
   setFixedSize(1200, 800);
 
-  setStyleSheet("QLabel {font-weight:bold;} QRadioButton {margin-left: 10px;}");
+  setStyleSheet("QLabel {font-weight:bold; margin-top: 5px;} QRadioButton {margin-left: 10px;}");
+  
+  jobsScroll = new QScrollArea;
+  
+  outputLabel = new QLabel("<h2>Output:</h2>");
+
+  outputList = new QListWidget;
+  outputList->setStyleSheet("QListWidget {background-color: black;}");
+  outputList->setFocusPolicy(Qt::NoFocus);
+  outputList->setWordWrap(true);
+  
+  progressBar = new QProgressBar;
+  progressBar->setFormat("%p% completed");
+  progressBar->setAlignment(Qt::AlignCenter);
   
   jobButtons = new QButtonGroup;
-
+  connect(jobButtons, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &JobRunner::listFileContents);
+  
   setHardcodedVars();
 
   QList<QVBoxLayout*> categoryLayouts;
@@ -116,30 +129,29 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
     }
   }
 
-  QVBoxLayout *jobsLayout = new QVBoxLayout;
+  QVBoxLayout *layout = new QVBoxLayout;
 
   if(!firstClicked) {
-    QLabel *noJob = new QLabel("<h2>No jobs found in jobs folder:</h2><h3>" + mainSettings.jobsFolder + "</h3>");
-    jobsLayout->addWidget(noJob, 2, Qt::AlignCenter);
-    
+    layout->addWidget(new QLabel("<h2>No jobs found in jobs folder:</h2><h3>" + mainSettings.jobsFolder + "</h3>"), 2, Qt::AlignCenter);
   } else {
-    jobsLayout->addWidget(new QLabel("<h3>Choose job to run:</h3>"), 0, Qt::AlignCenter);
+    jobsScroll->setFocusPolicy(Qt::NoFocus);
+    jobsScroll->setMaximumHeight(250);
+    jobsScroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QWidget *jobsWidget = new QWidget;
+    QVBoxLayout *jobsLayout = new QVBoxLayout;
+    layout->addWidget(new QLabel("<h3>Choose job to run:</h3>"), 0, Qt::AlignCenter);
     for(auto *categoryLayout: categoryLayouts) {
       jobsLayout->addLayout(categoryLayout);
     }
-    progressBar = new QProgressBar;
-    progressBar->setFormat("%p% completed");
-    progressBar->setAlignment(Qt::AlignCenter);
-    jobsLayout->addWidget(progressBar);
-    
-    statusList = new QListWidget;
-    statusList->setWordWrap(true);
-    statusList->setStyleSheet("QListWidget {background-color: black;}");
-    jobsLayout->addWidget(statusList);
+    jobsWidget->setLayout(jobsLayout);
+    jobsScroll->setWidget(jobsWidget);
+    layout->addWidget(jobsScroll);
+    layout->addWidget(outputLabel);
+    layout->addWidget(outputList);
+    layout->addWidget(progressBar);
   }
-
-  setLayout(jobsLayout);
-
+  setLayout(layout);
+  
   installEventFilter(this);
 }
 
@@ -150,7 +162,8 @@ void JobRunner::runJob(const QString &filename)
   progressBar->setFormat("%p% completed");
   progressBar->setValue(0);
   
-  statusList->clear();
+  outputLabel->setText("<h3>Processing job file '" + filename + "':</h3>");
+  outputList->clear();
 
   vars.clear();
   setHardcodedVars();
@@ -417,8 +430,8 @@ void JobRunner::addStatus(const int &status, const QString &text)
     item->setForeground(QBrush(Qt::cyan));
     item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
   }
-  statusList->addItem(item);
-  statusList->scrollToBottom();
+  outputList->addItem(item);
+  outputList->scrollToBottom();
   QEventLoop waiter;
   QTimer::singleShot(delay, &waiter, &QEventLoop::quit);
   waiter.exec();
@@ -1047,4 +1060,39 @@ bool JobRunner::mvPath(QString srcPath, QString dstPath)
   
   addStatus(INFO, "Path moved successful!");
   return true;
+}
+
+void JobRunner::listFileContents(QAbstractButton *button)
+{
+  QRadioButton *selectedButton = reinterpret_cast<QRadioButton*>(button);
+  if(prevButton != nullptr) {
+    int delta = selectedButton->pos().y() - prevButton->pos().y();
+    //printf("mapToGlobalY: %d\n", this->mapToGlobal(selectedButton->pos()).y());
+    /*
+    if((delta && selectedButton->mapToGlobal(QPoint(0, 0)).y() + delta >
+        mapToGlobal(jobsScroll->pos()).y() + jobsScroll->height() - (jobsScroll->height() / 6)) ||
+       (!delta && this->mapToGlobal(selectedButton->pos()).y() < this->mapToGlobal(jobsScroll->pos()).y() + (jobsScroll->height() / 6))) {
+      jobsScroll->verticalScrollBar()->setValue(jobsScroll->verticalScrollBar()->value() + delta);
+    }
+    */
+  }
+  QString filename = button->objectName();
+  progressBar->setFormat("No job in progress");
+  progressBar->setValue(0);
+  outputList->clear();
+  QFile jobFile(filename);
+  if(jobFile.exists() && jobFile.open(QIODevice::ReadOnly)) {
+    outputLabel->setText("<h3>Showing contents of job file '" + filename + "':</h3>");
+    while(!jobFile.atEnd()) {
+      QListWidgetItem *item = new QListWidgetItem(QString::fromUtf8(jobFile.readLine().trimmed()));
+      QFont itemFont("monospace");
+      item->setFont(itemFont);
+      item->setForeground(QBrush(Qt::white));
+      outputList->addItem(item);
+    }
+    jobFile.close();
+  } else {
+    outputLabel->setText("<h3>Couldn't open job file '" + filename + "'!</h3>");
+  }
+  prevButton = selectedButton;
 }

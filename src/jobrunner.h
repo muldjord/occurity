@@ -34,6 +34,9 @@
 #include <QButtonGroup>
 #include <QProgressBar>
 #include <QListWidget>
+#include <QLabel>
+#include <QScrollArea>
+#include <QRadioButton>
 
 constexpr int INFO = 0;
 constexpr int STATUS = 1;
@@ -57,6 +60,9 @@ public:
 protected:
   bool eventFilter(QObject *, QEvent *event) override;
 
+private slots:
+  void listFileContents(QAbstractButton *button);
+
 private:
   bool pretend = false;
   QList<Command> commands;
@@ -66,7 +72,11 @@ private:
   bool jobInProgress = false;
   bool abortJob = false;
 
-  QListWidget *statusList = nullptr;
+  QRadioButton *prevButton = nullptr;
+
+  QScrollArea *jobsScroll = nullptr;
+  QLabel *outputLabel = nullptr;
+  QListWidget *outputList = nullptr;
   QProgressBar *progressBar = nullptr;
   QList<QString> fileExcludes;
   QList<QString> pathExcludes;
