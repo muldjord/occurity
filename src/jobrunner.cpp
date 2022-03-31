@@ -388,7 +388,7 @@ void JobRunner::addStatus(const int &status, const QString &text)
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
     item->setForeground(QBrush(Qt::green));
-    item->setText(QString("  ") + (pretend?"pretend: ":"") + text);
+    item->setText(QString("    ") + (pretend?"pretend: ":"") + text);
     //delay = 10;
   } else if(status == STATUS) {
     qInfo("%s", text.toUtf8().data());
@@ -620,26 +620,24 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
     return true;
   }
   
+  if(askPerPath) {
+    MessageBox messageBox(QMessageBox::Question, "Delete?", "Do you want to delete path '" + path + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
+    messageBox.exec();
+    if(messageBox.result() == QMessageBox::Yes ||
+       messageBox.result() == QMessageBox::YesToAll) {
+      if(messageBox.result() == QMessageBox::YesToAll) {
+        askPerPath = false;
+      }
+    } else {
+      addStatus(WARNING, "Path not removed!");
+      return false;
+    }
+  }
+  
   for(const auto &dirInfo: srcDir.entryInfoList()) {
     if(dirInfo.isDir()) {
-      bool remove = true;
-      if(askPerPath) {
-        MessageBox messageBox(QMessageBox::Question, "Delete?", "Do you want to delete path '" + dirInfo.absoluteFilePath() + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
-        messageBox.exec();
-        if(messageBox.result() == QMessageBox::Yes ||
-           messageBox.result() == QMessageBox::YesToAll) {
-          if(messageBox.result() == QMessageBox::YesToAll) {
-            askPerPath = false;
-          }
-          remove = true;
-        } else {
-          remove = false;
-        }
-      }
-      if(remove) {
-        if(!rmPath(dirInfo.absoluteFilePath(), askPerPath)) {
-          return false;
-        }
+      if(!rmPath(dirInfo.absoluteFilePath(), askPerPath)) {
+        return false;
       }
     } else if(dirInfo.isFile()) {
       if(!rmFile(dirInfo.absoluteFilePath())) {
