@@ -301,6 +301,12 @@ void JobRunner::runJob(const QString &filename)
         addStatus(STATUS, command.parameters.at(0));
       }
 
+    } else if(command.type == "exit") {
+      if(command.parameters.length() == 1) {
+        addStatus(INFO, "Exit job: '" + command.parameters.at(0) + "'");
+        break;
+      }
+
     }
     progressBar->setValue(progressBar->value() + 1);
   }
