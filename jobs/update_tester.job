@@ -1,20 +1,67 @@
 title:Test updater functions
 category:Other jobs
-pretend:true
+#pretend:true
 
-message:Setting variables
+# Some of the following commands are designed to fail
+# Comments above them tells the expected result
+# If a command fails the job will exit
+# Uncomment the commands that aren't separated by newlines one by one to test them
+
+mvpath:%HOME%/test
+mvfile:%HOME%/test.file
+
+# Use the following command to exit / stop the running job at this point
+exit:Test job done!
+
+message:Check for 'sudo' right when using 'apt-get install'
+aptinstall:
+
+message:Check for 'sudo' right when using 'apt-get remove'
+aptremove:
+
+message:Expected: SUCCESS! Sets the '%VERSION%' variable to the current Occurity version
 loadvars:%HOME%/programming/occurity/VERSION
+
+#message:Expected: FAIL! 'srcpath' must be set when using a non-relative filepath
+#loadvars:this/path/is/relative/test.file
+
+message:Expected: SUCCESS! Sets the '%TEST%' variable to 'This is a value'
 setvar:TEST;This is a value
+
+message:Expected: WARNING! Variable name contains '%' which is discouraged and could cause problems
+setvar:%TEST;This is a value
+
+#message:Expected: FAIL! Relative paths when 'srcpath' not set is not allowed
+#cpfile:this/path/is/relative.file
+
+#message:Expected: FAIL! Relative destination path when 'dstpath' not set is not allowed
+#cpfile:%WORKDIR%/jobs/testfiles/test.file;this/path/is/relative/dstfile.file
+
+message:Expected: SUCCES! Both source and destination are non-relative. This should succeed!
+cpfile:%WORKDIR%/jobs/testfiles/test.file;%WORKDIR%/jobs/testfiles/dstfile.file
+message:Expected: SUCCES! Should remove the file we copied in the previous command
+rmfile:%WORKDIR%/jobs/testfiles/dstfile.file
+
+#message:Expected: FAIL! Relative path is never allowed with 'rmfile'
+#rmfile:this/path/is/relative/test.file
+
+#message:Expected: FAIL! 'srcpath' needs to be set for relative source path to work
+#cppath:this/path/is/relative;%WORKDIR%/jobs/testfiles/testpath
+
+#message:Expected: FAIL! 'dstpath' needs to be set for relative destination path to work
+#cppath:%WORKDIR%/jobs/testfiles/testpath;this/path/is/relative
+
+message:Expected: SUCCESS! Both source and destination paths are non-relative. This should succeed!
+cppath:%WORKDIR%/jobs/testfiles/testpath;%WORKDIR%/jobs/testfiles/testpath2
+message:Expected: SUCCESS! Path is non-relative. This should succeed!
+rmpath:%WORKDIR%/jobs/testfiles/testpath2
+
+message:Expected: FAIL! Relative path is not allowed with 'rmpath'
+rmpath:this/path/is/relative
 
 message:Setting source and destination paths
 srcpath:%WORKDIR%
 dstpath:%HOME%/occurity_update_test
-
-message:Installing required system packages
-aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
-
-message:Removing unwanted system packages
-aptremove:gstreamer1.0-plugins-bad
 
 message:Defining excludes for cp* commands
 fileexclude:README.md
