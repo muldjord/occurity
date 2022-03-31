@@ -1,0 +1,5 @@
+title:Remove entire '%HOME%/occurity' path including files and subfolders
+category:Maintenance
+
+message:Purging entire default installation path
+rmpath:%HOME%/occurity;ask
