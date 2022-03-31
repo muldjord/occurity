@@ -1,4 +1,0 @@
-title:Remove '%HOME%/occurity/config.ini'
-category:Tools
-
-rmfile:%HOME%/occurity/config.ini

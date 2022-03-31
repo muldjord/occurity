@@ -1,0 +1,4 @@
+title:Move '%HOME%/occurity/config.ini' to backup file
+category:Maintenance
+
+mvfile:%HOME%/occurity/config.ini
