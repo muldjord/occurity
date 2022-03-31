@@ -237,6 +237,8 @@ You can configure several options of Occurity to fit your needs. The first time 
 * Added pincode dialog to preferences. Pincode can be set in config.ini with `pinCode=0000`
 * Changed mainSettings to reference instead of pointer
 * Added scriptable updater allowing more update types than one
+* Now shows job file contents in the output view
+* Added a plehtora of commands that can be used in job files. All documents in `jobs/README.md`
 
 #### Version 0.7.2 (27jan2022)
 * Implemented randomize row with `r` key
