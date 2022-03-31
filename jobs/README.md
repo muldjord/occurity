@@ -63,13 +63,21 @@ Some hardcoded variables are available. These can be used without setting them w
 * %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
 * %USER%: The user name of the currently logged in user (eg. `pi`).
 
-### cpfile:sourcefile;destinationfile
-Copies a file from `sourcefile` to `destinationfile`. If `destinationfile` is left out it will copy the file using the filename from `sourcefile`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
+### cpfile:SOURCEFILE;DESTINATIONFILE
+Copies a file from `SOURCEFILE` to `DESTINATIONFILE`. If `DESTINATIONFILE` is left out it will copy the file using the filename from `SOURCEFILE`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
 
 * Example 1: `cpfile:Occurity` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file of the same name located at the path defined by `dstpath`.
 * Example 2: `cpfile:Occurity;OtherName` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file called `OtherName` located at the path defined by `dstpath`.
 * Example 3: `cpfile:/tmp/somefilename;/home/pi/someotherfilename` <-- This copies the source file `/tmp/somefilename` to the destination file `/home/pi/someotherfilename` ignoring the previously defined `srcpath` and `dstpath`.
 * Example 4: `cpfile:somefilename;/home/pi/someotherfilename` <-- This copies the source file `somefilename` to the destination file `/home/pi/someotherfilename`. The source file is relative to the path defined by `srcpath` while `dstpath` is ignored.
+
+### mvfile:SOURCEFILE;DESTINATIONFILE
+Moves / renames a file from 'SOURCEFILE' to 'DESTINATIONFILE'. Both file paths must be non-relative. If 'DESTINATIONFILE' is left out it will automatically be set to the same as 'SOURCEFILE' with a 4-digit serial number added. This is useful for creating backups of existing files.
+
+WARNING! If 'DESTINATIONFILE' is set to an already existing file IT WILL BE OVERWRITTEN with the contents of 'SOURCEFILE'!
+
+* Example 1: `mvfile:/media/%USER%/USBPEN/occurity/test.file`
+* Example 2: `mvfile:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old`
 
 ### rmfile:FILEPATH
 Removes a single file. A non-relative file path is required.
@@ -77,13 +85,21 @@ Removes a single file. A non-relative file path is required.
 * Example 1: `rmpath:%HOME%/occurity/config.ini`
 * Example 2: `rmpath:/media/%USER%/USBPEN/occurity/config.ini`
 
-### cppath:sourcepath;destinationpath
+### cppath:SOURCEPATH;DESTINATIONPATH
 Copies a path, including subdirectories, from `sourcepath` to `destinationpath`. If `destinationpath` is left out it will copy the path using the path name from `sourcepath`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the path name starts with a `/`.
 
 * Example 1: `cppath:optotypes` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path of the same name located at the path defined by `dstpath`.
 * Example 2: `cppath:optotypes;mypath` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path called `mypath` located at the path defined by `dstpath`.
 * Example 3: `cppath:/tmp/somepath;/home/pi/someotherpath` <-- This copies the source path `/tmp/somepath` to the destination path `/home/pi/someotherpath` ignoring the previously defined `srcpath` and `dstpath`.
 * Example 4: `cppath:somepath;/home/pi/someotherpath` <-- This copies the source path `somepath` to the destination path `/home/pi/someotherpath`. The source path is relative to the path defined by `srcpath` while `dstpath` is ignored.
+
+### mvpath:SOURCEPATH;DESTINATIONPATH
+Moves / renames a path from 'SOURCEPATH' to 'DESTINATIONPATH'. Both paths must be non-relative. If 'DESTINATIONPATH' is left out it will automatically be set to the same as 'SOURCEPATH' with a 4-digit serial number added. This is useful for creating backups of existing paths.
+
+WARNING! If 'DESTINATIONPATH' is set to an already existing path IT WILL BE DELETED AND OVERWRITTEN with the contents of 'SOURCEPATH'!
+
+* Example 1: `mvpath:/media/%USER%/USBPEN/occurity/test.path`
+* Example 2: `mvpath:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old`
 
 ### rmpath:PATH[;ask]
 Recursively removes an entire non-relative path. If `;ask` is added after the path, it will ask before deleting each subdirectory.
@@ -130,3 +146,8 @@ Shuts down the computer. `force` will shutdown without asking the user. `ask` wi
 
 * Example 1: `shutdown:force`
 * Example 2: `shutdown:ask`
+
+### exit:MESSAGE
+Exits the running job with MESSAGE. This is useful in test-cases where you want a job to run until a specific command and then exit without having to comment all remaining commands.
+
+* Example 1: `exit:Jobs done!`
