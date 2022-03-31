@@ -616,7 +616,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
     return true;
   }
   if(!srcDir.exists()) {
-    addStatus(WARNING, "Path already doesn't exist! Ignoring.");
+    addStatus(WARNING, "Path doesn't exist! Ignoring.");
     return true;
   }
   
