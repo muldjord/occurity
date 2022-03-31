@@ -77,16 +77,22 @@ private:
   bool fileExclude(const QString &filename);
   bool pathExclude(const QString &path);
   bool isExcluded(const QList<QString> &excludes, const QString &src);
-  bool setVar(const QString &key, const QString &value);
-  bool loadVars(const QString &filename);
+  bool setVar(QString variable, const QString &value);
+  bool loadVars(QString filename);
   void runJob(const QString &filename);
   void addStatus(const int &status, const QString &text);
+
   bool srcPath(const QString &path);
   bool dstPath(const QString &path);
+
   bool cpFile(const QString &srcFile, const QString &dstFile);
-  bool cpPath(const QString &srcPath, const QString &dstPath);
+  bool mvFile(QString srcFile, QString dstFile = "");
   bool rmFile(const QString &filePath);
+
+  bool cpPath(const QString &srcPath, const QString &dstPath);
+  bool mvPath(QString srcPath, QString dstPath = "");
   bool rmPath(const QString &path, bool &askPerPath);
+
   bool hasInternet(const QString &command);
   bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = true);
   bool reboot(const QString &argument);

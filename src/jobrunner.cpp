@@ -185,13 +185,13 @@ void JobRunner::runJob(const QString &filename)
         continue;
       }
       Command command;
-      command.type = line.split(':').first().trimmed();
+      command.type = line.left(line.indexOf(':')).trimmed();
       if(command.type == "title" ||
          command.type == "version" ||
          command.type == "category") {
         continue;
       }
-      command.parameters = line.split(':').last().split(';');
+      command.parameters = line.mid(line.indexOf(':') + 1).trimmed().split(';');
       commands.append(command);
     }
   }
@@ -207,23 +207,32 @@ void JobRunner::runJob(const QString &filename)
     }
 
     // Add entire command string to debug output
-    if(command.type != "message") {
+    if(command.type != "message" &&
+       command.type != "exit") {
       addStatus(CODE, getCommandString(command));
     }
     
     if(command.type == "aptinstall") {
       if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
-          runCommand("sudo", { "apt-get", "-y", "update" });
-          runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+          if(runCommand("apt-get", { "check" })) {
+            runCommand("sudo", { "apt-get", "-y", "update" });
+            runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+          } else {
+            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
+          }
         }
       }
 
     } else if(command.type == "aptremove") {
       if(command.parameters.length() == 1) {
         if(hasInternet(getCommandString(command))) {
-          runCommand("sudo", { "apt-get", "-y", "update" });
-          runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+          if(runCommand("apt-get", { "check" })) {
+            runCommand("sudo", { "apt-get", "-y", "update" });
+            runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+          } else {
+            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
+          }
         }
       }
 
@@ -270,6 +279,13 @@ void JobRunner::runJob(const QString &filename)
         cpFile(command.parameters.first(), command.parameters.last());
       }
 
+    } else if(command.type == "mvfile") {
+      if(command.parameters.length() == 1) {
+        mvFile(command.parameters.at(0));
+      } else if(command.parameters.length() == 2) {
+        mvFile(command.parameters.at(0), command.parameters.at(1));
+      }
+
     } else if(command.type == "rmfile") {
       if(command.parameters.length() == 1) {
         rmFile(command.parameters.at(0));
@@ -278,6 +294,13 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "cppath") {
       if(command.parameters.length() == 1 || command.parameters.length() == 2) {
         cpPath(command.parameters.at(0), command.parameters.last());
+      }
+
+    } else if(command.type == "mvpath") {
+      if(command.parameters.length() == 1) {
+        mvPath(command.parameters.at(0));
+      } else if(command.parameters.length() == 2) {
+        mvPath(command.parameters.at(0), command.parameters.at(1));
       }
 
     } else if(command.type == "rmpath") {
@@ -303,7 +326,7 @@ void JobRunner::runJob(const QString &filename)
 
     } else if(command.type == "exit") {
       if(command.parameters.length() == 1) {
-        addStatus(INFO, "Exit job: '" + command.parameters.at(0) + "'");
+        addStatus(STATUS, "Exit: '" + command.parameters.at(0) + "'");
         break;
       }
 
@@ -530,28 +553,28 @@ bool JobRunner::runCommand(const QString &program, const QList<QString> &args, c
   
   addStatus(INIT, "Running terminal command '" + fullCommand + "', please wait...");
   if(!pretend) {
-    QProcess aptProc;
-    aptProc.setProgram(program);
-    aptProc.setArguments(args);
-    aptProc.start();
-    aptProc.waitForFinished(10 * 60 * 1000); // 10 minutes
-    if(aptProc.exitStatus() != QProcess::NormalExit ||
-       aptProc.exitCode() != 0) {
-      addStatus(INFO, "StdOut:\n" + aptProc.readAllStandardOutput());
+    QProcess terminal;
+    terminal.setProgram(program);
+    terminal.setArguments(args);
+    terminal.start();
+    terminal.waitForFinished(10 * 60 * 1000); // 10 minutes
+    if(terminal.exitStatus() != QProcess::NormalExit ||
+       terminal.exitCode() != 0) {
+      addStatus(INFO, "StdOut:\n" + terminal.readAllStandardOutput());
       if(critical) {
-        addStatus(WARNING, "StdError:\n" + aptProc.readAllStandardError());
+        addStatus(WARNING, "StdError:\n" + terminal.readAllStandardError());
         addStatus(FATAL, "Terminal command failed!");
         return false;
       } else {
-        addStatus(WARNING, "StdError:\n" + aptProc.readAllStandardError());
+        addStatus(WARNING, "StdError:\n" + terminal.readAllStandardError());
         addStatus(WARNING, "Terminal command failed, but is not critical!");
       }
       return false;
     }
     
     addStatus(INFO, "Terminal command completed successfully with the following output:");
-    addStatus(INFO, aptProc.readAllStandardOutput().data());
-    addStatus(INFO, aptProc.readAllStandardError().data());
+    addStatus(INFO, terminal.readAllStandardOutput().data());
+    addStatus(INFO, terminal.readAllStandardError().data());
   }
 
   return true;
@@ -653,7 +676,7 @@ bool JobRunner::rmFile(const QString &filePath)
   addStatus(INIT, "Removing file '" + filePath + "'");
 
   if(filePath.left(1) != "/") {
-    addStatus(FATAL, "A non-relative file path is required. File not removed!");
+    addStatus(FATAL, "A non-relative file path is required. No file removed!");
     return false;
   }
 
@@ -707,9 +730,13 @@ bool JobRunner::pathExclude(const QString &path)
   return true;
 }
 
-bool JobRunner::setVar(const QString &key, const QString &value)
+bool JobRunner::setVar(QString variable, const QString &value)
 {
-  QString variable = "%" + key + "%";
+  if(variable.contains("%")) {
+    addStatus(WARNING, "Variable name contains '%'. This is discouraged and can cause problems!");
+  }
+  variable.prepend("%");
+  variable.append("%");
   addStatus(INIT, "Setting variable '" + variable + "' to value '" + value + "'");
   vars[variable] = value;
   varsReplace();
@@ -717,8 +744,16 @@ bool JobRunner::setVar(const QString &key, const QString &value)
   return true;
 }
 
-bool JobRunner::loadVars(const QString &filename)
+bool JobRunner::loadVars(QString filename)
 {
+  if(filename.left(1) != "/") {
+    if(jobSrcPath.isEmpty()) {
+      addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'loadvars'");
+      return false;
+    }
+    filename.prepend(jobSrcPath + "/");
+  }
+
   addStatus(INIT, "Setting variables from file '" + filename + "'");
   QFile varsFile(filename);
   if(varsFile.open(QIODevice::ReadOnly)) {
@@ -840,4 +875,178 @@ bool JobRunner::hasInternet(const QString &command)
     addStatus(WARNING, "No internet connection detected, continuing anyway!");
   }
   return false;
+}
+
+bool JobRunner::mvFile(QString srcFile, QString dstFile)
+{
+  if(abortJob) {
+    return false;
+  }
+
+  bool backupOperation = dstFile.isEmpty()?true:false;
+
+  if(srcFile.left(1) != "/" && jobSrcPath.isEmpty()) {
+    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with 'mvfile'");
+    return false;
+  }
+  
+  if(!backupOperation && dstFile.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with 'mvfile'");
+    return false;
+  }
+
+  if(srcFile.left(1) != "/") {
+    srcFile.prepend(jobSrcPath + "/");
+  }
+  QFileInfo srcInfo(srcFile);
+
+  bool serialError = false;
+  if(backupOperation) {
+    dstFile = srcInfo.absoluteFilePath() + "0000";
+    int serial = 0;
+    do {
+      dstFile = dstFile.left(dstFile.length() - 4);
+      if(serial > 9999) {
+        serialError = true;
+        break;
+      }
+      QString serialString = QString::number(serial);
+      serial++;
+      while(serialString.length() < 4) {
+        serialString.prepend("0");
+      }
+      dstFile += serialString;
+    } while(QFile::exists(dstFile));
+  }
+
+  if(dstFile.left(1) != "/") {
+    dstFile.prepend(jobDstPath + "/");
+  }
+  QFileInfo dstInfo(dstFile);
+
+  if(backupOperation) {
+    if(serialError) {
+      addStatus(INIT, "Backing up file '" + srcInfo.absoluteFilePath() + "'");
+      addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
+      return false;
+    } else {
+      addStatus(INIT, "Backing up file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+    }
+  } else {
+    addStatus(INIT, "Moving file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+  }
+  
+  if(!QFile::exists(srcInfo.absoluteFilePath())) {
+    if(backupOperation) {
+      addStatus(WARNING, "Source file not found! Ignoring.");
+    } else {
+      addStatus(FATAL, "Source file not found!");
+    }
+    return false;
+  }
+
+  if(srcInfo.absoluteFilePath() == dstInfo.absoluteFilePath()) {
+    addStatus(WARNING, "Source and destination are the same! Ignoring.");
+    return false;
+  }
+
+  if(QFile::exists(dstInfo.absoluteFilePath())) {
+    addStatus(FATAL, "Destination file already exists!");
+    return false;
+  }
+  
+  if(!pretend && !QFile::rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
+    addStatus(FATAL, "File move failed!");
+    return false;
+  }
+  
+  addStatus(INFO, "File move successful!");
+  return true;
+}
+
+bool JobRunner::mvPath(QString srcPath, QString dstPath)
+{
+  if(abortJob) {
+    return false;
+  }
+
+  bool backupOperation = dstPath.isEmpty()?true:false;
+
+  if(srcPath.left(1) != "/" && jobSrcPath.isEmpty()) {
+    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative path paths with 'mvpath'");
+    return false;
+  }
+  
+  if(!backupOperation && dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'mvpath'");
+    return false;
+  }
+
+  if(srcPath.left(1) != "/") {
+    srcPath.prepend(jobSrcPath + "/");
+  }
+  QFileInfo srcInfo(srcPath);
+
+  bool serialError = false;
+  if(backupOperation) {
+    dstPath = srcInfo.absoluteFilePath() + "0000";
+    int serial = 0;
+    do {
+      dstPath = dstPath.left(dstPath.length() - 4);
+      if(serial > 9999) {
+        serialError = true;
+        break;
+      }
+      QString serialString = QString::number(serial);
+      serial++;
+      while(serialString.length() < 4) {
+        serialString.prepend("0");
+      }
+      dstPath += serialString;
+    } while(QFile::exists(dstPath));
+  }
+
+  if(dstPath.left(1) != "/") {
+    dstPath.prepend(jobDstPath + "/");
+  }
+  QFileInfo dstInfo(dstPath);
+
+  if(backupOperation) {
+    if(serialError) {
+      addStatus(INIT, "Backing up path '" + srcInfo.absoluteFilePath() + "'");
+      addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
+      return false;
+    } else {
+      addStatus(INIT, "Backing up path '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+    }
+  } else {
+    addStatus(INIT, "Moving path '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+  }
+  
+  if(!QFile::exists(srcInfo.absoluteFilePath())) {
+    if(backupOperation) {
+      addStatus(WARNING, "Source path not found! Ignoring.");
+    } else {
+      addStatus(FATAL, "Source path not found!");
+    }
+    return false;
+  }
+
+  if(srcInfo.absoluteFilePath() == dstInfo.absoluteFilePath()) {
+    addStatus(WARNING, "Source and destination are the same! Ignoring.");
+    return false;
+  }
+
+  if(QFile::exists(dstInfo.absoluteFilePath())) {
+    addStatus(FATAL, "Destination path already exists!");
+    return false;
+  }
+  
+  if(!pretend && !QDir::root().rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
+    addStatus(FATAL, "Path move failed!");
+    return false;
+  }
+  
+  addStatus(INFO, "Path moved successful!");
+  return true;
 }
