@@ -178,7 +178,7 @@ void JobRunner::runJob(const QString &filename)
 
   pretend = false;
 
-  addStatus(STATUS, "Running script from file '" + filename + "'");
+  addStatus(STATUS, "Job process begin!");
 
   QFileInfo jobInfo(filename);
   if(!jobInfo.exists()) {
@@ -1067,15 +1067,7 @@ void JobRunner::listFileContents(QAbstractButton *button)
   QRadioButton *selectedButton = reinterpret_cast<QRadioButton*>(button);
   if(prevButton != nullptr) {
     int delta = selectedButton->pos().y() - prevButton->pos().y();
-    //printf("mapToGlobalY: %d\n", this->mapToGlobal(selectedButton->pos()).y());
-    /*
-    if((delta && selectedButton->mapToGlobal(QPoint(0, 0)).y() + delta >
-        mapToGlobal(jobsScroll->pos()).y() + jobsScroll->height() - (jobsScroll->height() / 6)) ||
-       (!delta && this->mapToGlobal(selectedButton->pos()).y() < this->mapToGlobal(jobsScroll->pos()).y() + (jobsScroll->height() / 6))) {
-      jobsScroll->verticalScrollBar()->setValue(jobsScroll->verticalScrollBar()->value() + delta);
-    }
-    */
-  }
+    jobsScroll->verticalScrollBar()->setValue(jobsScroll->verticalScrollBar()->value() + delta);     }
   QString filename = button->objectName();
   progressBar->setFormat("No job in progress");
   progressBar->setValue(0);
