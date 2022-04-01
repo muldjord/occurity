@@ -7,17 +7,15 @@ category:Other jobs
 # If a command fails the job will exit
 # Uncomment the commands that aren't separated by newlines one by one to test them
 
-mvpath:%HOME%/test
-mvfile:%HOME%/test.file
+#mvpath:%HOME%/test
+#mvfile:%HOME%/test.file
 
-# Use the following command to exit / stop the running job at this point
-exit:Test job done!
+#message:Check for 'sudo' right when using 'apt-get install'
+#aptinstall:
 
-message:Check for 'sudo' right when using 'apt-get install'
-aptinstall:
+#message:Check for 'sudo' right when using 'apt-get remove'
+#aptremove:
 
-message:Check for 'sudo' right when using 'apt-get remove'
-aptremove:
 
 message:Expected: SUCCESS! Sets the '%VERSION%' variable to the current Occurity version
 loadvars:%HOME%/programming/occurity/VERSION
@@ -56,25 +54,24 @@ cppath:%WORKDIR%/jobs/testfiles/testpath;%WORKDIR%/jobs/testfiles/testpath2
 message:Expected: SUCCESS! Path is non-relative. This should succeed!
 rmpath:%WORKDIR%/jobs/testfiles/testpath2
 
-message:Expected: FAIL! Relative path is not allowed with 'rmpath'
-rmpath:this/path/is/relative
+#message:Expected: FAIL! Relative path is not allowed with 'rmpath'
+#rmpath:this/path/is/relative
 
-message:Setting source and destination paths
+message:Expected: SUCCESS! Setting source and destination paths
 srcpath:%WORKDIR%
-dstpath:%HOME%/occurity_update_test
+dstpath:%HOME%/occuritytest
 
-message:Defining excludes for cp* commands
-fileexclude:README.md
-pathexclude:optotypes/sloan
+message:Expected: SUCCESS! Copy license file from 'srcpath' to 'dstpath'
+cpfile:LICENSE
 
-message:Copying required files from source to destination
-cpfile:AUTHORS
-cpfile:README.md
-cpfile:%WORKDIR%/LICENSE
+message:Expected: SUCCESS! Defining excludes for cp* commands
+addexclude:optotypes/README.md
+addexclude:optotypes/sloan
 
-message:Copying required paths, including subfolders, from source to destination
+message:Expected: SUCCESS! Copy 'optotypes' path from 'srcpath' to 'dstpath' but adhere to excludes
 cppath:optotypes
 
-message:All steps completed!
+message:Expected: SUCCESS! Asks to remove 'dstpath' that we created for this test
+rmpath:%DSTPATH%;ask
 
-reboot:ask
+message:All steps completed!
