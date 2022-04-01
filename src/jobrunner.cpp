@@ -227,7 +227,7 @@ void JobRunner::runJob(const QString &filename)
     if(command.type == "aptinstall") {
       if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("apt-get", { "check" })) {
+          if(runCommand("sudo", { "apt-get", "-y", "update" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
           } else {
@@ -239,7 +239,7 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "aptremove") {
       if(command.parameters.length() == 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("apt-get", { "check" })) {
+          if(runCommand("sudo", { "apt-get", "-y", "update" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
           } else {
@@ -550,7 +550,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   return true;
 }
 
-bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const bool &critical)
+bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const int &maxWaitSecs, const bool &critical)
 {
   QString fullCommand = program + " ";
   for(const auto &arg: args) {
@@ -564,7 +564,10 @@ bool JobRunner::runCommand(const QString &program, const QList<QString> &args, c
     terminal.setProgram(program);
     terminal.setArguments(args);
     terminal.start();
-    terminal.waitForFinished(10 * 60 * 1000); // 10 minutes
+    if(critical && !terminal.waitForFinished(maxWaitSecs * 1000)) {
+      addStatus(FATAL, "Terminal command timed out!");
+      return false;
+    }
     if(terminal.exitStatus() != QProcess::NormalExit ||
        terminal.exitCode() != 0) {
       addStatus(INFO, "StdOut:\n" + terminal.readAllStandardOutput());
@@ -865,7 +868,7 @@ bool JobRunner::hasInternet(const QString &command)
       return true;
     }
   }
-  MessageBox messageBox(QMessageBox::Question, "No internet", "No internet connection found while processing the command:\n'" + command + "'\n\nIs this command critical for this job procedure to proceed?", QMessageBox::Yes | QMessageBox::No, this);
+  MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIt seems you are not connected to the internet! Is this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
   messageBox.exec();
   if(messageBox.result() == QMessageBox::Yes) {
     addStatus(FATAL, "Job cancelled due to missing internet connection!");

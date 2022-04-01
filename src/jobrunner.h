@@ -102,7 +102,7 @@ private:
   bool rmPath(const QString &path, bool &askPerPath);
 
   bool hasInternet(const QString &command);
-  bool runCommand(const QString &program, const QList<QString> &args, const bool &critical = true);
+  bool runCommand(const QString &program, const QList<QString> &args, const int &maxWaitSecs = 600, const bool &critical = true);
   bool reboot(const QString &argument);
   bool shutdown(const QString &argument);
   QString varsReplace(QString string = "");
