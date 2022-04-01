@@ -12,8 +12,8 @@ srcpath:/media/%USER%/USBPEN/occurity
 dstpath:%HOME%/occurity
 
 message:Defining excludes for cp* commands
-fileexclude:optotypes/copyrights.txt
-pathexclude:optotypes/kids
+addexclude:optotypes/copyrights.txt
+addexclude:optotypes/kids
 
 message:Copying required files from source to destination
 cpfile:AUTHORS
