@@ -388,9 +388,8 @@ void MainWindow::updateFromConfig()
 
 void MainWindow::spawnPreferences()
 {
-  PinDialog pinDialog(mainSettings.pinCode.length(), this);
-  pinDialog.exec();
-  if(pinDialog.getPin() == mainSettings.pinCode) {
+  PinDialog pinDialog(mainSettings.pinCode);
+  if(pinDialog.exec() == QDialog::Accepted) {
     printf("Spawning Preferences...\n");
     Preferences prefs(config, this);
     prefs.exec();
@@ -399,9 +398,8 @@ void MainWindow::spawnPreferences()
 
 void MainWindow::spawnJobRunner()
 {
-  PinDialog pinDialog(mainSettings.pinCode.length(), this);
-  pinDialog.exec();
-  if(pinDialog.getPin() == mainSettings.pinCode) {
+  PinDialog pinDialog(mainSettings.pinCode);
+  if(pinDialog.exec() == QDialog::Accepted) {
     printf("Spawning job runner...\n");
     JobRunner jobRunner(mainSettings, this);
     jobRunner.exec();

@@ -35,16 +35,21 @@ class PinDialog : public QDialog
   Q_OBJECT
 
 public:
-  PinDialog(const int &pinLength, QWidget *parent);
-  QString getPin();
+  PinDialog(const QString &correctPinCode, QWidget *parent = nullptr);
+  bool pinCorrect();
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+  void shakeHead();
+  
 private:
   QList<QLabel *> asterisks;
-  const int &pinLength;
+  const QString &correctPinCode;
   QString pinCode = "";
+
+  int headShakes = 0;
 
 };
 #endif/*__OCCURITY_PINDIALOG_H__*/

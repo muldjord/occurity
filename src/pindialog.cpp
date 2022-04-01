@@ -29,16 +29,16 @@
 
 #include <QKeyEvent>
 #include <QHBoxLayout>
+#include <QTimer>
 
-PinDialog::PinDialog(const int &pinLength, QWidget *parent)
-  : QDialog(parent), pinLength(pinLength)
+PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
+  : QDialog(parent), correctPinCode(correctPinCode)
 {
   setWindowTitle(tr("Pincode:"));
-  setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+  //setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
   //setFixedSize(200, 80);
-
   QHBoxLayout *layout = new QHBoxLayout;
-  for(int a = 0; a < pinLength; ++a) {
+  for(int a = 0; a < correctPinCode.length(); ++a) {
     QLabel *asteriskLabel = new QLabel;
     asteriskLabel->setPixmap(QPixmap(":pinblank.png"));
     asterisks.append(asteriskLabel);
@@ -82,12 +82,23 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
     }
     asterisks.at(pinCode.length() - 1)->setPixmap(QPixmap(":pinfilled.png"));
   }
-  if(pinCode.length() == pinLength) {
-    accept();
+  if(pinCode.length() == correctPinCode.length()) {
+    if(pinCode == correctPinCode) {
+      accept();
+    } else {
+      shakeHead();
+    }
   }
 }
 
-QString PinDialog::getPin()
+void PinDialog::shakeHead()
 {
-  return pinCode;
+  if(headShakes < 8) {
+    printf("POS: %d\n", pos().x());
+    move(pos().x() + (headShakes % 2 == 0?10:-10), pos().y());
+    headShakes++;
+    QTimer::singleShot(50, this, &PinDialog::shakeHead);
+    return;
+  }
+  reject();
 }
