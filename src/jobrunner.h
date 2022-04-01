@@ -78,15 +78,13 @@ private:
   QLabel *outputLabel = nullptr;
   QListWidget *outputList = nullptr;
   QProgressBar *progressBar = nullptr;
-  QList<QString> fileExcludes;
-  QList<QString> pathExcludes;
+  QList<QString> excludes;
   QButtonGroup *jobButtons = nullptr;
   MainSettings &mainSettings;
 
   void setHardcodedVars();
-  bool fileExclude(const QString &filename);
-  bool pathExclude(const QString &path);
-  bool isExcluded(const QList<QString> &excludes, const QString &src);
+  bool addExclude(const QString &exclude);
+  bool isExcluded(const QString &src);
   bool setVar(QString variable, const QString &value);
   bool loadVars(QString filename);
   void runJob(const QString &filename);
