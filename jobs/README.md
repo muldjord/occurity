@@ -121,8 +121,8 @@ WARNING! This command can be dangerous to use! It removes ENTIRE directory trees
 ### aptinstall:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
 
-#### /etc/sudoers/sudoers.d/pi
-To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+#### /etc/sudoers.d/pi
+To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 
@@ -134,8 +134,8 @@ Note! `sudo apt-get update` will automatically be run before installing any new 
 ### aptremove:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to remove packages using the `sudo apt-get remove` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
 
-#### /etc/sudoers/sudoers.d/pi
-To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers/sudoers.d/pi` and inserting the following:
+#### /etc/sudoers.d/pi
+To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate software packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 
