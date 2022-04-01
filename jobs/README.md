@@ -63,6 +63,15 @@ Some hardcoded variables are available. These can be used without setting them w
 * %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
 * %USER%: The user name of the currently logged in user (eg. `pi`).
 
+### addexclude:FILE|PATH
+Adds either a file or path to the exclude list used by the cp* commands. This is useful if you want to copy an entire path but want to leave out a subdirectory or file from within the path.
+
+Note! Both relative and non-relative file and path are allowed. If relative it will match with files or paths located relative to the defined `srcpath`.
+
+* Example 1: `addexclude:optotypes/sloan
+* Example 2: `addexclude:optotypes/README.md
+* Example 3: `addexclude:%WORKDIR%/README.md
+
 ### cpfile:SOURCEFILE;DESTINATIONFILE
 Copies a file from `SOURCEFILE` to `DESTINATIONFILE`. If `DESTINATIONFILE` is left out it will copy the file using the filename from `SOURCEFILE`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
 
