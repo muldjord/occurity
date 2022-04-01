@@ -33,26 +33,26 @@ setvar:%TEST;This is a value
 #cpfile:this/path/is/relative.file
 
 #message:Expected: FAIL! Relative destination path when 'dstpath' not set is not allowed
-#cpfile:%WORKDIR%/jobs/testfiles/test.file;this/path/is/relative/dstfile.file
+#cpfile:%WORKDIR%/jobs/testdir/test1.file;this/path/is/relative/dstfile.file
 
 message:Expected: SUCCES! Both source and destination are non-relative. This should succeed!
-cpfile:%WORKDIR%/jobs/testfiles/test.file;%WORKDIR%/jobs/testfiles/dstfile.file
+cpfile:%WORKDIR%/jobs/testdir/test1.file;%WORKDIR%/jobs/testdir/dstfile.file
 message:Expected: SUCCES! Should remove the file we copied in the previous command
-rmfile:%WORKDIR%/jobs/testfiles/dstfile.file
+rmfile:%WORKDIR%/jobs/testdir/dstfile.file
 
 #message:Expected: FAIL! Relative path is never allowed with 'rmfile'
-#rmfile:this/path/is/relative/test.file
+#rmfile:this/path/is/relative/test1.file
 
 #message:Expected: FAIL! 'srcpath' needs to be set for relative source path to work
-#cppath:this/path/is/relative;%WORKDIR%/jobs/testfiles/testpath
+#cppath:this/path/is/relative;%WORKDIR%/jobs/testdir/subdir
 
 #message:Expected: FAIL! 'dstpath' needs to be set for relative destination path to work
-#cppath:%WORKDIR%/jobs/testfiles/testpath;this/path/is/relative
+#cppath:%WORKDIR%/jobs/testdir/subdir;this/path/is/relative
 
 message:Expected: SUCCESS! Both source and destination paths are non-relative. This should succeed!
-cppath:%WORKDIR%/jobs/testfiles/testpath;%WORKDIR%/jobs/testfiles/testpath2
+cppath:%WORKDIR%/jobs/testdir/subdir;%WORKDIR%/jobs/testdir/subdir2
 message:Expected: SUCCESS! Path is non-relative. This should succeed!
-rmpath:%WORKDIR%/jobs/testfiles/testpath2
+rmpath:%WORKDIR%/jobs/testdir/subdir2
 
 #message:Expected: FAIL! Relative path is not allowed with 'rmpath'
 #rmpath:this/path/is/relative
