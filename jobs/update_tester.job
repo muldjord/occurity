@@ -71,7 +71,7 @@ addexclude:optotypes/sloan
 message:Expected: SUCCESS! Copy 'optotypes' path from 'srcpath' to 'dstpath' but adhere to excludes
 cppath:optotypes
 
-message:Expected: SUCCESS! Asks to remove 'dstpath' that we created for this test
+message:Expected: USER DECIDED! Asks to remove 'dstpath' that we created for this test
 rmpath:%DSTPATH%;ask
 
 message:All steps completed!
