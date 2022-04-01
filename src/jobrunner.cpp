@@ -227,7 +227,7 @@ void JobRunner::runJob(const QString &filename)
     if(command.type == "aptinstall") {
       if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get" }, 1)) {
+          if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
           } else {
@@ -239,7 +239,7 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "aptremove") {
       if(command.parameters.length() == 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get" }, 1)) {
+          if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
           } else {
