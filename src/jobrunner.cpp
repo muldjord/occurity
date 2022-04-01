@@ -637,7 +637,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
       }
     } else {
       addStatus(WARNING, "Path not removed!");
-      return false;
+      return true;
     }
   }
   
@@ -660,7 +660,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
       for(const auto &tempInfo: srcDir.entryInfoList()) {
         printf("FOUND: %s\n", tempInfo.absoluteFilePath().toStdString().c_str());
       }
-      addStatus(FATAL, "Path '" + srcDir.absolutePath() + "' is not empty, can't remove!");
+      addStatus(WARNING, "Path '" + srcDir.absolutePath() + "' is not empty, can't remove!");
       return false;
     } else if(!QDir::root().rmdir(srcDir.absolutePath())) {
       addStatus(FATAL, "Path '" + srcDir.absolutePath() + "' could not be removed! Perhaps a permission problem?");
