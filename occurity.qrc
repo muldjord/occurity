@@ -7,5 +7,7 @@
     <file alias="ruler.png">icons/ruler.png</file>
     <file alias="pinblank.png">icons/pinblank.png</file>
     <file alias="pinfilled.png">icons/pinfilled.png</file>
+    <file alias="pincorrect.png">icons/pincorrect.png</file>
+    <file alias="pinincorrect.png">icons/pinincorrect.png</file>
   </qresource>
 </RCC>

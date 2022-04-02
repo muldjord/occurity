@@ -7,7 +7,7 @@
    viewBox="0 0 33.866666 33.866668"
    version="1.1"
    id="svg5"
-   inkscape:export-filename="/home/muldjord/programming/occurity/icons/pinfilled.png"
+   inkscape:export-filename="/home/muldjord/programming/occurity/icons/pincorrect.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
@@ -18,25 +18,25 @@
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
      id="namedview7"
-     pagecolor="#ffffff"
+     pagecolor="#c8c8c8"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
      units="px"
      width="128px"
-     inkscape:zoom="4"
-     inkscape:cx="35.875"
-     inkscape:cy="76.625"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="48.436814"
+     inkscape:cy="90.156115"
      inkscape:window-width="1852"
-     inkscape:window-height="1136"
-     inkscape:window-x="68"
-     inkscape:window-y="27"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer5" />
   <defs
      id="defs2">
     <rect
@@ -97,5 +97,26 @@
          style="font-family:'Abyssinica SIL';-inkscape-font-specification:'Abyssinica SIL'"
          id="path18090" />
     </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Correct"
+     style="display:inline">
+    <path
+       style="fill:#34bc2f;fill-opacity:1;stroke:#2ea72a;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 9.4546208,16.982125 -4.6096159,2.665831 c 0,0 3.5935296,2.691557 5.2288911,4.316651 1.635361,1.625093 4.524019,5.410315 4.524019,5.410315 0,0 4.324882,-8.707809 7.669238,-13.31772 3.344356,-4.609911 6.754496,-7.5702549 6.754496,-7.5702549 L 24.176892,4.4917639 c 0,0 -3.490909,5.5763001 -5.646735,9.9693221 -2.155826,4.393022 -4.339306,10.217618 -4.339306,10.217618 0,0 -1.440802,-2.853407 -2.267628,-4.10307 -0.826826,-1.249663 -2.4686022,-3.593509 -2.4686022,-3.593509 z"
+       id="path211"
+       sodipodi:nodetypes="cczczcczczc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Incorrect"
+     style="display:none">
+    <path
+       id="rect5363"
+       style="fill:#d2574c;fill-opacity:1;stroke:#c43131;stroke-width:0.938813;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 24.302031,5.2144271 16.933676,12.582782 9.5649781,5.2140842 5.2140842,9.564978 l 7.3686978,7.368698 -7.3683555,7.368356 4.350551,4.35055 7.3683555,-7.368355 7.368356,7.368355 4.350893,-4.350894 -7.368355,-7.368355 7.368355,-7.3683549 z" />
   </g>
 </svg>
