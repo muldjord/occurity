@@ -84,8 +84,14 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
   }
   if(pinCode.length() == correctPinCode.length()) {
     if(pinCode == correctPinCode) {
-      accept();
+      for(auto *asterisk: asterisks) {
+        asterisk->setPixmap(QPixmap(":pincorrect.png"));
+      }
+      QTimer::singleShot(1000, this, &PinDialog::accept);
     } else {
+      for(auto *asterisk: asterisks) {
+        asterisk->setPixmap(QPixmap(":pinincorrect.png"));
+      }
       shakeHead();
     }
   }
@@ -97,7 +103,7 @@ void PinDialog::shakeHead()
     printf("POS: %d\n", pos().x());
     move(pos().x() + (headShakes % 2 == 0?10:-10), pos().y());
     headShakes++;
-    QTimer::singleShot(50, this, &PinDialog::shakeHead);
+    QTimer::singleShot(75, this, &PinDialog::shakeHead);
     return;
   }
   reject();
