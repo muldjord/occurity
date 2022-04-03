@@ -83,8 +83,8 @@ private:
   MainSettings &mainSettings;
 
   void setHardcodedVars();
-  bool addExclude(const QString &exclude);
-  bool isExcluded(const QString &src);
+  bool addExclude(QString exclude);
+  bool isExcluded(QString src);
   bool setVar(QString variable, const QString &value);
   bool loadVars(QString filename);
   void runJob(const QString &filename);

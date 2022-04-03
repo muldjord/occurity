@@ -367,15 +367,42 @@ void JobRunner::runJob(const QString &filename)
   jobInProgress = false;
 }
 
-bool JobRunner::isExcluded(const QString &src)
+bool JobRunner::addExclude(QString exclude)
 {
-  for(auto exclude: excludes) {
-    if(exclude.left(1) != "/") {
-      exclude.prepend(jobSrcPath + "/");
+  if(exclude.left(1) != "/") {
+    if(jobSrcPath.isEmpty()) {
+      addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'cppath'");
+      return false;
     }
+    exclude.prepend(jobSrcPath + "/");
+  }
+  addStatus(INIT, "Adding exclude '" + exclude + "'");
+  excludes.append(exclude);
+  return true;
+}
+
+bool JobRunner::isExcluded(QString src)
+{
+  if(src.left(1) != "/") {
+    if(jobSrcPath.isEmpty()) {
+      addStatus(FATAL, "Job source path undefined when calling 'isExcluded' with '" + src + "'. This is probably a bug as this function isn't called from the scripts directly!");
+      return false;
+    }
+    src.prepend(jobSrcPath + "/");
+  }
+  QFileInfo srcInfo(src);
+  for(auto exclude: excludes) {
     QFileInfo excludeInfo(exclude);
-    if(src.left(excludeInfo.absoluteFilePath().length()) == excludeInfo.absoluteFilePath()) {
-      return true;
+    if(srcInfo.isFile()) {
+      if(srcInfo.absoluteFilePath() == excludeInfo.absoluteFilePath()) {
+        addStatus(WARNING, "File '" + srcInfo.absoluteFilePath() + "' is marked for exclusion, continuing!");
+        return true;
+      }
+    } else if(srcInfo.isDir()) {
+      if(srcInfo.absoluteFilePath() == excludeInfo.absoluteFilePath() || (excludeInfo.absoluteFilePath() == srcInfo.absoluteFilePath().left(excludeInfo.absoluteFilePath().length()) && srcInfo.absoluteFilePath().at(excludeInfo.absoluteFilePath().length()) == "/")) {
+        addStatus(WARNING, "Path '" + srcInfo.absoluteFilePath() + "' is marked for exclusion, continuing!");
+        return true;
+      }
     }
   }
   return false;
@@ -486,7 +513,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
   addStatus(INIT, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
 
   if(isExcluded(srcInfo.absoluteFilePath())) {
-    addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
+    //addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
     return true;
   }
 
@@ -548,7 +575,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   addStatus(INIT, "Copying path '" + srcDir.absolutePath() + "' to '" + dstDir.absolutePath() + "'");
 
   if(isExcluded(srcDir.absolutePath())) {
-    addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
+    //addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
     return true;
   }
   
@@ -645,7 +672,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
   QDir srcDir(path, "*", QDir::Name, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
 
   if(isExcluded(srcDir.absolutePath())) {
-    addStatus(WARNING, "Path marked for exclusion, continuing without removing!");
+    //addStatus(WARNING, "Path marked for exclusion, continuing without removing!");
     return true;
   }
   if(!srcDir.exists()) {
@@ -712,7 +739,7 @@ bool JobRunner::rmFile(const QString &filePath)
   }
 
   if(isExcluded(filePath)) {
-    addStatus(WARNING, "File marked for exclusion, file not removed!");
+    //addStatus(WARNING, "File marked for exclusion, file not removed!");
     return true;
   }
 
@@ -756,13 +783,6 @@ QString JobRunner::getCommandString(const Command &command)
   }
   commandString = commandString.left(commandString.length() - 1);
   return commandString;
-}
-
-bool JobRunner::addExclude(const QString &exclude)
-{
-  addStatus(INIT, "Adding exclude '" + exclude + "'");
-  excludes.append(exclude);
-  return true;
 }
 
 bool JobRunner::setVar(QString variable, const QString &value)
