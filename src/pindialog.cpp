@@ -87,7 +87,7 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
       for(auto *asterisk: asterisks) {
         asterisk->setPixmap(QPixmap(":pincorrect.png"));
       }
-      QTimer::singleShot(1000, this, &PinDialog::accept);
+      QTimer::singleShot(500, this, &PinDialog::accept);
     } else {
       for(auto *asterisk: asterisks) {
         asterisk->setPixmap(QPixmap(":pinincorrect.png"));
