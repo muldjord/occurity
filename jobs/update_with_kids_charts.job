@@ -32,10 +32,7 @@ rmpath:%DSTPATH%/optotypes
 cppath:optotypes
 rmpath:%DSTPATH%/scripts
 cppath:scripts
-setexec:%DSTPATH%/scripts/displaystate.sh
-setexec:%DSTPATH%/scripts/hibernate.sh
-setexec:%DSTPATH%/scripts/shutdown.sh
-setexec:%DSTPATH%/scripts/wakeup.sh
+setexec:%DSTPATH%/scripts/*.sh
 rmpath:%DSTPATH%/svg
 cppath:svg
 rmpath:%DSTPATH%/jobs
