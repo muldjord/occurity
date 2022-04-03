@@ -1,4 +1,4 @@
-title:Apply update from '/media/%USER%/USBPEN/occurity' to '%HOME%/occurity' including kids charts
+title:Apply update from '%USBPATH%/occurity' to '%HOME%/occurity' including kids charts
 category:Update jobs
 
 message:Installing required system packages
@@ -8,8 +8,11 @@ message:Removing unwanted system packages
 aptremove:gstreamer1.0-plugins-bad
 
 message:Setting source and destination paths. All cp* commands are relative to these
-srcpath:/media/%USER%/USBPEN/occurity
+srcpath:%USBPATH%/occurity
 dstpath:%HOME%/occurity
+
+# Set %VERSION% variable to the new version
+loadvars:VERSION
 
 message:Copying required files from source to destination
 cpfile:AUTHORS
@@ -18,17 +21,27 @@ cpfile:LICENSE
 cpfile:README.md
 cpfile:VERSION
 cpfile:Occurity
+setexec:%DSTPATH%/Occurity
 cpfile:occurity_da_DK.qm
 cpfile:video.mp4
 
 message:Copying required paths, including subfolders, from source to destination
+rmpath:%DSTPATH%/icons
 cppath:icons
+rmpath:%DSTPATH%/optotypes
 cppath:optotypes
+rmpath:%DSTPATH%/scripts
 cppath:scripts
+setexec:%DSTPATH%/scripts/displaystate.sh
+setexec:%DSTPATH%/scripts/hibernate.sh
+setexec:%DSTPATH%/scripts/shutdown.sh
+setexec:%DSTPATH%/scripts/wakeup.sh
+rmpath:%DSTPATH%/svg
 cppath:svg
+rmpath:%DSTPATH%/jobs
 cppath:jobs
 
-message:Release created successfully!
+message:Succesfully updated to Occurity v%VERSION%!
 
 # Ask for system reboot
 reboot:ask
