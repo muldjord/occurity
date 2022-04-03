@@ -37,6 +37,7 @@
 #include <QEventLoop>
 #include <QNetworkInterface>
 #include <QScrollBar>
+#include <QStorageInfo>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -66,7 +67,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
 
   QList<QVBoxLayout*> categoryLayouts;
   QList<QRadioButton *> jobButtonsList;
-  QDir jobDir(mainSettings.jobsFolder, "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+  QDir jobDir(getUsbPath().isEmpty()?mainSettings.jobsFolder:getUsbPath() + "/occurity/jobs", "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
   for(const auto &jobInfo: jobDir.entryInfoList()) {
     QFile jobFile(jobInfo.absoluteFilePath());
     if(jobFile.open(QIODevice::ReadOnly)) {
@@ -223,7 +224,19 @@ void JobRunner::runJob(const QString &filename)
        command.type != "exit") {
       addStatus(CODE, getCommandString(command));
     }
-    
+
+    // Check if %USBPATH% is used. Quit if it hasn't been set
+    for(const auto &parameter: command.parameters) {
+      if(parameter.contains("%USBPATH%") && !vars.contains("%USBPATH%")) {
+        addStatus(FATAL, "%USBPATH% used but not detected! USB device must be named 'USBPEN' and has to be inserted prior to opening job runner. Job cancelled!");
+        break;
+      }
+    }
+
+    if(abortJob) {
+      break;
+    }
+
     if(command.type == "aptinstall") {
       if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
@@ -279,6 +292,11 @@ void JobRunner::runJob(const QString &filename)
           addStatus(STATUS, "Setting pretend! No path or file changes will occur while processing this job.");
           pretend = true;
         }
+      }
+
+    } else if(command.type == "setexec") {
+      if(command.parameters.length() == 1) {
+        runCommand("chmod", { "+x", command.parameters.at(0) });
       }
 
     } else if(command.type == "cpfile") {
@@ -340,8 +358,12 @@ void JobRunner::runJob(const QString &filename)
     }
     progressBar->setValue(progressBar->value() + 1);
   }
-  progressBar->setFormat("All steps completed!");
-  progressBar->setValue(progressBar->maximum());
+  if(abortJob) {
+    progressBar->setFormat("Job process failed at %p% :(");
+  } else {
+    progressBar->setFormat("Job process completed! :)");
+    progressBar->setValue(progressBar->maximum());
+  }
   jobInProgress = false;
 }
 
@@ -390,6 +412,7 @@ void JobRunner::addStatus(const int &status, const QString &text)
 {
   QListWidgetItem *item = new QListWidgetItem;
   QFont itemFont("monospace");
+  itemFont.setWeight(QFont::Bold);
   int delay = 10;
   item->setFont(itemFont);
   if(status == INFO) {
@@ -688,6 +711,11 @@ bool JobRunner::rmFile(const QString &filePath)
     return false;
   }
 
+  if(isExcluded(filePath)) {
+    addStatus(WARNING, "File marked for exclusion, file not removed!");
+    return true;
+  }
+
   if(!QFile::exists(filePath)) {
     addStatus(FATAL, "File doesn't exist!");
     return false;
@@ -712,6 +740,12 @@ void JobRunner::setHardcodedVars()
   }
   // SEt %WORKDIR% so it can be used in the .job files
   vars["%WORKDIR%"] = QDir::currentPath();
+
+  QString usbPath = getUsbPath();
+  if(!usbPath.isEmpty()) {
+    // SEt %WORKDIR% so it can be used in the .job files
+    vars["%USBPATH%"] = usbPath;
+  }
 }
 
 QString JobRunner::getCommandString(const Command &command)
@@ -884,71 +918,42 @@ bool JobRunner::mvFile(QString srcFile, QString dstFile)
     return false;
   }
 
-  bool backupOperation = dstFile.isEmpty()?true:false;
-
   if(srcFile.left(1) != "/" && jobSrcPath.isEmpty()) {
     addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with 'mvfile'");
     return false;
-  }
-  
-  if(!backupOperation && dstFile.left(1) != "/" && jobDstPath.isEmpty()) {
-    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with 'mvfile'");
-    return false;
-  }
-
-  if(srcFile.left(1) != "/") {
+  } else {
     srcFile.prepend(jobSrcPath + "/");
   }
-  QFileInfo srcInfo(srcFile);
 
-  bool serialError = false;
-  if(backupOperation) {
-    dstFile = srcInfo.absoluteFilePath() + "0000";
-    int serial = 0;
-    do {
-      dstFile = dstFile.left(dstFile.length() - 4);
-      if(serial > 9999) {
-        serialError = true;
-        break;
-      }
-      QString serialString = QString::number(serial);
-      serial++;
-      while(serialString.length() < 4) {
-        serialString.prepend("0");
-      }
-      dstFile += serialString;
-    } while(QFile::exists(dstFile));
+  if(dstFile.isEmpty()) {
+    dstFile = srcFile;
   }
 
-  if(dstFile.left(1) != "/") {
+  if(dstFile.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with 'mvfile'");
+    return false;
+  } else {
     dstFile.prepend(jobDstPath + "/");
   }
+
+  if(!serialize(dstFile)) {
+    addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
+    return false;
+  }
+
+  QFileInfo srcInfo(srcFile);
   QFileInfo dstInfo(dstFile);
 
-  if(backupOperation) {
-    if(serialError) {
-      addStatus(INIT, "Backing up file '" + srcInfo.absoluteFilePath() + "'");
-      addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
-      return false;
-    } else {
-      addStatus(INIT, "Backing up file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
-    }
-  } else {
-    addStatus(INIT, "Moving file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
-  }
-  
+  addStatus(INIT, "Moving file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+
   if(!QFile::exists(srcInfo.absoluteFilePath())) {
-    if(backupOperation) {
-      addStatus(WARNING, "Source file not found! Ignoring.");
-    } else {
-      addStatus(FATAL, "Source file not found!");
-    }
-    return false;
+    addStatus(WARNING, "Source file not found! Ignoring.");
+    return true;
   }
 
   if(srcInfo.absoluteFilePath() == dstInfo.absoluteFilePath()) {
     addStatus(WARNING, "Source and destination are the same! Ignoring.");
-    return false;
+    return true;
   }
 
   if(QFile::exists(dstInfo.absoluteFilePath())) {
@@ -971,71 +976,42 @@ bool JobRunner::mvPath(QString srcPath, QString dstPath)
     return false;
   }
 
-  bool backupOperation = dstPath.isEmpty()?true:false;
-
   if(srcPath.left(1) != "/" && jobSrcPath.isEmpty()) {
-    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative path paths with 'mvpath'");
+    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'mvpath'");
     return false;
-  }
-  
-  if(!backupOperation && dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
-    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'mvpath'");
-    return false;
-  }
-
-  if(srcPath.left(1) != "/") {
+  } else {
     srcPath.prepend(jobSrcPath + "/");
   }
-  QFileInfo srcInfo(srcPath);
 
-  bool serialError = false;
-  if(backupOperation) {
-    dstPath = srcInfo.absoluteFilePath() + "0000";
-    int serial = 0;
-    do {
-      dstPath = dstPath.left(dstPath.length() - 4);
-      if(serial > 9999) {
-        serialError = true;
-        break;
-      }
-      QString serialString = QString::number(serial);
-      serial++;
-      while(serialString.length() < 4) {
-        serialString.prepend("0");
-      }
-      dstPath += serialString;
-    } while(QFile::exists(dstPath));
+  if(dstPath.isEmpty()) {
+    dstPath = srcPath;
   }
 
-  if(dstPath.left(1) != "/") {
+  if(dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
+    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'mvpath'");
+    return false;
+  } else {
     dstPath.prepend(jobDstPath + "/");
   }
+
+  if(!serialize(dstPath)) {
+    addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
+    return false;
+  }
+
+  QFileInfo srcInfo(srcPath);
   QFileInfo dstInfo(dstPath);
 
-  if(backupOperation) {
-    if(serialError) {
-      addStatus(INIT, "Backing up path '" + srcInfo.absoluteFilePath() + "'");
-      addStatus(FATAL, "4-digit backup serial number could not be generated, job cancelled!");
-      return false;
-    } else {
-      addStatus(INIT, "Backing up path '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
-    }
-  } else {
-    addStatus(INIT, "Moving path '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
-  }
-  
+  addStatus(INIT, "Moving path '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
+
   if(!QFile::exists(srcInfo.absoluteFilePath())) {
-    if(backupOperation) {
-      addStatus(WARNING, "Source path not found! Ignoring.");
-    } else {
-      addStatus(FATAL, "Source path not found!");
-    }
-    return false;
+    addStatus(WARNING, "Source path not found! Ignoring.");
+    return true;
   }
 
   if(srcInfo.absoluteFilePath() == dstInfo.absoluteFilePath()) {
     addStatus(WARNING, "Source and destination are the same! Ignoring.");
-    return false;
+    return true;
   }
 
   if(QFile::exists(dstInfo.absoluteFilePath())) {
@@ -1043,12 +1019,12 @@ bool JobRunner::mvPath(QString srcPath, QString dstPath)
     return false;
   }
   
-  if(!pretend && !QDir::root().rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
+  if(!pretend && !QFile::rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "Path move failed!");
     return false;
   }
   
-  addStatus(INFO, "Path moved successful!");
+  addStatus(INFO, "Path move successful!");
   return true;
 }
 
@@ -1077,4 +1053,38 @@ void JobRunner::listFileContents(QAbstractButton *button)
     outputLabel->setText("<h3>Couldn't open job file '" + filename + "'!</h3>");
   }
   prevButton = selectedButton;
+}
+
+QString JobRunner::getUsbPath()
+{
+  for(const auto &volume: QStorageInfo::mountedVolumes()) {
+    if(volume.fileSystemType().toLower().contains("fat") &&
+       (volume.displayName() == "USBPEN" || volume.name() == "USBPEN")) {
+      return volume.rootPath();
+    }
+  }
+  return "";
+}
+
+bool JobRunner::serialize(QString &dst)
+{
+  if(!QFile::exists(dst)) {
+    return true;
+  }
+  addStatus(WARNING, "Destination file or path already exists, adding serial number!");
+  dst.append("0000");
+  int serial = 0;
+  do {
+    dst = dst.left(dst.length() - 4);
+    if(serial > 9999) {
+      return false;
+    }
+    QString serialString = QString::number(serial);
+    serial++;
+    while(serialString.length() < 4) {
+      serialString.prepend("0");
+    }
+    dst += serialString;
+  } while(QFile::exists(dst));
+  return true;
 }
