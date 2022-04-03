@@ -64,7 +64,7 @@ dstpath:%HOME%/occuritytest
 message:Expected: SUCCESS! Copy license file from 'srcpath' to 'dstpath'
 cpfile:LICENSE
 
-message:Expected: SUCCESS! Defining excludes for cp* commands
+message:Expected: SUCCESS! Adding global file and path excludes
 addexclude:optotypes/README.md
 addexclude:optotypes/sloan
 

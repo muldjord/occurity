@@ -7,14 +7,14 @@ aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugin
 message:Removing unwanted system packages
 aptremove:gstreamer1.0-plugins-bad
 
-message:Setting source and destination paths. All cp* commands are relative to these
+message:Setting source and destination paths.
 srcpath:%USBPATH%/occurity
 dstpath:%HOME%/occurity
 
 # Set %VERSION% variable to the new version
 loadvars:VERSION
 
-message:Defining excludes for cp* commands
+message:Adding global file and path excludes
 addexclude:optotypes/copyrights.txt
 addexclude:optotypes/kids
 

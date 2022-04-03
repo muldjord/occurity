@@ -1,6 +1,6 @@
 title:Create new release in '%USBPATH%/occurity' using build in '%HOME%/programming/occurity'
 category:Release creation
-message:Setting source and destination paths. All cp* commands are relative to these
+message:Setting source and destination paths.
 srcpath:%HOME%/programming/occurity
 dstpath:%USBPATH%/occurity
 
