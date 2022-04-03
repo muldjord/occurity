@@ -72,46 +72,58 @@ Note! Both relative and non-relative file and path are allowed. If relative it w
 * Example 2: `addexclude:optotypes/README.md
 * Example 3: `addexclude:%WORKDIR%/README.md
 
-### cpfile:SOURCEFILE;DESTINATIONFILE
-Copies a file from `SOURCEFILE` to `DESTINATIONFILE`. If `DESTINATIONFILE` is left out it will copy the file using the filename from `SOURCEFILE`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
+### setexec:FILENAME
+Runs `chmod +x FILENAME` in order to make the file executable. This is important to apply to files moved or copied from a FAT32 usb pendrive, as they are often not executable. The main executable `Occurity` and all files from the `scripts` subfolder should all have this command run on them after an update to ensure Occurity works as expected. Otherwise Occurity might not start at all or the standby functions might not work as expected.
+
+* Example 1: `setexec:%HOME%/occurity/Occurity`
+* Example 2: `setexec:%HOME%/occurity/scripts/*.sh`
+
+### cpfile:SRCFILE;DSTFILE
+Copies a file from `SRCFILE` to `DSTFILE`. If `DSTFILE` is left out it will copy the file using the filename from `SRCFILE`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the file path starts with a `/`.
 
 * Example 1: `cpfile:Occurity` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file of the same name located at the path defined by `dstpath`.
 * Example 2: `cpfile:Occurity;OtherName` <-- This copies the source file `Occurity` from the path defined by `srcpath` to a destination file called `OtherName` located at the path defined by `dstpath`.
 * Example 3: `cpfile:/tmp/somefilename;/home/pi/someotherfilename` <-- This copies the source file `/tmp/somefilename` to the destination file `/home/pi/someotherfilename` ignoring the previously defined `srcpath` and `dstpath`.
 * Example 4: `cpfile:somefilename;/home/pi/someotherfilename` <-- This copies the source file `somefilename` to the destination file `/home/pi/someotherfilename`. The source file is relative to the path defined by `srcpath` while `dstpath` is ignored.
 
-### mvfile:SOURCEFILE;DESTINATIONFILE
-Moves / renames a file from 'SOURCEFILE' to 'DESTINATIONFILE'. Both file paths must be non-relative. If 'DESTINATIONFILE' is left out it will automatically be set to the same as 'SOURCEFILE' with a 4-digit serial number added. This is useful for creating backups of existing files.
+### mvfile:SRCFILE[;DSTFILE]
+Moves `SRCFILE` to `DSTFILE`. If `DSTFILE` is left out `SRCFILE` will be used with a 4-digit autoincremented serial added (eg `SRCFILE0000`). If `DSTFILE` already exists a 4-digit autoincremented serial will be added (eg. `DSTFILE0000`).
 
-WARNING! If 'DESTINATIONFILE' is set to an already existing file IT WILL BE OVERWRITTEN with the contents of 'SOURCEFILE'!
+Note! This command DOES NOT adhere to files added using `addexclude`!
 
-* Example 1: `mvfile:/media/%USER%/USBPEN/occurity/test.file`
-* Example 2: `mvfile:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old`
+* Example 1: `mvfile:/media/%USER%/USBPEN/occurity/test.file` <-- Moves to `/media/%USER%/USBPEN/occurity/test.file0000`
+* Example 2: `mvfile:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old` <-- If `%HOME/occurity/charts.xml.old` already exists it will move to `%HOME/occurity/charts.xml.old0000`
 
 ### rmfile:FILEPATH
 Removes a single file. A non-relative file path is required.
 
-* Example 1: `rmpath:%HOME%/occurity/config.ini`
-* Example 2: `rmpath:/media/%USER%/USBPEN/occurity/config.ini`
+Note! Files added using `addexclude` will NOT be removed!
 
-### cppath:SOURCEPATH;DESTINATIONPATH
+* Example 1: `rmfile:%HOME%/occurity/config.ini`
+* Example 2: `rmfile:/media/%USER%/USBPEN/occurity/config.ini`
+
+### cppath:SRCPATH;DSTPATH
 Copies a path, including subdirectories, from `sourcepath` to `destinationpath`. If `destinationpath` is left out it will copy the path using the path name from `sourcepath`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the path name starts with a `/`.
+
+Note! Paths added using `addexclude` will NOT be copied!
 
 * Example 1: `cppath:optotypes` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path of the same name located at the path defined by `dstpath`.
 * Example 2: `cppath:optotypes;mypath` <-- This copies the source path `optotypes` from the path defined by `srcpath` to a destination path called `mypath` located at the path defined by `dstpath`.
 * Example 3: `cppath:/tmp/somepath;/home/pi/someotherpath` <-- This copies the source path `/tmp/somepath` to the destination path `/home/pi/someotherpath` ignoring the previously defined `srcpath` and `dstpath`.
 * Example 4: `cppath:somepath;/home/pi/someotherpath` <-- This copies the source path `somepath` to the destination path `/home/pi/someotherpath`. The source path is relative to the path defined by `srcpath` while `dstpath` is ignored.
 
-### mvpath:SOURCEPATH;DESTINATIONPATH
-Moves / renames a path from 'SOURCEPATH' to 'DESTINATIONPATH'. Both paths must be non-relative. If 'DESTINATIONPATH' is left out it will automatically be set to the same as 'SOURCEPATH' with a 4-digit serial number added. This is useful for creating backups of existing paths.
+### mvpath:SRCPATH[;DSTPATH]
+Moves `SRCPATH` to `DSTPATH`. If `DSTPATH` is left out `SRCPATH` will be used with a 4-digit autoincremented serial added (eg `SRCPATH0000`). If `DSTPATH` already exists a 4-digit autoincremented serial will be added (eg. `DSTPATH0000`).
 
-WARNING! If 'DESTINATIONPATH' is set to an already existing path IT WILL BE DELETED AND OVERWRITTEN with the contents of 'SOURCEPATH'!
+Note! This command DOES NOT adhere to paths added using `addexclude`!
 
-* Example 1: `mvpath:/media/%USER%/USBPEN/occurity/test.path`
-* Example 2: `mvpath:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old`
+* Example 1: `mvpath:/media/%USER%/USBPEN/occurity/testpath` <-- Moves to `/media/%USER%/USBPEN/occurity/testpath0000`
+* Example 2: `mvpath:%HOME%/occurity/testpath;%HOME/occurity/testpathnew` <-- If `%HOME/occurity/testpathnew` already exists it will move to `%HOME/occurity/testpathnew0000`
 
 ### rmpath:PATH[;ask]
 Recursively removes an entire non-relative path. If `;ask` is added after the path, it will ask before deleting each subdirectory.
+
+Note! Paths added using `addexclude` will NOT be removed!
 
 WARNING! This command can be dangerous to use! It removes ENTIRE directory trees, including all files and subdirectories. So BEWARE! Consider running it with `pretend:true` (documented elsewhere in this document) to test it.
 
