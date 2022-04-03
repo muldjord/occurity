@@ -64,9 +64,14 @@ Some hardcoded variables are available. These can be used without setting them w
 * %USER%: The user name of the currently logged in user (eg. `pi`).
 
 ### addexclude:FILE|PATH
-Adds either a file or path to the exclude list used by the cp* commands. This is useful if you want to copy an entire path but want to leave out a subdirectory or file from within the path.
+Adds either a FILE or PATH to the global exclude list. This list is used by several of the available file and path manipulation commands. If a match is found the file or path will be ignored by those commands. Any subdirectories of an excluded path will also be excluded.
 
-Note! Both relative and non-relative file and path are allowed. If relative it will match with files or paths located relative to the defined `srcpath`.
+Adding excludes is useful if you want to copy an entire path but want to leave out a subdirectory or file from within that path.
+Same goes when removing a path. Excluded paths (including subdirectories) and / or files will remain after removal.
+
+Note 1: `mvpath` does not adhere to the exclude list!
+
+Note 2: Both relative and non-relative FILE and PATH are allowed. If relative it will match with files or paths located relative to the defined `srcpath`.
 
 * Example 1: `addexclude:optotypes/sloan
 * Example 2: `addexclude:optotypes/README.md
