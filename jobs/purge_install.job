@@ -4,5 +4,5 @@ category:Maintenance
 # Don't remove 'config.ini' as it contains important patient distance information
 addexclude:%HOME%/occurity/config.ini
 
-message:Purging entire default installation path
+message:Purging default installation path excluding 'config.ini'
 rmpath:%HOME%/occurity;ask
