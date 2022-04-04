@@ -899,18 +899,23 @@ bool JobRunner::reboot(const QString &argument)
 bool JobRunner::shutdown(const QString &argument)
 {
   addStatus(INIT, "System shutdown requested...");
+  bool doShutdown = false;
   if(argument == "force") {
     addStatus(INFO, "Forcing shutdown now!");
-    QProcess::execute("halt", {});
+    doShutdown = true;
   } else if(argument == "ask") {
     MessageBox messageBox(QMessageBox::Question, "Shutdown?", "Do you wish to perform a system shutdown?", QMessageBox::Yes | QMessageBox::No, this);
     messageBox.exec();
     if(messageBox.result() == QMessageBox::Yes) {
       addStatus(INFO, "Accepted by user, shutting system down now...");
-      QProcess::execute("halt", {});
+      doShutdown = true;
     } else {
       addStatus(WARNING, "Cancelled by user!");
+      return false;
     }
+  }
+  if(doShutdown) {
+    QProcess::execute("halt", {});
   }
   return true;
 }
