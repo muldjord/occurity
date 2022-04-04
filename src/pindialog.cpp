@@ -100,7 +100,6 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
 void PinDialog::shakeHead()
 {
   if(headShakes < 8) {
-    printf("POS: %d\n", pos().x());
     move(pos().x() + (headShakes % 2 == 0?10:-10), pos().y());
     headShakes++;
     QTimer::singleShot(75, this, &PinDialog::shakeHead);
