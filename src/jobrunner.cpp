@@ -98,7 +98,6 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
           }
         }
         if(categoryLayout == nullptr) {
-          printf("Creating category '%s'\n", categoryString.toStdString().c_str());
           categoryLayout = new QVBoxLayout;
           categoryLayout->setObjectName(categoryString);
           categoryLayout->addWidget(new QLabel(categoryString));
@@ -242,7 +241,7 @@ void JobRunner::runJob(const QString &filename)
         if(hasInternet(getCommandString(command))) {
           if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
-            runCommand("sudo", (QList<QString> { "apt-get", "-y", "install" }) + command.parameters);
+            runCommand("sudo", QList<QString> { "apt-get", "-y", "install" } + command.parameters);
           } else {
             addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
           }
@@ -254,7 +253,7 @@ void JobRunner::runJob(const QString &filename)
         if(hasInternet(getCommandString(command))) {
           if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
-            runCommand("sudo", (QList<QString> { "apt-get", "-y", "remove" }) + command.parameters);
+            runCommand("sudo", QList<QString> { "apt-get", "-y", "remove" } + command.parameters);
           } else {
             addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
           }
@@ -440,7 +439,7 @@ void JobRunner::addStatus(const int &status, const QString &text)
   QListWidgetItem *item = new QListWidgetItem;
   QFont itemFont("monospace");
   itemFont.setWeight(QFont::Bold);
-  int delay = 10;
+  //int delay = 2;
   item->setFont(itemFont);
   if(status == INFO) {
     qInfo("%s", text.toUtf8().data());
@@ -476,9 +475,11 @@ void JobRunner::addStatus(const int &status, const QString &text)
   }
   outputList->addItem(item);
   outputList->scrollToBottom();
+  /*
   QEventLoop waiter;
   QTimer::singleShot(delay, &waiter, &QEventLoop::quit);
   waiter.exec();
+  */
 }
 
 bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
@@ -600,41 +601,50 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
   return true;
 }
 
-bool JobRunner::runCommand(const QString &program, const QList<QString> &args, const int &maxWaitSecs, const bool &critical)
+bool JobRunner::runCommand(const QString &program, QList<QString> args, const int &maxWaitSecs, const bool &critical)
 {
-  QString fullCommand = program + " ";
-  for(const auto &arg: args) {
-    fullCommand.append(arg + " ");
-  }
-  fullCommand = fullCommand.trimmed();
-  
+  QString fullCommand = program + " " + args.join(" ").trimmed();
   addStatus(INIT, "Running terminal command '" + fullCommand + "', please wait...");
   if(!pretend) {
     QProcess terminal;
-    terminal.setProgram(program);
+    /*
+    terminal.setProgram("bash");
     terminal.setArguments(args);
-    terminal.start();
+    */
+    args.prepend(program);
+    terminal.start("bash", QStringList() << "-c" << args.join(" "));
     if(critical && !terminal.waitForFinished(maxWaitSecs * 1000)) {
+      addStatus(WARNING, "ERROR: " + QString::number(terminal.error()));
       addStatus(FATAL, "Terminal command timed out!");
       return false;
     }
     if(terminal.exitStatus() != QProcess::NormalExit ||
        terminal.exitCode() != 0) {
-      addStatus(INFO, "StdOut:\n" + terminal.readAllStandardOutput());
+      for(const auto &line: terminal.readAllStandardOutput().trimmed().split('\n')) {
+        addStatus(INFO, line);
+      }
       if(critical) {
-        addStatus(WARNING, "StdError:\n" + terminal.readAllStandardError());
+        for(const auto &line: terminal.readAllStandardError().trimmed().split('\n')) {
+          addStatus(WARNING, line);
+        }
         addStatus(FATAL, "Terminal command failed!");
         return false;
       } else {
-        addStatus(WARNING, "StdError:\n" + terminal.readAllStandardError());
+        for(const auto &line: terminal.readAllStandardError().trimmed().split('\n')) {
+          addStatus(WARNING, line);
+        }
         addStatus(WARNING, "Terminal command failed, but is not critical!");
       }
       return false;
     }
     
     addStatus(INFO, "Terminal command completed successfully with the following output:");
-    addStatus(INFO, terminal.readAllStandardOutput().data());
-    addStatus(INFO, terminal.readAllStandardError().data());
+    for(const auto &line: terminal.readAllStandardOutput().trimmed().split('\n')) {
+      addStatus(INFO, line);
+    }
+    for(const auto &line: terminal.readAllStandardError().trimmed().split('\n')) {
+      addStatus(WARNING, line);
+    }
   }
 
   return true;
