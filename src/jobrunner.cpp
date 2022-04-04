@@ -880,18 +880,22 @@ bool JobRunner::dstPath(const QString &path)
 bool JobRunner::reboot(const QString &argument)
 {
   addStatus(INIT, "System reboot requested...");
+  bool doReboot = false;
   if(argument == "force") {
     addStatus(INFO, "Forcing reboot now!");
-    QProcess::execute("reboot", {});
+    doReboot = true;
   } else if(argument == "ask") {
     MessageBox messageBox(QMessageBox::Question, "Reboot?", "Do you wish to perform a system reboot?", QMessageBox::Yes | QMessageBox::No, this);
     messageBox.exec();
     if(messageBox.result() == QMessageBox::Yes) {
       addStatus(INFO, "Accepted by user, rebooting now...");
-      QProcess::execute("reboot", {});
+      doReboot = true;
     } else {
       addStatus(WARNING, "Cancelled by user!");
     }
+  }
+  if(doReboot) {
+    QProcess::execute("bash", {"./scripts/reboot.sh"});
   }
   return true;
 }
@@ -915,7 +919,7 @@ bool JobRunner::shutdown(const QString &argument)
     }
   }
   if(doShutdown) {
-    QProcess::execute("halt", {});
+    QProcess::execute("bash", {"./scripts/shutdown.sh"});
   }
   return true;
 }
