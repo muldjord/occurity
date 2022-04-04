@@ -1011,22 +1011,26 @@ bool JobRunner::mvPath(QString srcPath, QString dstPath)
     return false;
   }
 
-  if(srcPath.left(1) != "/" && jobSrcPath.isEmpty()) {
-    addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'mvpath'");
-    return false;
-  } else {
-    srcPath.prepend(jobSrcPath + "/");
+  if(srcPath.at(0) != '/') {
+    if(jobSrcPath.isEmpty()) {
+      addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative paths with 'mvpath'");
+      return false;
+    } else {
+      srcPath.prepend(jobSrcPath + "/");
+    }
   }
 
   if(dstPath.isEmpty()) {
     dstPath = srcPath;
   }
 
-  if(dstPath.left(1) != "/" && jobDstPath.isEmpty()) {
-    addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'mvpath'");
-    return false;
-  } else {
-    dstPath.prepend(jobDstPath + "/");
+  if(dstPath.at(0) != '/') {
+    if(jobDstPath.isEmpty()) {
+      addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative paths with 'mvpath'");
+      return false;
+    } else {
+      dstPath.prepend(jobDstPath + "/");
+    }
   }
 
   if(!serialize(dstPath)) {
