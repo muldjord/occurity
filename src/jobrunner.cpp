@@ -67,7 +67,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
 
   QList<QVBoxLayout*> categoryLayouts;
   QList<QRadioButton *> jobButtonsList;
-  QDir jobDir(getUsbPath().isEmpty()?mainSettings.jobsFolder:getUsbPath() + "/occurity/jobs", "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+  QDir jobDir(!QDir::currentPath().contains("/programming/") && !getUsbPath().isEmpty()?getUsbPath() + "/occurity/jobs":mainSettings.jobsFolder, "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
   for(const auto &jobInfo: jobDir.entryInfoList()) {
     QFile jobFile(jobInfo.absoluteFilePath());
     if(jobFile.open(QIODevice::ReadOnly)) {
@@ -228,7 +228,7 @@ void JobRunner::runJob(const QString &filename)
     // Check if %USBPATH% is used. Quit if it hasn't been set
     for(const auto &parameter: command.parameters) {
       if(parameter.contains("%USBPATH%") && !vars.contains("%USBPATH%")) {
-        addStatus(FATAL, "%USBPATH% used but not detected! USB device must be named 'USBPEN' and has to be inserted prior to opening job runner. Job cancelled!");
+        addStatus(FATAL, "%USBPATH% used but not detected! USB device must be formatted as a FAT filesystem, be named 'USBPEN' and has to be inserted prior to opening job runner. Job cancelled!");
         break;
       }
     }
