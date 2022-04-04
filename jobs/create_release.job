@@ -16,7 +16,6 @@ cpfile:README.md
 cpfile:VERSION
 cpfile:Occurity
 cpfile:occurity_da_DK.qm
-cpfile:video.mp4
 
 message:Copying required paths, including subfolders, from source to destination
 cppath:icons
@@ -24,6 +23,7 @@ cppath:optotypes
 cppath:scripts
 cppath:svg
 cppath:jobs
+cppath:videos
 
 # Set %VERSION% variable to the new version
 loadvars:VERSION

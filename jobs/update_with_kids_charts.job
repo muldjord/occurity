@@ -23,7 +23,6 @@ cpfile:VERSION
 cpfile:Occurity
 setexec:%DSTPATH%/Occurity
 cpfile:occurity_da_DK.qm
-cpfile:video.mp4
 
 message:Copying required paths, including subfolders, from source to destination
 rmpath:%DSTPATH%/icons
@@ -37,6 +36,8 @@ rmpath:%DSTPATH%/svg
 cppath:svg
 rmpath:%DSTPATH%/jobs
 cppath:jobs
+rmpath:%DSTPATH%/videos
+cppath:videos
 
 message:Succesfully updated to Occurity v%VERSION%!
 
