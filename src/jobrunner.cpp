@@ -607,10 +607,6 @@ bool JobRunner::runCommand(const QString &program, QList<QString> args, const in
   addStatus(INIT, "Running terminal command '" + fullCommand + "', please wait...");
   if(!pretend) {
     QProcess terminal;
-    /*
-    terminal.setProgram("bash");
-    terminal.setArguments(args);
-    */
     args.prepend(program);
     terminal.start("bash", QStringList() << "-c" << args.join(" "));
     if(critical && !terminal.waitForFinished(maxWaitSecs * 1000)) {
