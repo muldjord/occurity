@@ -31,29 +31,38 @@
 
 #include <QKeyEvent>
 #include <QFileInfo>
+#include <QDir>
 
-VideoPlayer::VideoPlayer(const int &width, const int &height, QWidget *parent) :
+VideoPlayer::VideoPlayer(const QString &videosPath,
+                         const int &width, const int &height,
+                         QWidget *parent) :
   QVideoWidget(parent)
 {
   setFixedSize(width, height);
   setWindowFlags(Qt::WindowStaysOnTopHint);
   mediaPlayer = new QMediaPlayer();
-  if(QFileInfo::exists("./video.mp4")) {
-    QFile videoFile("./video.mp4");
-    if(videoFile.open(QIODevice::ReadOnly)) {
-      videoData = videoFile.readAll();
-      printf("Loaded %d bytes of video data from 'video.mp4'\n", videoData.length());
-      videoFile.close();
+  QDir videosDir(videosPath, "*.mp4", QDir::Name, QDir::Files);
+  for(const auto &videoInfo: videosDir.entryInfoList()) {
+    if(QFileInfo::exists(videoInfo.absoluteFilePath())) {
+      QFile videoFile(videoInfo.absoluteFilePath());
+      if(videoFile.open(QIODevice::ReadOnly)) {
+        QPair<QString, QByteArray> videoData;
+        videoData.first = videoInfo.fileName();
+        videoData.second = videoFile.readAll();
+        qInfo("Loaded %d bytes of video data from '%s'\n",
+              videoData.second.length(),
+              videoInfo.absoluteFilePath().toStdString().c_str());
+        videoFile.close();
+        videosData.append(videoData);
+      }
     }
-    mediaPlayer->setVideoOutput(this);
-    videoBuffer = new QBuffer();
-    videoBuffer->setData(videoData);
-    videoBuffer->open(QIODevice::ReadOnly);
-    mediaPlayer->setMedia(QMediaContent(), videoBuffer);
   }
-  allowStopTimer.setInterval(4000);
-  allowStopTimer.setSingleShot(true);
-  connect(&allowStopTimer, &QTimer::timeout, this, &VideoPlayer::setAllowStop);
+  mediaPlayer->setVideoOutput(this);
+  videoBuffer = new QBuffer();
+
+  allowActionTimer.setInterval(4000);
+  allowActionTimer.setSingleShot(true);
+  connect(&allowActionTimer, &QTimer::timeout, this, &VideoPlayer::setAllowStop);
 }
 
 VideoPlayer::~VideoPlayer()
@@ -61,19 +70,38 @@ VideoPlayer::~VideoPlayer()
   videoBuffer->close();
 }
 
+void VideoPlayer::changeVideo(const int &delta)
+{
+  videoIdx = videoIdx + delta;
+  if(videoIdx >= videosData.length()) {
+    videoIdx = 0;
+  }
+  if(videoIdx < 0) {
+    videoIdx = videosData.length() - 1;
+  }
+  if(videoBuffer->isOpen()) {
+    videoBuffer->close();
+  }
+  videoBuffer->setData(videosData.at(videoIdx).second);
+  videoBuffer->open(QIODevice::ReadOnly);
+  mediaPlayer->setMedia(QMediaContent(), videoBuffer);
+  startVideo();
+}
+
 void VideoPlayer::startVideo()
 {
-  printf("Starting video!\n");
+  if(videoIdx == -1) {
+    changeVideo(1);
+  }
   show();
   mediaPlayer->play();
-  allowStopTimer.start();
+  allowAction = false;
+  allowActionTimer.start();
 }
 
 void VideoPlayer::stopVideo()
 {
-  if(allowStop) {
-    printf("Stopping video!\n");
-    allowStop = false;
+  if(allowAction) {
     mediaPlayer->stop();
     hide();
   }
@@ -81,5 +109,5 @@ void VideoPlayer::stopVideo()
 
 void VideoPlayer::setAllowStop()
 {
-  allowStop = true;
+  allowAction = true;
 }

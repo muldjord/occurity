@@ -71,7 +71,9 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   installEventFilter(this);
 
   if(mainSettings.enableVideoPlayer) {
-    videoPlayer = new VideoPlayer(mainSettings.width, mainSettings.height, this);
+    videoPlayer = new VideoPlayer(mainSettings.videosFolder,
+                                  mainSettings.width, mainSettings.height,
+                                  this);
   }
 
   secretTimer.setInterval(400);
@@ -301,11 +303,21 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         return true;
       }
     } else if(keyEvent->key() == Qt::Key_Z && videoPlayer != nullptr) {
+      if(videoPlayer->isVisible()) {
+        videoPlayer->changeVideo(-1);
+        return true;
+      }
+    } else if(keyEvent->key() == Qt::Key_X && videoPlayer != nullptr) {
       videoPlayer->startVideo();
       return true;
-    } else if(keyEvent->key() == Qt::Key_X && videoPlayer != nullptr) {
+    } else if(keyEvent->key() == Qt::Key_C && videoPlayer != nullptr) {
       videoPlayer->stopVideo();
       return true;
+    } else if(keyEvent->key() == Qt::Key_V && videoPlayer != nullptr) {
+      if(videoPlayer->isVisible()) {
+        videoPlayer->changeVideo(1);
+        return true;
+      }
     }
   }
   return false;
@@ -353,6 +365,9 @@ void MainWindow::updateFromConfig()
   if(!config.contains("jobsFolder")) {
     config.setValue("jobsFolder", "./jobs");
   }
+  if(!config.contains("videosFolder")) {
+    config.setValue("videosFolder", "./videos");
+  }
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
@@ -366,6 +381,8 @@ void MainWindow::updateFromConfig()
   mainSettings.pinCode = config.value("pinCode").toString();
 
   mainSettings.jobsFolder = config.value("jobsFolder").toString();
+
+  mainSettings.videosFolder = config.value("videosFolder").toString();
 
   mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
   mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm

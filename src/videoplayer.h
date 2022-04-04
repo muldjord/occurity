@@ -31,14 +31,18 @@
 #include <QMediaPlayer>
 #include <QBuffer>
 #include <QTimer>
+#include <QLabel>
 
 class VideoPlayer : public QVideoWidget
 {
   Q_OBJECT
 
 public:
-  VideoPlayer(const int &width, const int &height, QWidget *parent = nullptr);
+  VideoPlayer(const QString &videosPath,
+              const int &width, const int &height,
+              QWidget *parent = nullptr);
   ~VideoPlayer();
+  void changeVideo(const int &delta);
   void startVideo();
   void stopVideo();
 
@@ -46,12 +50,13 @@ private slots:
   void setAllowStop();
 
 private:
-  bool allowStop = false;
+  int videoIdx = -1;
+  bool allowAction = false;
 
   QMediaPlayer *mediaPlayer = nullptr;
-  QByteArray videoData = "";
+  QList<QPair<QString, QByteArray> > videosData;
   QBuffer *videoBuffer = nullptr;
-  QTimer allowStopTimer;
+  QTimer allowActionTimer;
 
 };
 #endif/*__OCCURITY_VIDEOPLAYER_H__*/
