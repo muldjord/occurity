@@ -232,7 +232,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * Fixed bug where `updateSrcPath` and `updateDstPath` weren't cleared when running two updates one after the other
 * Fixed bug where an excluded path copy would result in all subsequent paths not being investigated
 * Added attention gif animation option to `optotype` chart. Show / hide with `a`. Set with `animation="file.gif"`
-* Added fullscreen attention video. Play / stop with `z` and `x`. Currently hardcoded to load and play `./video.mp4`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolutions are recommended
+* Added fullscreen attention video. Controls: Previous video `s`, Play / Pause `d`, Stop `f`, Next video `g`. Loads all .mp4 videos from the defined `videosFolder`. Default is `./videos`. Be aware that the Raspberry Pi might struggle with Full-HD videos, so lower resolutions are recommended
 * Added option to skip multiple lines on `optotype` charts using `w` and `s`. Configure number of lines in Preferences
 * Added pincode dialog to preferences. Pincode can be set in config.ini with `pinCode=0000`
 * Changed mainSettings to reference instead of pointer
