@@ -94,7 +94,6 @@ void VideoPlayer::changeVideo(const int &delta)
 
 void VideoPlayer::startVideo()
 {
-  printf("Started!\n");
   show();
   if(mediaPlayer->state() == QMediaPlayer::PlayingState) {
     mediaPlayer->pause();
