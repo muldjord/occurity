@@ -17,6 +17,7 @@ loadvars:VERSION
 message:Copying required files from source to destination
 cpfile:AUTHORS
 cpfile:charts_w_kids.xml;charts.xml
+cpfile:charts.xml.example
 cpfile:LICENSE
 cpfile:README.md
 cpfile:VERSION
