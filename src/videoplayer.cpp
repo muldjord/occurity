@@ -69,7 +69,9 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
 
 VideoPlayer::~VideoPlayer()
 {
-  videoBuffer->close();
+  if(videoBuffer->isOpen()) {
+    videoBuffer->close();
+  }
 }
 
 void VideoPlayer::changeVideo(const int &delta)
@@ -93,10 +95,6 @@ void VideoPlayer::changeVideo(const int &delta)
 void VideoPlayer::startVideo()
 {
   printf("Started!\n");
-  if(videoIdx == -1) {
-    changeVideo(1);
-    return;
-  }
   show();
   if(mediaPlayer->state() == QMediaPlayer::PlayingState) {
     mediaPlayer->pause();
