@@ -311,8 +311,9 @@ void JobRunner::runJob(const QString &filename)
       }
 
     } else if(command.type == "rmfile") {
-      if(command.parameters.length() == 1) {
-        rmFile(command.parameters.at(0));
+      if((command.parameters.length() == 1 || command.parameters.length() == 2)) {
+        bool ask = (command.parameters.length() == 2 && command.parameters.at(1) == "ask"?true:false);
+        rmFile(command.parameters.at(0), ask);
       }
 
     } else if(command.type == "cppath") {
@@ -514,7 +515,6 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
   addStatus(INIT, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
 
   if(isExcluded(srcInfo.absoluteFilePath())) {
-    //addStatus(WARNING, "Source file marked for exclusion, continuing without copying!");
     return true;
   }
 
@@ -539,6 +539,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
       return false;
     }
   }
+  
   if(!pretend && !QFile::copy(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "File copy failed!");
     return false;
@@ -687,7 +688,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
   }
   
   if(askPerPath) {
-    MessageBox messageBox(QMessageBox::Question, "Delete?", "Do you want to delete path '" + path + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
+    MessageBox messageBox(QMessageBox::Question, "Delete path?", "Do you want to delete the path '" + path + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
     messageBox.exec();
     if(messageBox.result() == QMessageBox::Yes ||
        messageBox.result() == QMessageBox::YesToAll) {
@@ -731,7 +732,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
   return true;
 }
 
-bool JobRunner::rmFile(const QString &filePath)
+bool JobRunner::rmFile(const QString &filePath, const bool &ask)
 {
   if(abortJob) {
     return false;
@@ -745,7 +746,6 @@ bool JobRunner::rmFile(const QString &filePath)
   }
 
   if(isExcluded(filePath)) {
-    //addStatus(WARNING, "File marked for exclusion, file not removed!");
     return true;
   }
 
@@ -754,7 +754,16 @@ bool JobRunner::rmFile(const QString &filePath)
     return false;
   }
 
-  if(!QFile::remove(filePath)) {
+  if(ask) {
+    MessageBox messageBox(QMessageBox::Question, "Delete file?", "Do you want to delete the file '" + filePath + "'?", QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.exec();
+    if(messageBox.result() == QMessageBox::No) {
+      addStatus(WARNING, "File not removed!");
+      return true;
+    }
+  }
+
+  if(!pretend && !QFile::remove(filePath)) {
     addStatus(FATAL, "File could not be removed!");
     return false;
   }

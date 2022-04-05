@@ -95,7 +95,7 @@ private:
 
   bool cpFile(const QString &srcFile, const QString &dstFile);
   bool mvFile(QString srcFile, QString dstFile = "");
-  bool rmFile(const QString &filePath);
+  bool rmFile(const QString &filePath, const bool &ask = false);
 
   bool cpPath(const QString &srcPath, const QString &dstPath);
   bool mvPath(QString srcPath, QString dstPath = "");
