@@ -73,7 +73,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   if(mainSettings.enableVideoPlayer) {
     videoPlayer = new VideoPlayer(mainSettings.videosFolder,
                                   mainSettings.width, mainSettings.height,
-                                  this);
+                                  nullptr);
   }
 
   secretTimer.setInterval(400);
@@ -302,22 +302,9 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         flipHibernate();
         return true;
       }
-    } else if(keyEvent->key() == Qt::Key_S && videoPlayer != nullptr) {
-      if(videoPlayer->isVisible()) {
-        videoPlayer->changeVideo(-1);
-        return true;
-      }
     } else if(keyEvent->key() == Qt::Key_D && videoPlayer != nullptr) {
       videoPlayer->startVideo();
       return true;
-    } else if(keyEvent->key() == Qt::Key_F && videoPlayer != nullptr) {
-      videoPlayer->stopVideo();
-      return true;
-    } else if(keyEvent->key() == Qt::Key_G && videoPlayer != nullptr) {
-      if(videoPlayer->isVisible()) {
-        videoPlayer->changeVideo(1);
-        return true;
-      }
     }
   }
   return false;
