@@ -99,13 +99,13 @@ Note! This command DOES NOT adhere to files added using `addexclude`!
 * Example 1: `mvfile:/media/%USER%/USBPEN/occurity/test.file` <-- Moves to `/media/%USER%/USBPEN/occurity/test.file0000`
 * Example 2: `mvfile:%HOME%/occurity/charts.xml;%HOME/occurity/charts.xml.old` <-- If `%HOME/occurity/charts.xml.old` already exists it will move to `%HOME/occurity/charts.xml.old0000`
 
-### rmfile:FILEPATH
-Removes a single file. A non-relative file path is required.
+### rmfile:FILEPATH[;ask]
+Removes a single file. A non-relative file path is required. If `;ask` is added after the path, it will ask before deleting the file.
 
 Note! Files added using `addexclude` will NOT be removed!
 
-* Example 1: `rmfile:%HOME%/occurity/config.ini`
-* Example 2: `rmfile:/media/%USER%/USBPEN/occurity/config.ini`
+* Example 1: `rmfile:%HOME%/occurity/config.ini;ask`
+* Example 2: `rmfile:%USBPATH%/occurity/config.ini`
 
 ### cppath:SRCPATH;DSTPATH
 Copies a path, including subdirectories, from `sourcepath` to `destinationpath`. If `destinationpath` is left out it will copy the path using the path name from `sourcepath`. Both are relative to the corresponding source and destination directiories set with `srcpath` and `dstpath` (documented elsewhere in this document) unless the path name starts with a `/`.
