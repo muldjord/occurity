@@ -303,7 +303,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         return true;
       }
     } else if(keyEvent->key() == Qt::Key_D && videoPlayer != nullptr) {
-      videoPlayer->changeVideo(1);
+      videoPlayer->startVideo();
       return true;
     }
   }
