@@ -31,14 +31,17 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QKeyEvent>
 
 VideoPlayer::VideoPlayer(const QString &videosPath,
                          const int &width, const int &height,
                          QWidget *parent) :
   QVideoWidget(parent)
 {
+  setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
+  setStyleSheet("QVideoWidget {background-color: black;}");
   setFixedSize(width, height);
-  setWindowFlags(Qt::WindowStaysOnTopHint);
+
   mediaPlayer = new QMediaPlayer();
   QDir videosDir(videosPath, "*.mp4", QDir::Name, QDir::Files);
   for(const auto &videoInfo: videosDir.entryInfoList()) {
@@ -89,13 +92,19 @@ void VideoPlayer::changeVideo(const int &delta)
 
 void VideoPlayer::startVideo()
 {
+  printf("Started!\n");
   if(videoIdx == -1) {
     changeVideo(1);
+    return;
   }
   show();
-  mediaPlayer->play();
-  allowAction = false;
-  allowActionTimer.start();
+  if(mediaPlayer->state() == QMediaPlayer::PlayingState) {
+    mediaPlayer->pause();
+  } else {
+    mediaPlayer->play();
+    allowAction = false;
+    allowActionTimer.start();
+  }
 }
 
 void VideoPlayer::stopVideo()
@@ -109,4 +118,17 @@ void VideoPlayer::stopVideo()
 void VideoPlayer::setAllowStop()
 {
   allowAction = true;
+}
+
+void VideoPlayer::keyPressEvent(QKeyEvent *event)
+{
+  if(event->key() == Qt::Key_S) {
+    changeVideo(-1);
+  } else if(event->key() == Qt::Key_G) {
+    changeVideo(1);
+  } else if(event->key() == Qt::Key_D) {
+    startVideo();
+  } else if(event->key() == Qt::Key_F) {
+    stopVideo();
+  }
 }

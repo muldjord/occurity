@@ -46,6 +46,9 @@ public:
   void startVideo();
   void stopVideo();
 
+protected:
+  void keyPressEvent(QKeyEvent *event) override;
+
 private slots:
   void setAllowStop();
 
