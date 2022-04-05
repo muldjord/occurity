@@ -29,7 +29,6 @@
 
 #include <stdio.h>
 
-#include <QKeyEvent>
 #include <QFileInfo>
 #include <QDir>
 
