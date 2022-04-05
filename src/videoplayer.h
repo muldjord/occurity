@@ -51,14 +51,15 @@ protected:
 
 private slots:
   void setAllowStop();
+  void mediaStatusChanged(QMediaPlayer::MediaStatus status);
+  void stateChanged(QMediaPlayer::State state);
 
 private:
   int videoIdx = -1;
   bool allowAction = false;
 
   QMediaPlayer *mediaPlayer = nullptr;
-  QList<QPair<QString, QByteArray> > videosData;
-  QBuffer *videoBuffer = nullptr;
+  QList<QBuffer *> videoBuffers;
   QTimer allowActionTimer;
 
 };

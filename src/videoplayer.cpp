@@ -48,19 +48,19 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
     if(QFileInfo::exists(videoInfo.absoluteFilePath())) {
       QFile videoFile(videoInfo.absoluteFilePath());
       if(videoFile.open(QIODevice::ReadOnly)) {
-        QPair<QString, QByteArray> videoData;
-        videoData.first = videoInfo.fileName();
-        videoData.second = videoFile.readAll();
-        qInfo("Loaded %d bytes of video data from '%s'\n",
-              videoData.second.length(),
+        QBuffer *videoBuffer = new QBuffer();
+        videoBuffer->buffer() = videoFile.readAll();
+        printf("Loaded %d bytes of video data from '%s'\n",
+              videoBuffer->buffer().length(),
               videoInfo.absoluteFilePath().toStdString().c_str());
         videoFile.close();
-        videosData.append(videoData);
+        videoBuffers.append(videoBuffer);
       }
     }
   }
   mediaPlayer->setVideoOutput(this);
-  videoBuffer = new QBuffer();
+  connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &VideoPlayer::mediaStatusChanged);
+  connect(mediaPlayer, &QMediaPlayer::stateChanged, this, &VideoPlayer::stateChanged);
 
   allowActionTimer.setInterval(4000);
   allowActionTimer.setSingleShot(true);
@@ -69,35 +69,47 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
 
 VideoPlayer::~VideoPlayer()
 {
-  if(videoBuffer->isOpen()) {
-    videoBuffer->close();
+  for(auto *videoBuffer: videoBuffers) {
+    if(videoBuffer->isOpen()) {
+      videoBuffer->close();
+    }
+    delete videoBuffer;
   }
 }
 
 void VideoPlayer::changeVideo(const int &delta)
 {
-  videoIdx = videoIdx + delta;
-  if(videoIdx >= videosData.length()) {
+  if(videoIdx != -1 && videoBuffers.at(videoIdx)->isOpen()) {
+    videoBuffers.at(videoIdx)->close();
+  }
+  videoIdx += delta;
+  if(videoIdx >= videoBuffers.length()) {
     videoIdx = 0;
   }
   if(videoIdx < 0) {
-    videoIdx = videosData.length() - 1;
+    videoIdx = videoBuffers.length() - 1;
   }
-  if(videoBuffer->isOpen()) {
-    videoBuffer->close();
+  printf("Change to %d\n", videoIdx);
+  if(videoBuffers.at(videoIdx)->open(QIODevice::ReadOnly)) {
+    mediaPlayer->setMedia(QMediaContent(), videoBuffers.at(videoIdx));
   }
-  videoBuffer->setData(videosData.at(videoIdx).second);
-  videoBuffer->open(QIODevice::ReadOnly);
-  mediaPlayer->setMedia(QMediaContent(), videoBuffer);
-  startVideo();
 }
 
 void VideoPlayer::startVideo()
 {
-  show();
+  if(!videoBuffers.isEmpty()) {
+    if(videoIdx == -1) {
+      changeVideo(1);
+    }
+  } else {
+    return;
+  }
   if(mediaPlayer->state() == QMediaPlayer::PlayingState) {
+    printf("Pausing!\n");
     mediaPlayer->pause();
   } else {
+    printf("Starting!\n");
+    show();
     mediaPlayer->play();
     allowAction = false;
     allowActionTimer.start();
@@ -107,7 +119,8 @@ void VideoPlayer::startVideo()
 void VideoPlayer::stopVideo()
 {
   if(allowAction) {
-    mediaPlayer->stop();
+    printf("Stopping!\n");
+    mediaPlayer->pause();
     hide();
   }
 }
@@ -115,6 +128,23 @@ void VideoPlayer::stopVideo()
 void VideoPlayer::setAllowStop()
 {
   allowAction = true;
+}
+
+void VideoPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status)
+{
+  printf("STATUS: %d\n", status);
+  if(status == QMediaPlayer::EndOfMedia) {
+    printf("END OF MEDIA! CHANGING VIDEO!\n");
+    changeVideo(1);
+  } else if(status == QMediaPlayer::LoadedMedia) {
+    printf("MEDIA LOADED!\n");
+    startVideo();
+  }
+}
+
+void VideoPlayer::stateChanged(QMediaPlayer::State state)
+{
+  printf("STATE: %d\n", state);
 }
 
 void VideoPlayer::keyPressEvent(QKeyEvent *event)
