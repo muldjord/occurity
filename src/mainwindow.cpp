@@ -42,7 +42,7 @@
 MainWindow::MainWindow(QSettings &config) : config(config)
 {
   setCursor(Qt::BlankCursor);
-  printf("Running Occurity v." VERSION "\n");
+  printf("Running Occurity v" VERSION "\n");
   setWindowTitle("Occurity v" VERSION);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -302,18 +302,18 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         flipHibernate();
         return true;
       }
-    } else if(keyEvent->key() == Qt::Key_Z && videoPlayer != nullptr) {
+    } else if(keyEvent->key() == Qt::Key_S && videoPlayer != nullptr) {
       if(videoPlayer->isVisible()) {
         videoPlayer->changeVideo(-1);
         return true;
       }
-    } else if(keyEvent->key() == Qt::Key_X && videoPlayer != nullptr) {
+    } else if(keyEvent->key() == Qt::Key_D && videoPlayer != nullptr) {
       videoPlayer->startVideo();
       return true;
-    } else if(keyEvent->key() == Qt::Key_C && videoPlayer != nullptr) {
+    } else if(keyEvent->key() == Qt::Key_F && videoPlayer != nullptr) {
       videoPlayer->stopVideo();
       return true;
-    } else if(keyEvent->key() == Qt::Key_V && videoPlayer != nullptr) {
+    } else if(keyEvent->key() == Qt::Key_G && videoPlayer != nullptr) {
       if(videoPlayer->isVisible()) {
         videoPlayer->changeVideo(1);
         return true;
