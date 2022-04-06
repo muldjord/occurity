@@ -55,8 +55,8 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
         QBuffer *videoBuffer = new QBuffer();
         videoBuffer->buffer() = videoFile.readAll();
         printf("Loaded %d bytes of video data from '%s'\n",
-              videoBuffer->buffer().length(),
-              videoInfo.absoluteFilePath().toStdString().c_str());
+               videoBuffer->buffer().length(),
+               videoInfo.absoluteFilePath().toStdString().c_str());
         videoFile.close();
         videoBuffers.append(videoBuffer);
       }

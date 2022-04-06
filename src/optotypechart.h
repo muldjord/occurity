@@ -62,7 +62,7 @@ public slots:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  
+
 private:
   QString startSize = "0.16";
   QGraphicsProxyWidget *animItem = nullptr;
@@ -70,7 +70,7 @@ private:
   QString optotype = "";
   double crowdingSpan = 2.5;
   QString animation = "";
-  
+
   int skew = 0;
   double spaceWidth = 0.0;
 

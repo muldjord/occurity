@@ -43,7 +43,7 @@ protected:
 
 private slots:
   void shakeHead();
-  
+
 private:
   QList<QLabel *> asterisks;
   const QString &correctPinCode;

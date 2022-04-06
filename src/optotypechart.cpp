@@ -62,7 +62,7 @@ void OptotypeChart::init()
       animItem->hide();
     }
   }
-  
+
   crowdRect = addRect(0, 0, 10, 10);
 
   sizeItem = new QGraphicsSimpleTextItem("0.0");

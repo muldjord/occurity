@@ -46,23 +46,23 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   setFixedSize(1200, 800);
 
   setStyleSheet("QLabel {font-weight:bold; margin-top: 5px;} QRadioButton {margin-left: 10px;}");
-  
+
   jobsScroll = new QScrollArea;
-  
+
   outputLabel = new QLabel("<h2>Output:</h2>");
 
   outputList = new QListWidget;
   outputList->setStyleSheet("QListWidget {background-color: black;}");
   outputList->setFocusPolicy(Qt::NoFocus);
   outputList->setWordWrap(true);
-  
+
   progressBar = new QProgressBar;
   progressBar->setFormat("%p% completed");
   progressBar->setAlignment(Qt::AlignCenter);
-  
+
   jobButtons = new QButtonGroup;
   connect(jobButtons, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked), this, &JobRunner::listFileContents);
-  
+
   setHardcodedVars();
 
   QList<QVBoxLayout*> categoryLayouts;
@@ -151,7 +151,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
     layout->addWidget(progressBar);
   }
   setLayout(layout);
-  
+
   installEventFilter(this);
 }
 
@@ -161,7 +161,7 @@ void JobRunner::runJob(const QString &filename)
   jobInProgress = true;
   progressBar->setFormat("%p% completed");
   progressBar->setValue(0);
-  
+
   outputLabel->setText("<h3>Processing job file '" + filename + "':</h3>");
   outputList->clear();
 
@@ -185,7 +185,7 @@ void JobRunner::runJob(const QString &filename)
     messageBox.exec();
     return;
   }
-  
+
   QFile commandFile(filename);
   if(commandFile.open(QIODevice::ReadOnly)) {
     while(!commandFile.atEnd()) {
@@ -207,11 +207,11 @@ void JobRunner::runJob(const QString &filename)
       commands.append(command);
     }
   }
-  
+
   progressBar->setMaximum(commands.length());
 
   varsReplace();
-  
+
   for(auto &command: commands) {
 
     if(abortJob) {
@@ -493,7 +493,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
     addStatus(FATAL, "Job source path undefined. 'srcpath=PATH' has to be set when using relative file paths with 'cpfile'");
     return false;
   }
-  
+
   if(dstFile.left(1) != "/" && jobDstPath.isEmpty()) {
     addStatus(FATAL, "Job destination path undefined. 'dstpath=PATH' has to be set when using relative file paths with 'cpfile'");
     return false;
@@ -511,7 +511,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
   }
 
   QFileInfo dstInfo(dstFileString);
-  
+
   addStatus(INIT, "Copying file '" + srcInfo.absoluteFilePath() + "' to '" + dstInfo.absoluteFilePath() + "'");
 
   if(isExcluded(srcInfo.absoluteFilePath())) {
@@ -539,7 +539,7 @@ bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
       return false;
     }
   }
-  
+
   if(!pretend && !QFile::copy(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "File copy failed!");
     return false;
@@ -580,7 +580,7 @@ bool JobRunner::cpPath(const QString &srcPath, const QString &dstPath)
     //addStatus(WARNING, "Source path marked for exclusion, continuing without copying!");
     return true;
   }
-  
+
   if(!pretend && !QDir::root().mkpath(dstDir.absolutePath())) {
     addStatus(FATAL, "Path '" + dstDir.absolutePath() + "' could not be copied!");
     return false;
@@ -634,7 +634,7 @@ bool JobRunner::runCommand(const QString &program, QList<QString> args, const in
       }
       return false;
     }
-    
+
     addStatus(INFO, "Terminal command completed successfully with the following output:");
     for(const auto &line: terminal.readAllStandardOutput().trimmed().split('\n')) {
       addStatus(INFO, line);
@@ -686,7 +686,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
     addStatus(WARNING, "Path doesn't exist! Ignoring.");
     return true;
   }
-  
+
   if(askPerPath) {
     MessageBox messageBox(QMessageBox::Question, "Delete path?", "Do you want to delete the path '" + path + "'?", QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No, this);
     messageBox.exec();
@@ -700,7 +700,7 @@ bool JobRunner::rmPath(const QString &path, bool &askPerPath)
       return true;
     }
   }
-  
+
   for(const auto &dirInfo: srcDir.entryInfoList()) {
     if(dirInfo.isDir()) {
       if(!rmPath(dirInfo.absoluteFilePath(), askPerPath)) {
@@ -1004,12 +1004,12 @@ bool JobRunner::mvFile(QString srcFile, QString dstFile)
     addStatus(FATAL, "Destination file already exists!");
     return false;
   }
-  
+
   if(!pretend && !QFile::rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "File move failed!");
     return false;
   }
-  
+
   addStatus(INFO, "File move successful!");
   return true;
 }
@@ -1066,12 +1066,12 @@ bool JobRunner::mvPath(QString srcPath, QString dstPath)
     addStatus(FATAL, "Destination path already exists!");
     return false;
   }
-  
+
   if(!pretend && !QFile::rename(srcInfo.absoluteFilePath(), dstInfo.absoluteFilePath())) {
     addStatus(FATAL, "Path move failed!");
     return false;
   }
-  
+
   addStatus(INFO, "Path move successful!");
   return true;
 }

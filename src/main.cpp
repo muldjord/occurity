@@ -61,7 +61,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
   }
 
   printf("%s", txt.toStdString().c_str());
-  
+
   // Set debug file
   QFile outFile("debug.log");
   outFile.open(QIODevice::Append);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
   QDir::setCurrent(QApplication::applicationDirPath());
 
   QSettings config("config.ini", QSettings::IniFormat);
-    
+
   QPixmap pixmap(":splash.png");
   QSplashScreen *splash = new QSplashScreen(pixmap);
   splash->show();

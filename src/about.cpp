@@ -53,7 +53,7 @@ About::About(QWidget *parent) : QTabWidget(parent)
   QTextEdit *licenseText = new QTextEdit(gplText);
   licenseText->setWordWrapMode(QTextOption::WordWrap);
   //licenseText->setStyleSheet("QTextEdit {background-color: white; padding: 15px;}");
-  
+
   addTab(aboutText, tr("About"));
   addTab(licenseText, tr("License"));
 }

@@ -52,7 +52,7 @@ struct MainSettings {
   QString hexGreen = "#00d200";
   bool enableVideoPlayer = true;
   QString videosFolder = "./videos";
-  
+
   // Global chart configs
   bool crowding = false;
   bool single = false;

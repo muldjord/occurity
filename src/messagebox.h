@@ -39,6 +39,6 @@ public:
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
-  
+
 };
 #endif/*__OCCURITY_MESSAGEBOX_H__*/

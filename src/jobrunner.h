@@ -68,7 +68,7 @@ private:
   QList<Command> commands;
   QString jobSrcPath = "";
   QString jobDstPath = "";
-  
+
   bool jobInProgress = false;
   bool abortJob = false;
 
@@ -102,7 +102,7 @@ private:
   bool rmPath(const QString &path, bool &askPerPath);
 
   bool serialize(QString &dst);
-  
+
   bool hasInternet(const QString &command);
   bool runCommand(const QString &program, QList<QString> args, const int &maxWaitSecs = 600, const bool &critical = true);
   bool reboot(const QString &argument);
@@ -112,6 +112,6 @@ private:
   QString getUsbPath();
 
   QMap<QString, QString> vars;
-  
+
 };
 #endif/*__OCCURITY_JOBRUNNER_H__*/

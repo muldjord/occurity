@@ -61,7 +61,7 @@ public:
 
 protected:
   QGraphicsSimpleTextItem *titleItem;
-                                    
+
 public slots:
   virtual void updateAll(){};
   virtual void resetAll(){};
