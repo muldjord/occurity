@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = Occurity
 DEPENDPATH += .
 INCLUDEPATH += .
-QT += widgets xml svg multimediawidgets multimedia
+QT += widgets xml svg multimediawidgets multimedia network
 CONFIG += release
 TRANSLATIONS = occurity_da_DK.ts
 QMAKE_CXXFLAGS += -std=c++11

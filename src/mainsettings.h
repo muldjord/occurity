@@ -38,6 +38,9 @@ struct MainSettings {
   int rowSkipDelta = 4;
   QString pinCode = "4242";
   QString jobsFolder = "./jobs";
+  QString optotypesFolder = "./optotypes";
+  bool enableVideoPlayer = true;
+  QString videosFolder = "./videos";
   bool updatePretend = false;
   double patientDistance = 600.0;
   double distanceFactor = 1.0;
@@ -45,17 +48,18 @@ struct MainSettings {
   double pxPerMm = 42.0;
   //QString startSize = "1.0";
   double pxPerArcMin = 0.0;
-  QString optotypesDir = "optotypes";
   QString chartsXml = "charts.xml";
   QString sizeFormat = "decimal";
   QString hexRed = "#d20000";
   QString hexGreen = "#00d200";
-  bool enableVideoPlayer = true;
-  QString videosFolder = "./videos";
 
   // Global chart configs
   bool crowding = false;
   bool single = false;
+  
+  // Internet check
+  QString networkHost = "8.8.8.8";
+  int networkPort = 53;
 };
 
 #endif // MAINSETTINGS_H

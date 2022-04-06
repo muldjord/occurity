@@ -38,6 +38,7 @@
 #include <QNetworkInterface>
 #include <QScrollBar>
 #include <QStorageInfo>
+#include <QTcpSocket>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -941,10 +942,10 @@ bool JobRunner::shutdown(const QString &argument)
 
 bool JobRunner::hasInternet(const QString &command)
 {
-  for(const auto &addr: QNetworkInterface::allAddresses()) {
-    if(addr.isGlobal()) {
-      return true;
-    }
+  QTcpSocket testSocket;
+  testSocket.connectToHost(QHostAddress(mainSettings.networkHost), mainSettings.networkPort);
+  if(testSocket.waitForConnected(1000)) {
+    return true;
   }
   MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIt seems you are not connected to the internet! Is this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
   messageBox.exec();

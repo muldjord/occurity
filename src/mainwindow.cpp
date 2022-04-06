@@ -318,21 +318,36 @@ void MainWindow::updateFromConfig()
     config.remove("physDistance");
   }
 
+  // Convert obsolete 'optotypesDir' variable to 'folders/optotypes'
+  if(config.contains("optotypesDir")) {
+    config.setValue("folders/optotypes", config.value("optotypesDir").toString());
+    config.remove("optotypesDir");
+  }
+  
   // Convert obsolete 'physHeight' variable to 'rulerWidth'
   if(config.contains("physHeight")) {
     config.setValue("rulerWidth", ((double)config.value("physHeight").toInt() / (double)mainSettings.height) * 500);
     config.remove("physHeight");
   }
 
+  // Remove obsolete variables if they exist
+  if(config.contains("jobsFolder")) {
+    config.remove("jobsFolder");
+  }
+  if(config.contains("updatesFolder")) {
+    config.remove("updatesFolder");
+  }
+  if(config.contains("videosFolder")) {
+    config.remove("videosFolder");
+  }
+
   while(!config.contains("rulerWidth")) {
     spawnPreferences();
   }
 
+  // General
   if(!config.contains("chartsXml")) {
     config.setValue("chartsXml", "charts.xml");
-  }
-  if(!config.contains("optotypesDir")) {
-    config.setValue("optotypesDir", "optotypes");
   }
   if(!config.contains("sizeResetTime")) {
     config.setValue("sizeResetTime", 240);
@@ -349,11 +364,23 @@ void MainWindow::updateFromConfig()
   if(!config.contains("enableVideoPlayer")) {
     config.setValue("enableVideoPlayer", true);
   }
-  if(!config.contains("jobsFolder")) {
-    config.setValue("jobsFolder", "./jobs");
+  // Folders
+  if(!config.contains("folders/optotypes")) {
+    config.setValue("folders/optotypes", "./optotypes");
   }
-  if(!config.contains("videosFolder")) {
-    config.setValue("videosFolder", "./videos");
+  if(!config.contains("folders/jobs")) {
+    config.setValue("folders/jobs", "./jobs");
+  }
+  if(!config.contains("folders/videos")) {
+    config.setValue("folders/videos", "./videos");
+  }
+
+  // Network
+  if(!config.contains("network/host")) {
+    config.setValue("network/host", "8.8.8.8");
+  }
+  if(!config.contains("network/port")) {
+    config.setValue("network/port", 53);
   }
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
@@ -363,13 +390,18 @@ void MainWindow::updateFromConfig()
 
   mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
 
+  mainSettings.networkHost = config.value("network/host").toString();
+  mainSettings.networkPort = config.value("network/port").toInt();
+
   mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
-  mainSettings.jobsFolder = config.value("jobsFolder").toString();
+  mainSettings.optotypesFolder = config.value("folders/optotypes").toString();
 
-  mainSettings.videosFolder = config.value("videosFolder").toString();
+  mainSettings.jobsFolder = config.value("folders/jobs").toString();
+
+  mainSettings.videosFolder = config.value("folders/videos").toString();
 
   mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
   mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm
@@ -381,7 +413,6 @@ void MainWindow::updateFromConfig()
   mainSettings.hexRed = "#" + QString::number(config.value("redValue").toInt(), 16) + "0000";
   mainSettings.hexGreen = "#00" + QString::number(config.value("greenValue").toInt(), 16) + "00";
 
-  mainSettings.optotypesDir = config.value("optotypesDir").toString();
   mainSettings.chartsXml = config.value("chartsXml").toString();
 
   printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
