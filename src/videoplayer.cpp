@@ -38,6 +38,8 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
                          QWidget *parent) :
   QVideoWidget(parent)
 {
+  setCursor(Qt::BlankCursor);
+
   setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
   setStyleSheet("QVideoWidget {background-color: black;}");
   setFixedSize(width, height);
