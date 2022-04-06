@@ -44,8 +44,12 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
 
   mediaPlayer = new QMediaPlayer();
   QDir videosDir(videosPath, "*.mp4", QDir::Name, QDir::Files);
+  int videosFound = videosDir.entryInfoList().length();
   for(const auto &videoInfo: videosDir.entryInfoList()) {
     if(QFileInfo::exists(videoInfo.absoluteFilePath())) {
+      if(videosFound > 2 && videoInfo.fileName() == "example.mp4") {
+        continue;
+      }
       QFile videoFile(videoInfo.absoluteFilePath());
       if(videoFile.open(QIODevice::ReadOnly)) {
         QBuffer *videoBuffer = new QBuffer();
