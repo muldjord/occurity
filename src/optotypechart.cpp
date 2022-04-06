@@ -194,7 +194,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   */
   QPair<QString, QGraphicsItemGroup *> rowPair;
 
-  QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings.optotypesDir + "/" + optotype + "/_.svg");
+  QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings.optotypesFolder + "/" + optotype + "/_.svg");
   spaceWidth = svgSpace->boundingRect().width();
 
   QGraphicsItemGroup *layer = new QGraphicsItemGroup;
@@ -212,7 +212,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     }
   }
   for(const auto &letter: letters) {
-    QString svgFilename = mainSettings.optotypesDir + "/" + optotype + "/" + letter + ".svg";
+    QString svgFilename = mainSettings.optotypesFolder + "/" + optotype + "/" + letter + ".svg";
     if(QFileInfo::exists(svgFilename)) {
       QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(svgFilename);
       svgLetter->setX(curX);
