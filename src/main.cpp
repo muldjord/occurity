@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 
   QPixmap pixmap(":splash.png");
   QSplashScreen *splash = new QSplashScreen(pixmap);
+  splash->setCursor(Qt::BlankCursor);
   splash->show();
   splash->showMessage("Running Occurity v" VERSION,
                       Qt::AlignLeft,
