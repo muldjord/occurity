@@ -377,10 +377,10 @@ void MainWindow::updateFromConfig()
 
   // Network
   if(!config.contains("network/host")) {
-    config.setValue("network/host", "8.8.8.8");
+    config.setValue("network/host", "139.178.84.217"); // kernel.org
   }
   if(!config.contains("network/port")) {
-    config.setValue("network/port", 53);
+    config.setValue("network/port", 80);
   }
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
