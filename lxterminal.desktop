@@ -5,3 +5,4 @@ Name=Terminal
 Exec=/usr/bin/lxterminal
 StartupNotify=true
 Categories=Utility
+Icon=lxterminal
