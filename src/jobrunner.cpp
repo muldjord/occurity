@@ -945,6 +945,7 @@ bool JobRunner::hasInternet(const QString &command)
   QTcpSocket testSocket;
   testSocket.connectToHost(QHostAddress(mainSettings.networkHost), mainSettings.networkPort);
   if(testSocket.waitForConnected(1000)) {
+    testSocket.close();
     return true;
   }
   MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIt seems you are not connected to the internet! Is this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
