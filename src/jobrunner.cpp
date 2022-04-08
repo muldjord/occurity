@@ -240,7 +240,7 @@ void JobRunner::runJob(const QString &filename)
     if(command.type == "aptinstall") {
       if(command.parameters.length() >= 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
+          if(runCommand("sudo", { "apt-get", "--help" }, 1, true)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", QList<QString> { "apt-get", "-y", "install" } + command.parameters);
           } else {
@@ -252,7 +252,7 @@ void JobRunner::runJob(const QString &filename)
     } else if(command.type == "aptremove") {
       if(command.parameters.length() == 1) {
         if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get", "--help" }, 1)) {
+          if(runCommand("sudo", { "apt-get", "--help" }, 1, true)) {
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", QList<QString> { "apt-get", "-y", "remove" } + command.parameters);
           } else {
@@ -943,7 +943,7 @@ bool JobRunner::shutdown(const QString &argument)
 bool JobRunner::hasInternet(const QString &command)
 {
   QTcpSocket testSocket;
-  testSocket.connectToHost(QHostAddress(mainSettings.networkHost), mainSettings.networkPort);
+  testSocket.connectToHost(mainSettings.networkHost, mainSettings.networkPort);
   if(testSocket.waitForConnected(1000)) {
     testSocket.close();
     return true;
