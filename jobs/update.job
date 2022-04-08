@@ -1,11 +1,11 @@
 title:Apply update from '%USBPATH%/occurity' to '%HOME%/occurity'
 category:Update jobs
 
-message:Installing required system packages
-aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
+#message:Installing required system packages
+#aptinstall:qtbase5-dev;libqt5svg5-dev;qtmultimedia5-dev;libqt5multimedia5-plugins
 
-message:Removing unwanted system packages
-aptremove:gstreamer1.0-plugins-bad
+#message:Removing unwanted system packages
+#aptremove:gstreamer1.0-plugins-bad
 
 message:Setting source and destination paths.
 srcpath:%USBPATH%/occurity
