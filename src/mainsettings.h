@@ -58,7 +58,7 @@ struct MainSettings {
   bool single = false;
   
   // Internet check
-  QString networkHost = "139.178.84.217"; // kernel.org
+  QString networkHost = "www.kernel.org";
   int networkPort = 80;
 };
 

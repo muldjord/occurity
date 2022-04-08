@@ -73,7 +73,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   if(mainSettings.enableVideoPlayer) {
     videoPlayer = new VideoPlayer(mainSettings.videosFolder,
                                   mainSettings.width, mainSettings.height,
-                                  nullptr);
+                                  this);
   }
 
   secretTimer.setInterval(400);
@@ -377,7 +377,7 @@ void MainWindow::updateFromConfig()
 
   // Network
   if(!config.contains("network/host")) {
-    config.setValue("network/host", "139.178.84.217"); // kernel.org
+    config.setValue("network/host", "www.kernel.org");
   }
   if(!config.contains("network/port")) {
     config.setValue("network/port", 80);
