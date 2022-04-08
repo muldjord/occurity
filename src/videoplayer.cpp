@@ -39,7 +39,6 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
   QVideoWidget(parent)
 {
   setCursor(Qt::BlankCursor);
-
   setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
   setStyleSheet("QVideoWidget {background-color: black;}");
   setFixedSize(width, height);
@@ -115,6 +114,7 @@ void VideoPlayer::startVideo()
     mediaPlayer->pause();
   } else {
     printf("Starting!\n");
+    setFocus();
     show();
     mediaPlayer->play();
     allowAction = false;
@@ -156,12 +156,16 @@ void VideoPlayer::stateChanged(QMediaPlayer::State state)
 void VideoPlayer::keyPressEvent(QKeyEvent *event)
 {
   if(event->key() == Qt::Key_S) {
-    changeVideo(-1);
+    // Restart current video
+    changeVideo(0);
   } else if(event->key() == Qt::Key_G) {
+    // Play next video
     changeVideo(1);
   } else if(event->key() == Qt::Key_D) {
+    // Play / pause current video
     startVideo();
   } else if(event->key() == Qt::Key_F) {
+    // Stop video and hide videoPlayer
     stopVideo();
   }
 }
