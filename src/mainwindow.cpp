@@ -428,6 +428,7 @@ void MainWindow::spawnPreferences()
     printf("Spawning Preferences...\n");
     Preferences prefs(config, this);
     prefs.exec();
+    activateWindow();
   }
 }
 
@@ -438,6 +439,7 @@ void MainWindow::spawnJobRunner()
     printf("Spawning job runner...\n");
     JobRunner jobRunner(mainSettings, this);
     jobRunner.exec();
+    activateWindow();
   }
 }
 
