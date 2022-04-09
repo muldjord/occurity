@@ -93,7 +93,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   resetTimer.setSingleShot(true);
   resetTimer.start();
 
-  QTimer::singleShot(0, this, &MainWindow::init);
+  init();
 }
 
 MainWindow::~MainWindow()
