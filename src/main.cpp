@@ -35,6 +35,8 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QTextStream>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QString &msg)
 {
@@ -90,6 +92,16 @@ int main(int argc, char *argv[])
   QPixmap pixmap(":splash.png");
   QSplashScreen *splash = new QSplashScreen(pixmap);
   splash->setCursor(Qt::BlankCursor);
+
+  QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+  splash->setGraphicsEffect(opacityEffect);
+  QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
+  animation->setDuration(1500);
+  animation->setStartValue(0);
+  animation->setEndValue(1);
+  animation->setEasingCurve(QEasingCurve::InOutQuad);
+  animation->start(QPropertyAnimation::DeleteWhenStopped);
+
   splash->show();
   splash->showMessage("Running Occurity v" VERSION,
                       Qt::AlignLeft,
@@ -97,7 +109,7 @@ int main(int argc, char *argv[])
   app.processEvents();
   if(config.value("showSplash", true).toBool()) {
     QEventLoop q;
-    QTimer::singleShot(5000, &q, &QEventLoop::quit);
+    QTimer::singleShot(4000, &q, &QEventLoop::quit);
     q.exec();
   }
 
