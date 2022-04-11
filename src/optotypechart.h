@@ -32,10 +32,9 @@
 #include "mainsettings.h"
 #include "abstractchart.h"
 
-#include <QTimer>
-#include <QMediaPlayer>
-#include <QGraphicsVideoItem>
+#include <QGraphicsItem>
 #include <QGraphicsProxyWidget>
+#include <QPropertyAnimation>
 
 class OptotypeChart : public AbstractChart
 {
@@ -63,6 +62,9 @@ public slots:
 protected:
   void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+  void hideFromList();
+  
 private:
   QString startSize = "0.16";
   QGraphicsProxyWidget *animItem = nullptr;
@@ -76,6 +78,8 @@ private:
 
   void addRow();
   void positionReset();
+
+  QList<QGraphicsItem *> hideList;
 
   QList<QPair<QString, QGraphicsItemGroup *> > rows;
   int currentRowIdx = 0;

@@ -29,13 +29,16 @@
 
 #include <stdio.h>
 #include <math.h>
+
 #include <QKeyEvent>
-#include <QGraphicsSvgItem>
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QRandomGenerator>
 #include <QLabel>
 #include <QMovie>
+#include <QParallelAnimationGroup>
+#include <QGraphicsOpacityEffect>
+#include <QGraphicsSvgItem>
 
 OptotypeChart::OptotypeChart(MainSettings &mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
@@ -58,7 +61,7 @@ void OptotypeChart::init()
       animItem = addWidget(gifAnim);
       animItem->setZValue(-1);
       animItem->setPos(mainSettings.width / 2.0 - animItem->boundingRect().width() / 2.0,
-                        mainSettings.height / 4.0 - animItem->boundingRect().height() / 2.0);
+                       mainSettings.height / 4.0 - animItem->boundingRect().height() / 2.0);
       animItem->hide();
     }
   }
@@ -258,16 +261,58 @@ void OptotypeChart::updateAll()
         if(mainSettings.single) {
           if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
              rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
-            letter->show();
+            if(!letter->isVisible()) {
+              letter->show();
+              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+              letter->setGraphicsEffect(opacityEffect);
+              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
+              animation->setDuration(500);
+              animation->setStartValue(0);
+              animation->setEndValue(1);
+              animation->setEasingCurve(QEasingCurve::InOutQuad);
+              animation->start(QPropertyAnimation::DeleteWhenStopped);
+            }
           } else {
-            letter->hide();
+            if(letter->isVisible()) {
+              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+              letter->setGraphicsEffect(opacityEffect);
+              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
+              animation->setDuration(500);
+              animation->setStartValue(1);
+              animation->setEndValue(0);
+              animation->setEasingCurve(QEasingCurve::InOutQuad);
+              animation->start(QPropertyAnimation::DeleteWhenStopped);
+              hideList.append(letter);
+              connect(animation, &QPropertyAnimation::finished, this, &OptotypeChart::hideFromList);
+            }
           }
         } else {
           if(rows.at(a).second->mapToScene(letter->pos()).x() < 0 ||
              rows.at(a).second->mapToScene(letter->pos()).x() + rows.at(a).second->mapRectToScene(letter->boundingRect()).width() > mainSettings.width) {
-            letter->hide();
+            if(letter->isVisible()) {
+              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+              letter->setGraphicsEffect(opacityEffect);
+              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
+              animation->setDuration(500);
+              animation->setStartValue(1);
+              animation->setEndValue(0);
+              animation->setEasingCurve(QEasingCurve::InOutQuad);
+              animation->start(QPropertyAnimation::DeleteWhenStopped);
+              hideList.append(letter);
+              connect(animation, &QPropertyAnimation::finished, this, &OptotypeChart::hideFromList);
+            }
           } else {
-            letter->show();
+            if(!letter->isVisible()) {
+              letter->show();
+              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+              letter->setGraphicsEffect(opacityEffect);
+              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
+              animation->setDuration(500);
+              animation->setStartValue(0);
+              animation->setEndValue(1);
+              animation->setEasingCurve(QEasingCurve::InOutQuad);
+              animation->start(QPropertyAnimation::DeleteWhenStopped);
+            }
           }
         }
       }
@@ -370,4 +415,12 @@ void OptotypeChart::positionReset()
 void OptotypeChart::setAnimation(const QString &animation)
 {
   this->animation = animation;
+}
+
+void OptotypeChart::hideFromList()
+{
+  for(auto *item: hideList) {
+    item->hide();
+  }
+  hideList.clear();
 }
