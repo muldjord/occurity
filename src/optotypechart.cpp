@@ -26,6 +26,7 @@
  */
 
 #include "optotypechart.h"
+#include "optosymbol.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -36,9 +37,6 @@
 #include <QRandomGenerator>
 #include <QLabel>
 #include <QMovie>
-#include <QParallelAnimationGroup>
-#include <QGraphicsOpacityEffect>
-#include <QGraphicsSvgItem>
 
 OptotypeChart::OptotypeChart(MainSettings &mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
@@ -197,7 +195,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   */
   QPair<QString, QGraphicsItemGroup *> rowPair;
 
-  QGraphicsSvgItem *svgSpace = new QGraphicsSvgItem(mainSettings.optotypesFolder + "/" + optotype + "/_.svg");
+  OptoSymbol *svgSpace = new OptoSymbol(mainSettings.optotypesFolder + "/" + optotype + "/_.svg");
   spaceWidth = svgSpace->boundingRect().width();
 
   QGraphicsItemGroup *layer = new QGraphicsItemGroup;
@@ -217,11 +215,12 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   for(const auto &letter: letters) {
     QString svgFilename = mainSettings.optotypesFolder + "/" + optotype + "/" + letter + ".svg";
     if(QFileInfo::exists(svgFilename)) {
-      QGraphicsSvgItem *svgLetter = new QGraphicsSvgItem(svgFilename);
+      OptoSymbol *svgLetter = new OptoSymbol(svgFilename);
       svgLetter->setX(curX);
       svgLetter->setData(0, svgLetter->pos());
       layer->addToGroup(svgLetter);
       curX += svgLetter->boundingRect().width() + spaceWidth;
+      svgLetter->hide();
     } else {
       QMessageBox::warning(nullptr, tr("File not found"), tr("File '") + svgFilename + tr("' not found. Please correct this."));
     }
@@ -253,66 +252,28 @@ void OptotypeChart::updateAll()
       rows.at(a).second->setX((mainSettings.width / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() / 2) + currentSkew);
       rows.at(a).second->setY((mainSettings.height / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() / 2));
 
-      rows.at(a).second->show();
+      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+        static_cast<OptoSymbol *>(graphicsItem)->fadeIn();
+        //rows.at(a).second->show();
+      }
 
       // Show / hide optotypes depending on whether they are cut off at screen edges
       // or if single is set
-      for(auto *letter: rows.at(a).second->childItems()) {
+      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+        OptoSymbol *optoSymbol = static_cast<OptoSymbol *>(graphicsItem);
         if(mainSettings.single) {
-          if(rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
-             rows.at(a).second->mapToScene(letter->pos()).x() + (rows.at(a).second->mapRectToScene(letter->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
-            if(!letter->isVisible()) {
-              letter->show();
-              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
-              letter->setGraphicsEffect(opacityEffect);
-              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
-              animation->setDuration(500);
-              animation->setStartValue(0);
-              animation->setEndValue(1);
-              animation->setEasingCurve(QEasingCurve::InOutQuad);
-              animation->start(QPropertyAnimation::DeleteWhenStopped);
-            }
+          if(rows.at(a).second->mapToScene(optoSymbol->pos()).x() + (rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
+             rows.at(a).second->mapToScene(optoSymbol->pos()).x() + (rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
+            optoSymbol->fadeIn();
           } else {
-            if(letter->isVisible()) {
-              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
-              letter->setGraphicsEffect(opacityEffect);
-              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
-              animation->setDuration(500);
-              animation->setStartValue(1);
-              animation->setEndValue(0);
-              animation->setEasingCurve(QEasingCurve::InOutQuad);
-              animation->start(QPropertyAnimation::DeleteWhenStopped);
-              hideList.append(letter);
-              connect(animation, &QPropertyAnimation::finished, this, &OptotypeChart::hideFromList);
-            }
+            optoSymbol->fadeOut();
           }
         } else {
-          if(rows.at(a).second->mapToScene(letter->pos()).x() < 0 ||
-             rows.at(a).second->mapToScene(letter->pos()).x() + rows.at(a).second->mapRectToScene(letter->boundingRect()).width() > mainSettings.width) {
-            if(letter->isVisible()) {
-              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
-              letter->setGraphicsEffect(opacityEffect);
-              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
-              animation->setDuration(500);
-              animation->setStartValue(1);
-              animation->setEndValue(0);
-              animation->setEasingCurve(QEasingCurve::InOutQuad);
-              animation->start(QPropertyAnimation::DeleteWhenStopped);
-              hideList.append(letter);
-              connect(animation, &QPropertyAnimation::finished, this, &OptotypeChart::hideFromList);
-            }
+          if(rows.at(a).second->mapToScene(optoSymbol->pos()).x() < 0 ||
+             rows.at(a).second->mapToScene(optoSymbol->pos()).x() + rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() > mainSettings.width) {
+            optoSymbol->fadeOut();
           } else {
-            if(!letter->isVisible()) {
-              letter->show();
-              QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
-              letter->setGraphicsEffect(opacityEffect);
-              QPropertyAnimation *animation = new QPropertyAnimation(opacityEffect,"opacity");
-              animation->setDuration(500);
-              animation->setStartValue(0);
-              animation->setEndValue(1);
-              animation->setEasingCurve(QEasingCurve::InOutQuad);
-              animation->start(QPropertyAnimation::DeleteWhenStopped);
-            }
+            optoSymbol->fadeIn();
           }
         }
       }
@@ -331,7 +292,7 @@ void OptotypeChart::updateAll()
         int rightMost = 0;
         double rightX = 0;
         for(int b = 0; b < rows.at(a).second->childItems().length(); ++b) {
-          if(!rows.at(a).second->childItems().at(b)->isVisible()) {
+          if(static_cast<OptoSymbol *>(rows.at(a).second->childItems().at(b))->isHidden()) {
             continue;
           }
           if(rows.at(a).second->childItems().at(b)->pos().x() <= leftX) {
@@ -353,7 +314,10 @@ void OptotypeChart::updateAll()
         crowdRect->hide();
       }
     } else {
-      rows.at(a).second->hide();
+      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+        static_cast<OptoSymbol *>(graphicsItem)->fadeOut();
+        //rows.at(a).second->hide();
+      }
     }
   }
 
@@ -361,7 +325,7 @@ void OptotypeChart::updateAll()
   font.setFamily("Arial");
   font.setPixelSize(mainSettings.pxPerArcMin * mainSettings.distanceFactor * 1.5);
 
-  // Add the letter size visual help
+  // Add the optoSymbol size visual help
   sizeItem->setText(sizeStr);
   sizeItem->setFont(font);
   sizeItem->setX(10);
@@ -406,7 +370,7 @@ QString OptotypeChart::getSize()
 
 void OptotypeChart::positionReset()
 {
-  // Reset positions for all optotype letters in row in case they've been randomized
+  // Reset positions for all optotype symbols in row in case they've been randomized
   for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
     child->setPos(child->data(0).toPointF());
   }

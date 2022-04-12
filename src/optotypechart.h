@@ -27,14 +27,11 @@
 #ifndef __OCCURITY_OPTOTYPECHART_H__
 #define __OCCURITY_OPTOTYPECHART_H__
 
-#include "letterrow.h"
-#include "lettersize.h"
 #include "mainsettings.h"
 #include "abstractchart.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsProxyWidget>
-#include <QPropertyAnimation>
 
 class OptotypeChart : public AbstractChart
 {
