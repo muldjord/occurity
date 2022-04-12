@@ -27,8 +27,6 @@
 #ifndef __OCCURITY_ABSTRACTCHART_H__
 #define __OCCURITY_ABSTRACTCHART_H__
 
-#include "letterrow.h"
-#include "lettersize.h"
 #include "mainsettings.h"
 
 #include <QGraphicsScene>
