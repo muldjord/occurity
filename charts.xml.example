@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <charts>
   <group numkey="1">
-    <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
+    <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true" fadetimings="0;50;150;150" fadelevels="1.0;0.0;0.15">
       <row size="0.05">VHCNO</row>
       <row size="0.067">SVHCZ</row>
       <row size="0.08">OZDVK</row>
