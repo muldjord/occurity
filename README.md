@@ -222,7 +222,9 @@ You can configure several options of Occurity to fit your needs. The first time 
 * Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
-#### Version 1.0.0 (25mar2022)
+#### Version 1.0.1 (In progress, unreleased)
+* Splash screen now fades in
+* Optotype symbols now fade in and out for better clinician visual clues
 * Rename VisuTest to Occurity
 * Added category to jobs
 * Changed `update` to `job` everywhere
