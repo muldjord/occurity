@@ -106,7 +106,21 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
   if(!charts.isEmpty()) {
-    setScene(charts.first());
+    if(mainSettings.startingChart.isEmpty()) {
+      setScene(charts.first());
+    } else {
+      bool foundChart = false;
+      for(auto *chart: charts) {
+        if(chart->objectName() == mainSettings.startingChart) {
+          setScene(chart);
+          foundChart = true;
+          break;
+        }
+      }
+      if(!foundChart) {
+        setScene(charts.first());
+      }
+    }
   }
 }
 
@@ -169,47 +183,52 @@ bool MainWindow::loadCharts(QString chartsXml)
       if(chart->getType() == "optotype") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
           printf("    Size lock: true\n");
-          reinterpret_cast<OptotypeChart*>(chart)->setSizeLocked(true);
+          static_cast<OptotypeChart*>(chart)->setSizeLocked(true);
         } else {
           printf("    Size lock: false\n");
         }
-        reinterpret_cast<OptotypeChart*>(chart)->setOptotype(xmlChart.attribute("optotype"));
-        printf("    Optotype: '%s'\n", reinterpret_cast<OptotypeChart*>(chart)->getOptotype().toStdString().c_str());
+        static_cast<OptotypeChart*>(chart)->setOptotype(xmlChart.attribute("optotype"));
+        printf("    Optotype: '%s'\n", static_cast<OptotypeChart*>(chart)->getOptotype().toStdString().c_str());
         if(xmlChart.hasAttribute("crowdingspan")) {
-          reinterpret_cast<OptotypeChart*>(chart)->setCrowdingSpan(xmlChart.attribute("crowdingspan").toDouble());
+          static_cast<OptotypeChart*>(chart)->setCrowdingSpan(xmlChart.attribute("crowdingspan").toDouble());
         }
         if(xmlChart.hasAttribute("animation")) {
-          reinterpret_cast<OptotypeChart*>(chart)->setAnimation(xmlChart.attribute("animation"));
+          static_cast<OptotypeChart*>(chart)->setAnimation(xmlChart.attribute("animation"));
         }
-        printf("    Crowding span: '%f'\n", reinterpret_cast<OptotypeChart*>(chart)->getCrowdingSpan());
+        printf("    Crowding span: '%f'\n", static_cast<OptotypeChart*>(chart)->getCrowdingSpan());
+        if(xmlChart.hasAttribute("startsize")) {
+          static_cast<OptotypeChart*>(chart)->setStartSize(xmlChart.attribute("startsize"));
+        }
+        if(xmlChart.hasAttribute("fadetimings")) {
+          static_cast<OptotypeChart*>(chart)->setFadeTimings(xmlChart.attribute("fadetimings"));
+        }
+        if(xmlChart.hasAttribute("fadelevels")) {
+          static_cast<OptotypeChart*>(chart)->setFadeLevels(xmlChart.attribute("fadelevels"));
+        }
         QDomNodeList xmlRows = xmlChart.elementsByTagName("row");
         QMap<QString, int> rowSizeMap;
         for(int b = 0; b < xmlRows.count(); ++b) {
           QDomElement xmlRow = xmlRows.at(b).toElement();
           QString rowSize = xmlRow.attribute("size");
           QString rowChars = xmlRow.text();
-          reinterpret_cast<OptotypeChart*>(chart)->addRow(rowSize, rowChars);
+          static_cast<OptotypeChart*>(chart)->addRow(rowSize, rowChars);
           printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
         }
         QList<QString> rowSizeStrings;
         for(auto &str : rowSizeMap.keys()) {
           rowSizeStrings.append(str);
         }
-        //chart->setRowSizes(rowSizeStrings);
-        if(xmlChart.hasAttribute("startsize")) {
-          reinterpret_cast<OptotypeChart*>(chart)->setStartSize(xmlChart.attribute("startsize"));
-        }
       } else if(chart->getType() == "svg") {
-        reinterpret_cast<SvgChart*>(chart)->setSource(xmlChart.attribute("source"));
+        static_cast<SvgChart*>(chart)->setSource(xmlChart.attribute("source"));
         if(xmlChart.hasAttribute("scaling")) {
-          reinterpret_cast<SvgChart*>(chart)->setScaling(xmlChart.attribute("scaling"));
+          static_cast<SvgChart*>(chart)->setScaling(xmlChart.attribute("scaling"));
           printf("    Scaling: %s\n", xmlChart.attribute("scaling").toStdString().c_str());
         }
         QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
         for(int b = 0; b < xmlSvgLayers.count(); ++b) {
           QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
           QString svgLayerId = xmlSvgLayer.attribute("id");
-          if(!reinterpret_cast<SvgChart*>(chart)->addSvgLayer(svgLayerId)) {
+          if(!static_cast<SvgChart*>(chart)->addSvgLayer(svgLayerId)) {
             printf("  Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
           } else {
             printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
@@ -349,6 +368,9 @@ void MainWindow::updateFromConfig()
   if(!config.contains("chartsXml")) {
     config.setValue("chartsXml", "charts.xml");
   }
+  if(!config.contains("startingChart")) {
+    config.setValue("startingChart", "Sloan 1");
+  }
   if(!config.contains("sizeResetTime")) {
     config.setValue("sizeResetTime", 240);
   }
@@ -364,6 +386,7 @@ void MainWindow::updateFromConfig()
   if(!config.contains("enableVideoPlayer")) {
     config.setValue("enableVideoPlayer", true);
   }
+
   // Folders
   if(!config.contains("folders/optotypes")) {
     config.setValue("folders/optotypes", "./optotypes");
@@ -414,6 +437,7 @@ void MainWindow::updateFromConfig()
   mainSettings.hexGreen = "#00" + QString::number(config.value("greenValue").toInt(), 16) + "00";
 
   mainSettings.chartsXml = config.value("chartsXml").toString();
+  mainSettings.startingChart = config.value("startingChart").toString();
 
   printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
   printf("  Pixels per arc minute: %f\n", mainSettings.pxPerArcMin);

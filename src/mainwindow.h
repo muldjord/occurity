@@ -83,6 +83,5 @@ private:
   QTimer secretTimer;
   bool allowSecret = true;
   int secretState = 0;
-
 };
 #endif/*__OCCURITY_MAINWINDOW_H__*/
