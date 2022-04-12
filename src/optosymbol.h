@@ -35,7 +35,9 @@
 class OptoSymbol : public QGraphicsSvgItem
 {
 public:
-  OptoSymbol(const QString &optoSymbol);
+  OptoSymbol(const QString &optoSymbol,
+             const QString &fadeTimings,
+             const QString &fadeLevels);
   ~OptoSymbol();
   void fadeIn();
   void fadeOut();
