@@ -195,7 +195,9 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   */
   QPair<QString, QGraphicsItemGroup *> rowPair;
 
-  OptoSymbol *svgSpace = new OptoSymbol(mainSettings.optotypesFolder + "/" + optotype + "/_.svg");
+  OptoSymbol *svgSpace = new OptoSymbol(mainSettings.optotypesFolder + "/" + optotype + "/_.svg",
+                                        fadeTimings,
+                                        fadeLevels);
   spaceWidth = svgSpace->boundingRect().width();
 
   QGraphicsItemGroup *layer = new QGraphicsItemGroup;
@@ -215,7 +217,7 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
   for(const auto &letter: letters) {
     QString svgFilename = mainSettings.optotypesFolder + "/" + optotype + "/" + letter + ".svg";
     if(QFileInfo::exists(svgFilename)) {
-      OptoSymbol *svgLetter = new OptoSymbol(svgFilename);
+      OptoSymbol *svgLetter = new OptoSymbol(svgFilename, fadeTimings, fadeLevels);
       svgLetter->setX(curX);
       svgLetter->setData(0, svgLetter->pos());
       layer->addToGroup(svgLetter);
@@ -343,6 +345,16 @@ void OptotypeChart::updateAll()
 void OptotypeChart::setStartSize(const QString &startSize)
 {
   this->startSize = startSize;
+}
+
+void OptotypeChart::setFadeTimings(const QString &fadeTimings)
+{
+  this->fadeTimings = fadeTimings;
+}
+
+void OptotypeChart::setFadeLevels(const QString &fadeLevels)
+{
+  this->fadeLevels = fadeLevels;
 }
 
 void OptotypeChart::resetAll()

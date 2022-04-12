@@ -51,6 +51,8 @@ public:
   QString getSize() override;
   void addRow(const QString &size, const QString &row);
   void setStartSize(const QString &startSize);
+  void setFadeTimings(const QString &fadeTimings);
+  void setFadeLevels(const QString &fadeLevels);
 
 public slots:
   void updateAll() override;
@@ -64,6 +66,9 @@ private slots:
   
 private:
   QString startSize = "0.16";
+  QString fadeTimings = "0;50;150;150";
+  QString fadeLevels = "1.0;0.0;0.15";
+
   QGraphicsProxyWidget *animItem = nullptr;
 
   QString optotype = "";
