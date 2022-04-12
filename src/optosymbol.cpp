@@ -52,7 +52,7 @@ OptoSymbol::OptoSymbol(const QString &optoSymbol) : QGraphicsSvgItem(optoSymbol)
 
   QPropertyAnimation *fadeInOutInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
   fadeInOutInAnimation->setDuration(250);
-  //fadeInOutInAnimation->setStartValue(0.0);
+  fadeInOutInAnimation->setStartValue(0.0);
   fadeInOutInAnimation->setEndValue(0.1);
   fadeInOutInAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
