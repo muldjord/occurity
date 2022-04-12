@@ -20,34 +20,36 @@ In order to install a system using Occurity you need the following hardware
   * A remote control that works with flirc
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
 
-### Monitor
+#### Monitor
 
-#### Resolution
+##### Resolution
 Occurity should display correctly on any monitor using any resolution provided the following two requirements are met:
 * The physical length of the ruler must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
 * The physical distance from the patients eyes to the monitor must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
 
 To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype letters at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with Occurity. To test if your monitor scales correctly, you can also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype letter must be 58 mm at 0.1 and 23 at 0.25.
 
-#### Brightness calibration
+##### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
 
-#### Tested working with the following monitors
+##### Tested working with the following monitors
 * Asus VG248QE
 
-### Remote controls
+#### Remote controls
 
-#### Tested working with the following remote controls
+##### Tested working with the following remote controls
 * LG AKB75095344
 * Samsung AA59-00818A
 
 In theory most remote controls you might have lying around should work with the disclaimer that there are some remotes that use dual-output signals which makes them hard to use with the flirc interface. Only way to know is to just try.
 
+## Software and configuration
+
 ### Operating system
 * [Latest Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os)
 Install it on your Pi SD card and plug it into your Pi.
 
-### Software prerequisites
+#### Software prerequisites
 Run the following commands in a terminal on the Pi to install the prerequisites.
 ```
 $ sudo apt update
@@ -55,16 +57,16 @@ $ sudo apt install git qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multim
 $ sudo apt remove gstreamer1.0-plugins-bad
 ```
 
-### System configurations
+#### System configurations
 I recommend applying the following settings on your Pi system to optimize it for use with Occurity.
 
-#### /etc/sudoers.d/pi
+##### /etc/sudoers.d/pi
 To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` and inserting the following:
 ```
 pi ALL = NOPASSWD : /usr/bin/apt-get
 ```
 
-#### raspi-config
+##### raspi-config
 Run `sudo raspi-config` in a terminal and set the following options:
 * 1 System Options->S5 Boot / Auto login->B4 Desktop Autologin
 * 1 System Options->S6 Network at Boot->No
@@ -74,14 +76,14 @@ Run `sudo raspi-config` in a terminal and set the following options:
 * 6 Advanced Options->A2 GL Driver->Enable
 * 6 Advanced Options->A8 Glamor->Enable
 
-#### /etc/xdg/lxsession/LXDE-pi/autostart
+##### /etc/xdg/lxsession/LXDE-pi/autostart
 Add the following line to the bottom of the file:
 ```
 @/home/pi/occurity/Occurity
 ```
 This will autostart Occurity when the system is logged in.
 
-#### Appearance Settings
+##### Appearance Settings
 * Raspberry menu->Preferences->Appearance Settings
   * Desktop
     * Layout: No Image
@@ -93,13 +95,13 @@ This will autostart Occurity when the system is logged in.
     * Color: Black
     * Test color: White 
 
-#### pcmanfm
+##### pcmanfm
 * Run the command `pcmanfm` which will open the File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
 
-#### Update notifications
+##### Update notifications
 * Right-click panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
 
-### Getting and compiling Occurity
+#### Getting and compiling Occurity
 Open a terminal on the Pi and run the following commands. This will fetch the Occurity source code and compile it.
 ```
 $ cd
@@ -114,6 +116,59 @@ $ make
 ### Optotypes
 Occurity comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
 
+## Keyboard controls
+The following keyboard keys are in use when running Occurity.
+### General
+* q: Turn monitor on / off (standby)
+* j: Launch Job Runner (requires pin-code)
+* p: Launch Preferences (requires pin-code)
+* s: Restart current attention video
+* d: Start attention video
+* f: Stop attention video
+* g: Next attention video
+
+### Optotype chart specific keyboard functions
+* up: Change to next line with bigger size
+* down: Change to next line with smaller size
+* left: Move entire row to the left
+* right: Move entire row to the right
+* PgUp: Skip n number of lines bigger (configure n in preferences)
+* PgDn: Skip n number of lines smaller (configure n in preferences)
+* c: Enable / disable crowding
+* m: Switch between single and multi-optotype from the selected row. Use left / right to move between them
+* r: Randomize optotypes from selected line
+* a: Enable / disable attention animation (if one is defined)
+
+### SVG chart specific keyboard functions
+* left / right: Switch between layers defined in `charts.xml`
+
+## config.ini
+You can configure several options of Occurity to fit your needs. The first time Occurity is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard (pincode required, see below) and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
+
+### [General]
+* `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
+* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
+* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
+* `redValue=210`: Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
+* `greenValue=210`: Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
+* `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
+* `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
+* `rowSkipDelta=4`: The number of lines skipped when pressing `PgUp` and `PgDn`.
+* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. It can be any length as long as it only contains numbers. Default is `4242`.
+* `enableVideoPlauer=true`: Enables or disables the integrated attention video player.
+
+### [folders]
+* `optotypes="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `./optotypes`.
+* `videos="your/videos/folder"`: Defines the attention videos folder. Only supports mp4 video container format. Default is `./videos`.
+* `jobs="your/jobs/folder"`: Defines the jobs folder. All `.job` files within this folder will be accessible through the Job Runner dialog (open with `j`). Default is `./jobs`.
+
+### [network]
+The following variables are used when determining if a network connection exists when running the `aptinstall` and `aptremove` job commands. Occurity DOES NOT require a network connection for anything else than this. If the host can't be contacted, a dialog box will appear which asks whether the `apt*` command is critical for the job to function properly. If not, it will continue executing the job. Otherwise it will end the job.
+* `host="www.somesite.org"`
+* `port=80`
+
+## Defining charts
+
 ### charts.xml
 All of the charts displayed in the Occurity software are customizable. Edit the `charts.xml` file in any basic text/xml editor. The format is as follows:
 
@@ -125,11 +180,12 @@ This node tells the xml format. Don't change it.
 
 #### 'charts' node
 ```
-<charts>
+<charts startingchart="CHARTNAME">
   ...
 </charts>
 ```
-This node is the parent node containing all charts. Don't change or remove it.
+This node is the parent node containing all charts. It supports the following attribute:
+* startingchart="Sloan R" (optional) <-- Set this to define the initial chart that will be activated when Occurity starts. If left out it will show the topmost chart initially.
 
 #### 'group' node
 ```
@@ -157,6 +213,8 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 * startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a `row` below.
 * crowdingspan="2.5" <-- Sets optotype crowding span in size relative arc minutes. If left out the default value of 2.5 is used.
 * animation="file.gif" <-- Sets the attention GIF animation for this chart. Activate with `a`.
+* fadetimings="0;50;150;150" <-- Defines the optotype fade timings. There are three relevant timings. 1: Used when fading in a symbol, 2: Used when fading out a symbol, 3 and 4: Used when momentarily showing a symbol (fade in / out). All values are in ms.
+* fadelevels="0.0;1.0;0.15" <-- Defines the optotype fade levels. There are three relevant levels. 1: Opacity when hiding a symbol, 2: Opacity when showing, 3: Opacity when momentarily showing a symbol. All values can range from 0.0 to 1.0. Completely opaque is 1.0.
 
 ###### 'row' node
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
@@ -181,48 +239,14 @@ Must be nested inside a `chart` node. Defines a layer from inside an SVG to be d
 ```
 You can add as many layer nodes as you'd like. Occurity can then switch between them with the left/right arrow keys. SVG's and their layers can be created with the open source software [Inkscape](https://inkscape.org/).
 
-### config.ini
-You can configure several options of Occurity to fit your needs. The first time Occurity is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
-* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
-* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
-* `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
-* `optotypesDir="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `optotypes`.
-* `redValue=210`: Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
-* `greenValue=210`: Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
-* `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
-* `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
-* `rowSkipDelta=4`: The number of lines skipped when pressing `w` and `s`.
-* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. It can be any length as long as it only contains numbers. Default is `4242`.
-
-## Keyboard control
-* q: Hibernate / turn monitor off
-* u: Launch updater (requires pin-code)
-* p: Launch preferences (requires pin-code)
-* z: Start attention video
-* x: Stop attention video
-
-### Optotype chart specific keyboard functions
-* up: Change to next line with bigger size
-* down: Change to next line with smaller size
-* left: Move entire row to the left
-* right: Move entire row to the right
-* PgUp: Skip n number of lines bigger (configure n in preferences)
-* PgDn: Skip n number of lines smaller (configure n in preferences)
-* c: Enable / disable crowding
-* m: Switch between single and multi-optotype from the selected row. Use left / right to move between them
-* r: Randomize optotypes from selected line
-* a: Enable / disable attention animation
-
-### SVG chart specific keyboard functions
-* left / right: Switch between layers defined in charts.xml
-
 ## Releases
 
 #### Version x.x.x (unimplemented)
-* Add `startingChart` to config to allow setting initial displayed chart
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
 #### Version 1.0.1 (In progress, unreleased)
+* Added `startingChart` config variable to allow setting initial displayed chart
+* Added `fadetimings` and `fadelevels` attributes to `<chart>` xml node
 * Splash screen now fades in
 * Optotype symbols now fade in and out for better clinician visual clues
 * Rename VisuTest to Occurity
