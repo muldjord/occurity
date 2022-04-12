@@ -29,6 +29,8 @@
 
 #include <stdio.h>
 
+#include <QPropertyAnimation>
+
 OptoSymbol::OptoSymbol(const QString &optoSymbol) : QGraphicsSvgItem(optoSymbol)
 {
   opacityEffect = new QGraphicsOpacityEffect;
@@ -36,17 +38,34 @@ OptoSymbol::OptoSymbol(const QString &optoSymbol) : QGraphicsSvgItem(optoSymbol)
   setGraphicsEffect(opacityEffect);
 
   fadeInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeInAnimation->setDuration(10);
+  fadeInAnimation->setDuration(50);
   //fadeInAnimation->setStartValue(0.0);
   fadeInAnimation->setEndValue(1.0);
   fadeInAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
   fadeOutAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeOutAnimation->setDuration(150);
-  fadeOutAnimation->setStartValue(1.0);
+  fadeOutAnimation->setDuration(50);
+  //fadeOutAnimation->setStartValue(1.0);
   fadeOutAnimation->setEndValue(0.0);
   fadeOutAnimation->setEasingCurve(QEasingCurve::InOutQuad);
   connect(fadeOutAnimation, &QPropertyAnimation::finished, this, &OptoSymbol::fadeDoneHide);
+
+  QPropertyAnimation *fadeInOutInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
+  fadeInOutInAnimation->setDuration(250);
+  //fadeInOutInAnimation->setStartValue(0.0);
+  fadeInOutInAnimation->setEndValue(0.1);
+  fadeInOutInAnimation->setEasingCurve(QEasingCurve::InOutQuad);
+
+  QPropertyAnimation *fadeInOutOutAnimation = new QPropertyAnimation(opacityEffect, "opacity");
+  fadeInOutOutAnimation->setDuration(250);
+  //fadeInOutOutAnimation->setStartValue(0.1);
+  fadeInOutOutAnimation->setEndValue(0.0);
+  fadeInOutOutAnimation->setEasingCurve(QEasingCurve::InOutQuad);
+
+  fadeInOutAnimation = new QSequentialAnimationGroup;
+  fadeInOutAnimation->addAnimation(fadeInOutInAnimation);
+  fadeInOutAnimation->addAnimation(fadeInOutOutAnimation);
+  connect(fadeInOutAnimation, &QSequentialAnimationGroup::finished, this, &OptoSymbol::fadeDoneHide);
 }
 
 OptoSymbol::~OptoSymbol()
@@ -64,6 +83,11 @@ void OptoSymbol::fadeOut()
   fadeOutAnimation->start();
 }
 
+void OptoSymbol::fadeInOut()
+{
+  fadeInOutAnimation->start();
+}
+
 void OptoSymbol::fadeDoneHide()
 {
   hide();
@@ -73,7 +97,9 @@ bool OptoSymbol::isHidden()
 {
   if(!isVisible() ||
      fadeOutAnimation->state() == QAbstractAnimation::Running ||
-     fadeOutAnimation->state() == QAbstractAnimation::Paused) {
+     fadeOutAnimation->state() == QAbstractAnimation::Paused ||
+     fadeInOutAnimation->state() == QAbstractAnimation::Running ||
+     fadeInOutAnimation->state() == QAbstractAnimation::Paused) {
     return true;
   }
   return false;

@@ -29,6 +29,7 @@
 
 #include <QGraphicsSvgItem>
 #include <QPropertyAnimation>
+#include <QSequentialAnimationGroup>
 #include <QGraphicsOpacityEffect>
 
 class OptoSymbol : public QGraphicsSvgItem
@@ -38,6 +39,7 @@ public:
   ~OptoSymbol();
   void fadeIn();
   void fadeOut();
+  void fadeInOut();
   bool isHidden();
 
 private slots:
@@ -45,8 +47,11 @@ private slots:
   
 private:
   QGraphicsOpacityEffect *opacityEffect;
+
   QPropertyAnimation *fadeInAnimation;
   QPropertyAnimation *fadeOutAnimation;
+
+  QSequentialAnimationGroup *fadeInOutAnimation;
 
 };
 #endif/*__OCCURITY_OPTOSYMBOL_H__*/

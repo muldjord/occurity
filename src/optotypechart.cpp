@@ -266,12 +266,12 @@ void OptotypeChart::updateAll()
              rows.at(a).second->mapToScene(optoSymbol->pos()).x() + (rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
             optoSymbol->fadeIn();
           } else {
-            optoSymbol->fadeOut();
+            optoSymbol->fadeInOut();
           }
         } else {
           if(rows.at(a).second->mapToScene(optoSymbol->pos()).x() < 0 ||
              rows.at(a).second->mapToScene(optoSymbol->pos()).x() + rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() > mainSettings.width) {
-            optoSymbol->fadeOut();
+            optoSymbol->fadeInOut();
           } else {
             optoSymbol->fadeIn();
           }
