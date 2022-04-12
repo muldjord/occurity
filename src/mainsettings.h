@@ -46,7 +46,7 @@ struct MainSettings {
   double distanceFactor = 1.0;
   double rulerWidth = 138.0;
   double pxPerMm = 42.0;
-  //QString startSize = "1.0";
+  QString startingChart = "";
   double pxPerArcMin = 0.0;
   QString chartsXml = "charts.xml";
   QString sizeFormat = "decimal";
