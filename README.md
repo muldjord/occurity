@@ -12,7 +12,7 @@ Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 ### Hardware
 In order to install a system using Occurity you need the following hardware
-* A Raspberry Pi (preferably a 3B+, but older models should work just fine)
+* A Raspberry Pi (3B+ or later is recommended)
   * At least an 8 GB SD flash card
   * A Raspberry Pi case (recommended, but you might have plans to built it into a monitor)
   * A Raspberry Pi power supply
