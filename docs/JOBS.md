@@ -143,7 +143,7 @@ Note! `sudo apt-get update` will automatically be run before installing any new 
 #### aptremove:PACKAGE1;PACKAGE2;...
 In some cases it can be necessary to remove packages using the `sudo apt-get remove` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
 
-To allow the use of the `apt` commands, it is necessary to let the user running Occurity run these commands without having to provide a password. Go [here](../README.md) to read more.
+To allow the use of the `apt` commands, it is necessary to let the user running Occurity run these commands without having to provide a password. Go [here](../README.md#etcsudoersdpi-optional) to read more.
 
 Note! `sudo apt-get update` will automatically be run before removing any packages.
 
