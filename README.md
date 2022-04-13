@@ -14,11 +14,11 @@ Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 In order to install a system using Occurity you need the following hardware
 * A Raspberry Pi (3B+ or later is recommended)
   * At least an 8 GB SD flash card
-  * A Raspberry Pi case (recommended, but you might have plans to built it into a monitor)
+  * A Raspberry Pi case (Recommended, but you might have plans to built it into a monitor)
   * A Raspberry Pi power supply
-* A [Flirc infrared reciever](https://flirc.tv/)
-  * A remote control that works with flirc
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
+* A [Flirc infrared reciever](https://flirc.tv/) (Optional)
+  * A remote control that works with flirc. Most do (Optional)
 
 #### Monitor
 
