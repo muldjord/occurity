@@ -16,7 +16,7 @@ In order to install a system using Occurity you need the following hardware
   * At least an 8 GB SD flash card
   * A Raspberry Pi case (recommended, but you might have plans to built it into a monitor)
   * A Raspberry Pi power supply
-* A Flirc infrared reciever (https://flirc.tv/)
+* A [Flirc infrared reciever](https://flirc.tv/)
   * A remote control that works with flirc
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
 
@@ -118,126 +118,38 @@ Occurity comes with an optotype that was created from the ground up to adhere to
 
 ## Keyboard controls
 The following keyboard keys are in use when running Occurity.
+
 ### General
-* q: Turn monitor on / off (standby)
-* j: Launch Job Runner (requires pin-code)
-* p: Launch Preferences (requires pin-code)
-* s: Restart current attention video
-* d: Start attention video
-* f: Stop attention video
-* g: Next attention video
+* `q`: Enable / disable standby
+* `j`: Open Job Runner dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
+* `p`: Open Preferences dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
+* `s`: Restart current attention video
+* `d`: Start attention video
+* `f`: Stop attention video
+* `g`: Next attention video
 
 ### Optotype chart specific keyboard functions
-* up: Change to next line with bigger size
-* down: Change to next line with smaller size
-* left: Move entire row to the left
-* right: Move entire row to the right
-* PgUp: Skip n number of lines bigger (configure n in preferences)
-* PgDn: Skip n number of lines smaller (configure n in preferences)
-* c: Enable / disable crowding
-* m: Switch between single and multi-optotype from the selected row. Use left / right to move between them
-* r: Randomize optotypes from selected line
-* a: Enable / disable attention animation (if one is defined)
+* `up`: Change to next line with bigger size
+* `down`: Change to next line with smaller size
+* `left`: Move entire row to the left
+* `right`: Move entire row to the right
+* `PgUp`: Skip n number of lines bigger (configure n in preferences)
+* `PgDn`: Skip n number of lines smaller (configure n in preferences)
+* `c`: Enable / disable crowding
+* `m`: Switch between single and multi-optotype from the selected row. Use left / right to move between them
+* `r`: Randomize optotypes from selected line
+* `a`: Enable / disable attention animation (if one is defined)
 
 ### SVG chart specific keyboard functions
-* left / right: Switch between layers defined in `charts.xml`
+* `left / right`: Switch between layers defined in `charts.xml`
 
-## config.ini
-You can configure several options of Occurity to fit your needs. The first time Occurity is started the preferences dialog will appear on screen. Remember to set everything up appropriately. To change these setting later, either press the `p` key on the keyboard (pincode required, see below) and change the values using the arrow keys, or simply edit the `config.ini` file in any editor.
+## Overall configuration
+Most important Occurity settings can be configured through the Preferences dialog. The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results. The pin-code is configured in `config.ini`.
 
-### [General]
-* `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`.
-* `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
-* `rulerWidth=125`: The physical width of the ruler shown in the preferences dialog in millimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
-* `redValue=210`: Sets the red color value or SVG charts. To make this work, the initial red color of the SVG elements has to be `#d20000`.
-* `greenValue=210`: Sets the green color value or SVG charts. To make this work, the initial green color of the SVG elements has to be `#00d200`.
-* `sizeResetTime=240`: After this many seconds of inactivity, the charts will reset back to the startsize as defined in `charts.xml`.
-* `hibernateTime=140`: After this many minutes of inactivity, the monitor will turn off to avoid burn-in. You can turn it back on by pressing `q`.
-* `rowSkipDelta=4`: The number of lines skipped when pressing `PgUp` and `PgDn`.
-* `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Updater dialogs. It can be any length as long as it only contains numbers. Default is `4242`.
-* `enableVideoPlauer=true`: Enables or disables the integrated attention video player.
+Options that aren't available in the Preferences dialog can be changed by opening the `config.ini` file in a text editor. For a complete description of all available options go [here](docs/CONFIGINI.md).
 
-### [folders]
-* `optotypes="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `./optotypes`.
-* `videos="your/videos/folder"`: Defines the attention videos folder. Only supports mp4 video container format. Default is `./videos`.
-* `jobs="your/jobs/folder"`: Defines the jobs folder. All `.job` files within this folder will be accessible through the Job Runner dialog (open with `j`). Default is `./jobs`.
-
-### [network]
-The following variables are used when determining if a network connection exists when running the `aptinstall` and `aptremove` job commands. Occurity DOES NOT require a network connection for anything else than this. If the host can't be contacted, a dialog box will appear which asks whether the `apt*` command is critical for the job to function properly. If not, it will continue executing the job. Otherwise it will end the job.
-* `host="www.somesite.org"`
-* `port=80`
-
-## Defining charts
-
-### charts.xml
-All of the charts displayed in the Occurity software are customizable. Edit the `charts.xml` file in any basic text/xml editor. The format is as follows:
-
-#### 'xml' node
-```
-<?xml version="1.0" encoding="UTF-8"?>
-```
-This node tells the xml format. Don't change it.
-
-#### 'charts' node
-```
-<charts startingchart="CHARTNAME">
-  ...
-</charts>
-```
-This node is the parent node containing all charts. It supports the following attribute:
-* startingchart="Sloan R" (optional) <-- Set this to define the initial chart that will be activated when Occurity starts. If left out it will show the topmost chart initially.
-
-#### 'group' node
-```
-<group numkey="1">
-  ...
-</group>
-```
-This groups several charts together on the same number key. It supports the following attributes, some of which are required:
-* numkey="1" (required) <-- This is the number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the charts contained in the group.
-
-#### 'chart' nodes
-```
-<chart name="Chart 1" type="optotype" optotype="sloan" bgcolor="white" sizelock="true">
-  ...
-</chart>
-```
-Must be nested in the `group` node. This defines a single chart to be used by the software. It supports the following attributes, some of which are required:
-* caption="Caption" <-- The caption that is shown on-screen in Occurity.
-* type="optotype" (required) <-- The chart type. Currently supports `optotype` and `svg`.
-* bgcolor="white" <-- Sets the background color of the chart (can be `black`, `white` or hex as `#AABBCC`).
-* sizelock="true" <-- If this is set to true and you switch to another chart with the same attribute, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes.
-
-##### 'optotype' chart type specific
-* optotype="sloan" (required) <-- Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
-* startsize="0.1" <-- Sets optotype size on initialization. Size must match with a size from a `row` below.
-* crowdingspan="2.5" <-- Sets optotype crowding span in size relative arc minutes. If left out the default value of 2.5 is used.
-* animation="file.gif" <-- Sets the attention GIF animation for this chart. Activate with `a`.
-* fadetimings="0;50;150;150" <-- Defines the optotype fade timings. There are three relevant timings. 1: Used when fading in a symbol, 2: Used when fading out a symbol, 3 and 4: Used when momentarily showing a symbol (fade in / out). All values are in ms.
-* fadelevels="0.0;1.0;0.15" <-- Defines the optotype fade levels. There are three relevant levels. 1: Opacity when hiding a symbol, 2: Opacity when showing, 3: Opacity when momentarily showing a symbol. All values can range from 0.0 to 1.0. Completely opaque is 1.0.
-
-###### 'row' node
-Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
-```
-<row size="0.1">NCKZO</row>
-<row size="0.1">one;two;three;four;five</row>
-```
-Size defines the size used by the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
-
-You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg`, `C.svg` and so on.
-
-The second way is by using semicolons to separate the optotypes, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second examples this would require files to be named `one.svg`, `two.svg` and so on.
-
-##### 'svg' chart type specific
-* source="filename.svg" <-- The filename containing the SVG you want to use.
-* scaling="distance" <-- Can be `width`, `height` or `distance`. `distance` scales according to patient distance. The SVG must be scaled as 100 pixels being equal to 1 arc minute at a distance of 6 meters. `width` and `height` simply scales the SVG to fit the width or height of the screen.
-
-###### 'layer' node
-Must be nested inside a `chart` node. Defines a layer from inside an SVG to be displayed on the chart. It has the following format:
-```
-<layer id="layername"/>
-```
-You can add as many layer nodes as you'd like. Occurity can then switch between them with the left/right arrow keys. SVG's and their layers can be created with the open source software [Inkscape](https://inkscape.org/).
+## Charts customization
+Occurity comes with a number of default charts. All charts can easily be customized through the `charts.xml` file. Go [here](docs/CHARTSXML.md) for a complete description of the format.
 
 ## Releases
 
