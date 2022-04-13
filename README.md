@@ -69,7 +69,7 @@ I recommend applying the following settings on your Pi system to optimize it for
     * Test color: White 
 
 ##### Disable removable media pop-up
-Open a File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+Open a File Manager. In Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
 
 ##### Update notifications
 * Right-click the panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
