@@ -108,7 +108,7 @@ $ sudo apt update
 $ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
 $ sudo apt remove gstreamer1.0-plugins-bad
 ```
-The `gstreamer1.0-plugins-bad` might not be installed already. But try removing it to be sure. Having it installed is known to break h.264 video playback needed by Occurity.
+The `gstreamer1.0-plugins-bad` package might not be installed already. But try removing it to be sure. Having it installed is known to break h.264 video playback needed by Occurity.
 
 ##### Download and compile
 Open a terminal on the Pi and run the following commands. This will fetch the latest version of Occurity and compile it. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `1.0.1`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
