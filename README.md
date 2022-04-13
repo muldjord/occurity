@@ -17,7 +17,7 @@ In order to install a system using Occurity you need the following hardware:
   * A Raspberry Pi case (Recommended, but you might have plans to built it into a monitor)
   * A Raspberry Pi power supply
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
-* A [Flirc infrared reciever](https://flirc.tv/products/flirc-usb-receiver?variant=42687976538340) (Optional)
+* A [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) (Optional)
   * A remote control that works with flirc. Most do (Optional)
 
 Note that Occurity can be installed on any ordinary Debian-derived PC as well (Ubuntu is recommended as this is the OS used to develop Occurity).
@@ -136,9 +136,9 @@ The following keyboard keys are in use when running Occurity.
 * `j`: Open Job Runner dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
 * `p`: Open Preferences dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
 * `s`: Restart current attention video
-* `d`: Start attention video
+* `d`: Play / pause current attention video
 * `f`: Stop attention video
-* `g`: Next attention video
+* `g`: Play next attention video
 
 ### Optotype chart specific keyboard functions
 * `up`: Change to next row with bigger size
@@ -149,7 +149,7 @@ The following keyboard keys are in use when running Occurity.
 * `PgDn`: Skip n number of rows smaller (configure n in preferences)
 * `c`: Enable / disable crowding
 * `m`: Switch between single and multisymbol from the selected row. Use left / right to move between them
-* `r`: Randomize optotypes from selected row
+* `r`: Randomize symbols from selected row
 * `a`: Enable / disable attention animation (if one is defined)
 
 ### SVG chart specific keyboard functions
