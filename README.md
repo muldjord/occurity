@@ -11,7 +11,7 @@ Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 ## What you need
 
 ### Hardware
-In order to install a system using Occurity you need the following hardware
+In order to install a system using Occurity you need the following hardware:
 * A Raspberry Pi (3B+ or later is recommended)
   * At least an 8 GB SD flash card
   * A Raspberry Pi case (Recommended, but you might have plans to built it into a monitor)
@@ -20,14 +20,18 @@ In order to install a system using Occurity you need the following hardware
 * A [Flirc infrared reciever](https://flirc.tv/products/flirc-usb-receiver?variant=42687976538340) (Optional)
   * A remote control that works with flirc. Most do (Optional)
 
+Note that Occurity can be installed on any ordinary Debian-derived PC as well (Ubuntu is recommended as this is the OS used to develop Occurity).
+
 #### Monitor
 
 ##### Resolution
-Occurity should display correctly on any monitor using any resolution provided the following two requirements are met:
-* The physical length of the ruler must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
-* The physical distance from the patients eyes to the monitor must be set correctly in the Occurity configuration (Press `p` on the keyboard and use arrow keys to set it).
+Occurity displays correctly on any monitor using any resolution provided the following two requirements are met:
+* The physical length of the ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
+* The physical distance from the patients eyes to the monitor must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 
-To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype letters at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with Occurity. To test if your monitor scales correctly, you can also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype letter must be 58 mm at 0.1 and 23 at 0.25.
+To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype sumbols at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with Occurity.
+
+To test if your monitor scales the distance correctly, you should also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype symbol must be 58 mm at 0.1 and 23 at 0.25.
 
 ##### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
@@ -49,22 +53,26 @@ In theory most remote controls you might have lying around should work with the 
 * [Latest Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os)
 Install it on your Pi SD card and plug it into your Pi.
 
-#### Software prerequisites
-Run the following commands in a terminal on the Pi to install the prerequisites.
-```
-$ sudo apt update
-$ sudo apt install git qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
-$ sudo apt remove gstreamer1.0-plugins-bad
-```
-
 #### System configurations
 I recommend applying the following settings on your Pi system to optimize it for use with Occurity.
 
-##### /etc/sudoers.d/pi
-To allow the use of the `apt*` commands from the Occurity updater scripting language (updater activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` and inserting the following:
-```
-pi ALL = NOPASSWD : /usr/bin/apt-get
-```
+##### Appearance Settings
+* Raspberry menu->Preferences->Appearance Settings
+  * Desktop
+    * Layout: No Image
+    * Color: Black
+    * Remove marking in "Wastebasket"
+  * Menu bar
+    * Size: Small
+    * Position: Bottom
+    * Color: Black
+    * Test color: White 
+
+##### Disable removable media pop-up
+Open a File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+
+##### Update notifications
+* Right-click the panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
 
 ##### raspi-config
 Run `sudo raspi-config` in a terminal and set the following options:
@@ -81,37 +89,40 @@ Add the following line to the bottom of the file:
 ```
 @/home/pi/occurity/Occurity
 ```
-This will autostart Occurity when the system is logged in.
+This will autostart Occurity when the system is logged in. You should also consider commenting the `lxpanel` line to stop the panel from being loaded. But be aware that this will make it harder to launch software. To remedy this it is recommended to first copy the `lxterminal.desktop` shortcut to `/home/USER/Desktop` before rebooting. This will place a terminal icon on the desktop for easy access.
 
-##### Appearance Settings
-* Raspberry menu->Preferences->Appearance Settings
-  * Desktop
-    * Layout: No Image
-    * Color: Black
-    * Remove marking in "Wastebasket"
-  * Menu bar
-    * Size: Small
-    * Position: Bottom
-    * Color: Black
-    * Test color: White 
+Note that disabling the panel will also complicate wifi connections as the tray icon for connecting to access points will no longer be available. You can of course always re-enable the panel by re-adding the `lxpanel` command to `/etc/xdg/lxsession/LXDE-pi/autostart`.
 
-##### pcmanfm
-* Run the command `pcmanfm` which will open the File Manager. In the Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+##### /etc/sudoers.d/pi (Optional)
+To allow the use of the `apt*` commands through the Occurity Job Runner scripting language (activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` (or whichever username will be running Occurity) and inserting the following:
+```
+pi ALL = NOPASSWD : /usr/bin/apt-get
+```
 
-##### Update notifications
-* Right-click panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
+#### Installing Occurity
 
-#### Getting and compiling Occurity
-Open a terminal on the Pi and run the following commands. This will fetch the Occurity source code and compile it.
+##### Software prerequisites
+Run the following commands in a terminal on the Pi to install the prerequisites needed for Occurity to function correctly.
+```
+$ sudo apt update
+$ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
+$ sudo apt remove gstreamer1.0-plugins-bad (Might not be installed, but try removing it to be sure. Having it installed is known to break h.264 video playback needed by Occurity)
+```
+
+##### Download and compile
+Open a terminal on the Pi and run the following commands. This will fetch the latest version of Occurity and compile it. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `1.0.1`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
 ```
 $ cd
-$ mkdir programming
-$ cd programming
-$ git clone https://github.com/muldjord/occurity.git
+$ mkdir occurity
 $ cd occurity
+$ wget -N https://github.com/muldjord/occurity/archive/LATEST.tar.gz
+$ tar xvzf LATEST.tar.gz --strip-components 1 --overwrite
 $ qmake
 $ make
 ```
+
+##### Running Occurity
+You should now have a `/home/USER/occurity/Occurity` executable ready to run. Provided that you added Occurity to autostart as described previously, you should now be able to simply restart, and Occurity will run automatically. Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
 
 ### Optotypes
 Occurity comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
@@ -129,22 +140,22 @@ The following keyboard keys are in use when running Occurity.
 * `g`: Next attention video
 
 ### Optotype chart specific keyboard functions
-* `up`: Change to next line with bigger size
-* `down`: Change to next line with smaller size
+* `up`: Change to next row with bigger size
+* `down`: Change to next row with smaller size
 * `left`: Move entire row to the left
 * `right`: Move entire row to the right
-* `PgUp`: Skip n number of lines bigger (configure n in preferences)
-* `PgDn`: Skip n number of lines smaller (configure n in preferences)
+* `PgUp`: Skip n number of rows bigger (configure n in preferences)
+* `PgDn`: Skip n number of rows smaller (configure n in preferences)
 * `c`: Enable / disable crowding
-* `m`: Switch between single and multi-optotype from the selected row. Use left / right to move between them
-* `r`: Randomize optotypes from selected line
+* `m`: Switch between single and multisymbol from the selected row. Use left / right to move between them
+* `r`: Randomize optotypes from selected row
 * `a`: Enable / disable attention animation (if one is defined)
 
 ### SVG chart specific keyboard functions
-* `left / right`: Switch between layers defined in `charts.xml`
+* `left / right`: Switch between SVG layers defined in `charts.xml`
 
 ## Overall configuration
-Most important Occurity settings can be configured through the Preferences dialog. The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results. The pin-code is configured in `config.ini`.
+The most important Occurity settings can be configured through the Preferences dialog. The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results. The pin-code is configured in [config.ini](docs/CONFIGINI.md) (default is `4242`).
 
 Options that aren't available in the Preferences dialog can be changed by opening the `config.ini` file in a text editor. For a complete description of all available options go [here](docs/CONFIGINI.md).
 
@@ -157,7 +168,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 * Add all charts to combo in preferences to allow setting `startingChart` config variable
 
 #### Version 1.0.1 (In progress, unreleased)
-* Added `startingChart` config variable to allow setting initial displayed chart
+* Added `startingChart` config variable to allow setting initially displayed chart
 * Added `fadetimings` and `fadelevels` attributes to `<chart>` xml node
 * Splash screen now fades in
 * Optotype symbols now fade in and out for better clinician visual clues
