@@ -156,7 +156,7 @@ The following keyboard keys are in use when running Occurity.
 * `left / right`: Switch between SVG layers defined in `charts.xml`
 
 ## Overall configuration
-The most important Occurity settings can be configured through the Preferences dialog. The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results. The pin-code is configured in [config.ini](docs/CONFIGINI.md) (default is `4242`).
+The most important Occurity settings can be configured through the [Preferences dialog](PREFERENCES.md). The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results (default is `4242`).
 
 Options that aren't available in the Preferences dialog can be changed by opening the `config.ini` file in a text editor. For a complete description of all available options go [here](docs/CONFIGINI.md).
 
