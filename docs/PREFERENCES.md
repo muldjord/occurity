@@ -1,2 +1,2 @@
-## The Preferences dialog
+# The Preferences dialog
 Press `p` on the keyboard to open it. A pin-code is required. Default is `4242`. Use arrow keys to configure the available options. Options are saved as they are changed. Press `Enter` to close the dialog.
