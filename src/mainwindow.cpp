@@ -398,14 +398,6 @@ void MainWindow::updateFromConfig()
     config.setValue("folders/videos", "./videos");
   }
 
-  // Network
-  if(!config.contains("network/host")) {
-    config.setValue("network/host", "www.kernel.org");
-  }
-  if(!config.contains("network/port")) {
-    config.setValue("network/port", 80);
-  }
-
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
 
@@ -413,8 +405,8 @@ void MainWindow::updateFromConfig()
 
   mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
 
-  mainSettings.networkHost = config.value("network/host").toString();
-  mainSettings.networkPort = config.value("network/port").toInt();
+  mainSettings.networkHost = config.value("network/host", "www.kernel.org").toString();
+  mainSettings.networkPort = config.value("network/port", 80).toInt();
 
   mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
 
