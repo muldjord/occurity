@@ -57,7 +57,7 @@ Size defines the size used by the row (required). This is defined as 0.1 being e
 
 You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg`, `C.svg` and so on.
 
-The second way is by using semicolons to separate the optotypes, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second examples this would require files to be named `one.svg`, `two.svg` and so on.
+The second way is by using semicolons to separate the optotypes, which correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the second example this would require files to be named `one.svg`, `two.svg` and so on.
 
 ### 'svg' chart type specific
 * `source="filename.svg"` <-- The filename containing the SVG you want to use.
