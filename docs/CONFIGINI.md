@@ -22,3 +22,4 @@ You can configure several options of Occurity to fit your needs. The first time 
 The following variables are used when determining if a network connection exists when running the `aptinstall` and `aptremove` job commands. Occurity DOES NOT require a network connection for anything other than this. If the host can't be contacted, a dialog box will appear which asks whether the `apt` command is critical for the job to function properly. If not, it will continue executing the job. Otherwise it will end the job. No Occurity jobs make use of these commands by default.
 * `host="www.somesite.org"`
 * `port=80`
+
