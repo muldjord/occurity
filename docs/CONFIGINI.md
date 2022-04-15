@@ -14,7 +14,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * `enableVideoPlayer=true`: Enables or disables the integrated attention video player.
 
 ## [folders]
-* `optotypes="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Default is `./optotypes`.
+* `optotypes="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Read more about the customizable optotype format [here](OPTOTYPES.md). Default is `./optotypes`.
 * `videos="your/videos/folder"`: Defines the attention videos folder. Only supports `.mp4` video files. Default is `./videos`. Recommended codec is h.264.
 * `jobs="your/jobs/folder"`: Defines the jobs folder. All `.job` files within this folder will be accessible through the Job Runner dialog (open with `j`). Default is `./jobs`.
 
