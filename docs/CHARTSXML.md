@@ -13,8 +13,7 @@ This node tells the xml format. Don't change it.
   ...
 </charts>
 ```
-This node is the parent node containing all charts. It supports the following attribute:
-* startingchart="Sloan R" (optional) <-- Set this to define the initial chart that will be activated when Occurity starts. If left out it will show the topmost chart initially.
+This node is the parent node containing all charts.
 
 ## 'group' node
 ```
