@@ -948,7 +948,7 @@ bool JobRunner::hasInternet(const QString &command)
     testSocket.close();
     return true;
   }
-  MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIt seems you are not connected to the internet! Is this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
+  MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIs this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
   messageBox.exec();
   if(messageBox.result() == QMessageBox::Yes) {
     addStatus(FATAL, "Job cancelled due to missing internet connection!");
