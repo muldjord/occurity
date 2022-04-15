@@ -42,7 +42,7 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 * `crowdingspan="2.5"` <-- Sets optotype crowding span in size relative arc minutes. If left out the default value of 2.5 is used.
 * `animation="file.gif"` <-- Sets the attention GIF animation for this chart. Activate with `a`.
 * `fadetimings="0;50;150;150"` <-- Defines the optotype fade timings. There are three relevant timings. 1: Used when fading in a symbol, 2: Used when fading out a symbol, 3 and 4: Used when momentarily showing a symbol (fade in / out). All values are in ms.
-* `fadelevels="0.0;1.0;0.15"` <-- Defines the optotype fade levels. There are three relevant levels. 1: Opacity when hiding a symbol, 2: Opacity when showing, 3: Opacity when momentarily showing a symbol. All values can range from 0.0 to 1.0. Completely opaque is 1.0.
+* `fadelevels="0.0;1.0;0.15"` <-- Defines the optotype fade levels. There are three relevant levels. 1: Opacity when hiding a symbol, 2: Opacity when showing a symbol, 3: Opacity when momentarily showing a symbol. All values can range from 0.0 to 1.0. Completely opaque is 1.0.
 
 #### 'row' node
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
