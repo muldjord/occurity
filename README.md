@@ -152,7 +152,7 @@ The following keyboard keys are in use when running Occurity.
 * `c`: Enable / disable crowding
 * `m`: Switch between single and multisymbol from the selected row. Use left / right to move between them
 * `r`: Randomize symbols from selected row
-* `a`: Enable / disable attention animation (if one is defined)
+* `a`: Enable / disable attention animation (if one is defined for the chart in `charts.xml`)
 
 ### SVG chart specific keyboard functions
 * `left / right`: Switch between SVG layers defined in `charts.xml`
