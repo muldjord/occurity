@@ -5,5 +5,4 @@ Furthermore, each optotype should include an SVG named `_.svg`. The width of thi
 
 See the included optotypes for examples.
 
-The optotypes included with VisuTest are all created with the open source vector graphics software Inkscape:
-https://inkscape.org/
+The optotypes included with Occurity are all created with the open source vector graphics software [Inkscape](https://inkscape.org).
