@@ -1,5 +1,5 @@
 # The Job Runner dialog
-In order to maintain and update Occurity an integrated job runner has been implemented. It is a powerful tool that can help perform any number of defined tasks. All available jobs are located in the [jobs folder](CONFIGINI.md#folders). The default jobs folder is `./jobs`. To create a new job, create a new `.job` file in this folder. The available commands are documented below.
+In order to maintain and update Occurity an integrated Job Runner has been implemented. It is a powerful tool that can help perform any number of defined tasks. All available jobs are located in the [jobs folder](CONFIGINI.md#folders). The default jobs folder is `./jobs`. To create a new job, create a new `.job` file in this folder. The available commands are documented below.
 
 ## Command format
 A single line of the scripting language is made up of the command type, followed by a `:`, followed by the required arguments. If more arguments are allowed / required they are separated by `;`.
@@ -12,7 +12,7 @@ Sets the title that will be used to select and execute this particular `.job` en
 * Example 1: `title:This is a title`
 
 #### category:CATEGORY
-This defines the category applied to the job when adding it to the Job runner dialog. More jobs can share the same category.
+This defines the category applied to the job when adding it to the Job Runner dialog. More jobs can share the same category.
 
 * Example 1: `category:Tools`
 * Example 2: `category:Update jobs`
