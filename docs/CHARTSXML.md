@@ -48,6 +48,9 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
 ```
 <row size="0.1">NCKZO</row>
+```
+or
+```
 <row size="0.1">one;two;three;four;five</row>
 ```
 Size defines the size used by the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
