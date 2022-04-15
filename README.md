@@ -47,6 +47,8 @@ DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the 
 
 In theory most remote controls you might have lying around should work with the disclaimer that there are some remotes that use dual-output signals which makes them hard to use with the flirc interface. Only way to know is to just try.
 
+Note! The [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) emulates a keyboard. For the remote to work, you need to install the Flirc software on a supported OS and configure the buttons on your remote to correspond with [these](README.md#keyboard-controls) keyboard keys.
+
 ## Software and configuration
 
 ### Operating system
