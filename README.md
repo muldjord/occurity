@@ -152,10 +152,10 @@ The following keyboard keys are in use when running Occurity.
 * `c`: Enable / disable crowding
 * `m`: Switch between single and multisymbol from the selected row. Use left / right to move between them
 * `r`: Randomize symbols from selected row
-* `a`: Enable / disable attention animation (if one is defined for the chart in `charts.xml`)
+* `a`: Enable / disable attention animation (if one is defined for the chart in [charts.xml](docs/CHARTSXML.md))
 
 ### SVG chart specific keyboard functions
-* `left / right`: Switch between SVG layers defined in `charts.xml`
+* `left / right`: Switch between SVG layers defined in [charts.xml](docs/CHARTSXML.md)
 
 ## Overall configuration
 The most important Occurity settings can be configured through the [Preferences dialog](docs/PREFERENCES.md). The dialog is opened by pressing `p` on a connected keyboard. Note that a pin-code must be entered to open Preferences. This is to avoid users inadvertently changing settings that could compromise the quality of the visual acuity results (default is `4242`).
@@ -163,7 +163,7 @@ The most important Occurity settings can be configured through the [Preferences 
 Options that aren't available in the Preferences dialog can be changed by opening the `config.ini` file in a text editor. For a complete description of all available options go [here](docs/CONFIGINI.md).
 
 ## Charts customization
-Occurity comes with a number of default charts. All charts can easily be customized through the `charts.xml` file. Go [here](docs/CHARTSXML.md) for a complete description of the format.
+Occurity comes with a number of default charts. All charts can easily be customized through the [charts.xml](docs/CHARTSXML.md) file. Go [here](docs/CHARTSXML.md) for a complete description of the format.
 
 ## Releases
 
@@ -207,7 +207,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version 0.6.2 (26may2021)
 * Added `T` to Sloan font
-* Added `HOTV` charts to `charts.xml` on numkey 7
+* Added `HOTV` charts to [charts.xml](docs/CHARTSXML.md) on numkey 7
 * Updated deprecated Qt5 functions
 
 #### Version 0.6.1 (08jul2020)
