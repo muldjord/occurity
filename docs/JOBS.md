@@ -26,6 +26,8 @@ If set, the `x.x.x` will be shown before the title when displaying the job entry
 #### pretend:TRUE|FALSE
 Setting this to true will ensure that no files or directories are manipulated while executing the script lines following this line. Default is `false`. Useful while testing / debugging a script.
 
+Note! Setting `pretend:true` does come with caveats. Since all file operations are not actually carried out it will be impossible to copy a directory and then remove files from it afterwards since those files aren't actually there. This will result in an error.
+
 * Example 1: `pretend:true`
 
 #### message:MESSAGE
