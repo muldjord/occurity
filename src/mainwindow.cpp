@@ -78,11 +78,11 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 
   secretTimer.setInterval(400);
   secretTimer.setSingleShot(true);
-  connect(&secretTimer, &QTimer::timeout, this, &MainWindow::enableSecret);
+  connect(&secretTimer, &QTimer::timeout, [this] () { allowSecret = true; });
 
   hiberCooldownTimer.setInterval(10000);
   hiberCooldownTimer.setSingleShot(true);
-  connect(&hiberCooldownTimer, &QTimer::timeout, this, &MainWindow::enableHibernate);
+  connect(&hiberCooldownTimer, &QTimer::timeout, [this] () { allowHibernate = true; });
 
   hiberTimer.setInterval(mainSettings.hibernateTime);
   hiberTimer.setSingleShot(true);
@@ -459,17 +459,6 @@ void MainWindow::spawnJobRunner()
   }
 }
 
-void MainWindow::enableHibernate()
-{
-  printf("Now allowing hibernate again\n");
-  allowHibernate = true;
-}
-
-void MainWindow::enableSecret()
-{
-  allowSecret = true;
-}
-
 void MainWindow::hibernate()
 {
   flipHibernate(true);
@@ -477,13 +466,13 @@ void MainWindow::hibernate()
 
 void MainWindow::flipHibernate(bool forceHibernate)
 {
-  int exitState = QProcess::execute("bash", QStringList({"./scripts/displaystate.sh"}));
+  int exitState = QProcess::execute("bash", {"./scripts/displaystate.sh"});
   // On error exitState is -1 or -2. If display is on it is 42. All other cases it is 0.
   if(exitState >= 0) {
     if(exitState == 42) {
-      QProcess::execute("bash", QStringList({"./scripts/hibernate.sh"}));
+      QProcess::execute("bash", {"./scripts/hibernate.sh"});
     } else if(!forceHibernate) {
-      QProcess::execute("bash", QStringList({"./scripts/wakeup.sh"}));
+      QProcess::execute("bash", {"./scripts/wakeup.sh"});
     }
   }
   // Disallow new hibernation for a while, as it queue's each time allowing for some

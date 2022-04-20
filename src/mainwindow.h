@@ -53,8 +53,6 @@ signals:
 
 private slots:
   void init();
-  void enableHibernate();
-  void enableSecret();
   void hibernate();
 
 private:
