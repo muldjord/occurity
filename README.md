@@ -113,7 +113,7 @@ $ sudo apt remove gstreamer1.0-plugins-bad
 The `gstreamer1.0-plugins-bad` package might not be installed already. But try removing it to be sure. Having it installed is known to break h.264 video playback needed by the Occurity attention video player.
 
 ##### Download and compile
-Open a terminal on the Pi and run the following commands. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `1.0.1`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
+Open a terminal on the Pi and run the following commands. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `0.7.2`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
 ```
 $ cd
 $ mkdir occurity
