@@ -64,14 +64,14 @@ I recommend applying the following settings on your Pi system to optimize it for
     * Layout: No Image
     * Color: Black
     * Remove marking in "Wastebasket"
-  * Menu bar
+  * Taskbar
     * Size: Small
     * Position: Bottom
     * Color: Black
     * Test color: White 
 
 ##### Disable removable media pop-up
-Open a File Manager. In Edit->Preferences->Disk Management remove checkmark from "Show available options for removable media"
+Open a File Manager. In Edit->Preferences->Volume Management remove checkmark from "Show available options for removable media"
 
 ##### Update notifications
 * Right-click the panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
@@ -80,18 +80,22 @@ Open a File Manager. In Edit->Preferences->Disk Management remove checkmark from
 Run `sudo raspi-config` in a terminal and set the following options:
 * 1 System Options->S5 Boot / Auto login->B4 Desktop Autologin
 * 1 System Options->S6 Network at Boot->No
-* 1 System Options->S7 Splash Screen->Yes
+* 1 System Options->S7 Splash Screen->Yes (You can set this to 'No' if you don't want to expose your support for the Raspberry Pi platform)
 * 2 Display Options->D2 Underscan->No
 * 2 Display Options->D3 Screen Blanking->No
-* 6 Advanced Options->A2 GL Driver->Enable
-* 6 Advanced Options->A8 Glamor->Enable
+* 6 Advanced Options->A2 GL Driver->Enable (Not relevant on RPi4)
+* 6 Advanced Options->A8 Glamor->Enable (Not relevant on RPi4)
 
 ##### /etc/xdg/lxsession/LXDE-pi/autostart
 Add the following line to the bottom of the file:
 ```
 @/home/pi/occurity/Occurity
 ```
-This will autostart Occurity when the system is logged in. You should also consider commenting the `lxpanel` line to stop the panel from being loaded. But be aware that this will make it harder to launch software. To remedy this it is recommended to first copy the `lxterminal.desktop` shortcut to `/home/USER/Desktop` before rebooting. This will place a terminal icon on the desktop for easy access.
+Remove the following line to stop the screensaver from starting:
+```
+@xscreensaver -no-splash
+```
+Occurity will now autostart when the user logs in. You should also consider commenting the `lxpanel` line to stop the panel from being loaded. But be aware that this will make it harder to launch software. To remedy this it is recommended to first copy the `lxterminal.desktop` shortcut to `/home/USER/Desktop` before rebooting. This will place a terminal icon on the desktop for easy access.
 
 Note that disabling the panel will also complicate wifi connections as the tray icon for connecting to access points will no longer be available. You can of course always re-enable the panel by re-adding the `lxpanel` command to `/etc/xdg/lxsession/LXDE-pi/autostart`.
 
