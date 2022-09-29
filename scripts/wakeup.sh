@@ -1,2 +1,2 @@
 #!/bin/bash
-vcgencmd display_power 1
+xrandr --output HDMI-1 --auto
