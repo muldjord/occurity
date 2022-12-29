@@ -172,13 +172,14 @@ Occurity comes with a number of default charts. All charts can easily be customi
 ## Releases
 
 #### Version x.x.x (unimplemented)
-* Add all charts to combo in preferences to allow setting `startingChart` config variable
+* Add optional on-screen buttons to allow Occurity to be operated using a touch-screen or mouse
 
-#### Version 1.0.1 (In progress, unreleased)
+#### Version 1.0.2 (29dec2022)
 * Added `startingChart` config variable to allow setting initially displayed chart
+* Added all charts to combo in preferences to allow setting `startingChart` config variable
 * Added `fadetimings` and `fadelevels` attributes to `<chart>` xml node
 * Splash screen now fades in
-* Optotype symbols now fade in and out for better clinician visual clues
+* Optotype symbols can now be optionally configured to fade in and out
 * Rename VisuTest to Occurity
 * Added category to jobs
 * Changed `update` to `job` everywhere
