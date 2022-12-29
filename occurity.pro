@@ -4,8 +4,9 @@ DEPENDPATH += .
 INCLUDEPATH += .
 QT += widgets xml svg multimediawidgets multimedia network
 CONFIG += release
+CONFIG += c++17
 TRANSLATIONS = occurity_da_DK.ts
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++17
 
 include(./VERSION)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
@@ -18,6 +19,7 @@ HEADERS += src/mainwindow.h \
            src/mainsettings.h \
            src/about.h \
            src/slider.h \
+           src/combobox.h \
            src/abstractchart.h \
            src/svgchart.h \
            src/optotypechart.h \
@@ -32,6 +34,7 @@ SOURCES += src/main.cpp \
            src/preferences.cpp \
            src/about.cpp \
            src/slider.cpp \
+           src/combobox.cpp \
            src/abstractchart.cpp \
            src/svgchart.cpp \
            src/optotypechart.cpp \
