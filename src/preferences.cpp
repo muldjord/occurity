@@ -28,6 +28,7 @@
 #include "preferences.h"
 #include "about.h"
 #include "slider.h"
+#include "combobox.h"
 
 #include <stdio.h>
 #include <QVBoxLayout>
@@ -39,10 +40,10 @@
 #include <QScrollArea>
 #include <QTabWidget>
 
-Preferences::Preferences(QSettings &config, QWidget *parent)
+Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 500);
+  setFixedSize(1200, 600);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
@@ -57,6 +58,12 @@ Preferences::Preferences(QSettings &config, QWidget *parent)
   QLabel *rulerLabel = new QLabel(this);
   rulerLabel->setPixmap(QPixmap(":ruler.png"));
   Slider *patientDistance = new Slider(config, "", "patientDistance", tr("Patient distance to monitor (cm):"), 50, 1000, 600, 10, this);
+
+  ComboBox *startingChart = new ComboBox(config, "", "startingChart", tr("Starting chart:"), "", this);
+  for(const auto *chart: charts) {
+    startingChart->addConfigItem(chart->objectName(), chart->objectName());
+  }
+
   Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", tr("Idle time before size reset (seconds):"), 10, 3600, 240, 10, this);
   Slider *hexRed = new Slider(config, "", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
   Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
@@ -66,6 +73,7 @@ Preferences::Preferences(QSettings &config, QWidget *parent)
   configLayout->addWidget(rulerWidth);
   configLayout->addWidget(rulerLabel, 0, Qt::AlignCenter);
   configLayout->addWidget(patientDistance);
+  configLayout->addWidget(startingChart);
   configLayout->addWidget(sizeResetTime);
   configLayout->addWidget(hexRed);
   configLayout->addWidget(hexGreen);

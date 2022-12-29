@@ -27,6 +27,8 @@
 #ifndef __OCCURITY_PREFERENCES_H__
 #define __OCCURITY_PREFERENCES_H__
 
+#include "abstractchart.h"
+
 #include <QDialog>
 #include <QSettings>
 #include <QEvent>
@@ -36,7 +38,7 @@ class Preferences : public QDialog
   Q_OBJECT
 
 public:
-  Preferences(QSettings &config, QWidget *parent);
+  Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent);
   ~Preferences();
 
 protected:
