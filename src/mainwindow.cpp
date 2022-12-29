@@ -442,7 +442,7 @@ void MainWindow::spawnPreferences()
   PinDialog pinDialog(mainSettings.pinCode, this);
   if(pinDialog.exec() == QDialog::Accepted) {
     printf("Spawning Preferences...\n");
-    Preferences prefs(config, this);
+    Preferences prefs(config, charts, this);
     prefs.exec();
     activateWindow();
   }
