@@ -50,8 +50,7 @@ private slots:
 
 private:
   QSettings &config;
-  QString group;
-  QString name;
+  QString key;
   int defaultValue;
 
   QSlider *valueSlider;
