@@ -4,9 +4,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 QT += widgets xml svg multimediawidgets multimedia network
 CONFIG += release
-CONFIG += c++17
 TRANSLATIONS = occurity_da_DK.ts
-QMAKE_CXXFLAGS += -std=c++17
+QMAKE_CXXFLAGS += -std=c++11
 
 include(./VERSION)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
