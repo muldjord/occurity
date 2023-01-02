@@ -9,5 +9,9 @@
     <file alias="pinfilled.png">icons/pinfilled.png</file>
     <file alias="pincorrect.png">icons/pincorrect.png</file>
     <file alias="pinincorrect.png">icons/pinincorrect.png</file>
+    <file alias="touch_up.png">icons/touch_up.png</file>
+    <file alias="touch_down.png">icons/touch_down.png</file>
+    <file alias="touch_left.png">icons/touch_left.png</file>
+    <file alias="touch_right.png">icons/touch_right.png</file>
   </qresource>
 </RCC>
