@@ -28,6 +28,7 @@
 #define __OCCURITY_ABSTRACTCHART_H__
 
 #include "mainsettings.h"
+#include "touchcontrolitem.h"
 
 #include <QGraphicsScene>
 #include <QKeyEvent>
@@ -35,6 +36,8 @@
 
 constexpr int OPTOTYPECHART = 0;
 constexpr int SVGCHART = 1;
+
+class TouchControlItem;
 
 class AbstractChart : public QGraphicsScene
 {
@@ -50,17 +53,19 @@ public:
   QString getType();
   void setNumKey(Qt::Key numKey);
   Qt::Key getNumKey();
-  void setBgColor(QString color);
   MainSettings &mainSettings;
   void setSizeLocked(const bool &sizeLocked);
   bool isSizeLocked();
   virtual void setSize(const QString &sizeStr);
   virtual QString getSize();
+  void setBgColor(QString color);
+  void setTouchControls(const QString &controls);
 
 protected:
   QGraphicsSimpleTextItem *titleItem;
 
 public slots:
+  void updateTouchControls();
   virtual void updateAll(){};
   virtual void resetAll(){};
 
@@ -69,6 +74,8 @@ private:
   Qt::Key numKey = Qt::Key_0;
   QString sizeStr = "";
   bool sizeLocked = false;
+
+  QList<QGraphicsItem *> touchControls;
 
 };
 #endif/*__OCCURITY_ABSTRACTCHART_H__*/

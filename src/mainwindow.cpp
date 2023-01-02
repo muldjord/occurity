@@ -172,6 +172,7 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->installEventFilter(this);
       chart->setType(chartType);
       connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateAll);
+      connect(this, &MainWindow::configUpdated, chart, &AbstractChart::updateTouchControls);
       connect(&resetTimer, &QTimer::timeout, chart, &AbstractChart::resetAll);
       chart->setObjectName(xmlChart.attribute("caption"));
       if(numKey) {
@@ -179,6 +180,7 @@ bool MainWindow::loadCharts(QString chartsXml)
         chart->setNumKey((Qt::Key)(numKey + 48));
       }
       chart->setBgColor(xmlChart.attribute("bgcolor"));
+      chart->setTouchControls(xmlChart.attribute("touchcontrols"));
       printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
       if(chart->getType() == "optotype") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
@@ -236,6 +238,7 @@ bool MainWindow::loadCharts(QString chartsXml)
         }
       }
       chart->init();
+      chart->updateTouchControls();
       charts.append(chart);
     }
   }

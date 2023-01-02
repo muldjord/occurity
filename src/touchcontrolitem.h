@@ -27,15 +27,15 @@
 #ifndef __OCCURITY_TOUCHCONTROLITEM_H__
 #define __OCCURITY_TOUCHCONTROLITEM_H__
 
-#include "abstractchart.h"
-
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 
 class TouchControlItem : public QGraphicsPixmapItem
 {
 public:
-  TouchControlItem(const QPixmap &pixmap, const int &key, AbstractChart *parent);
+  TouchControlItem(const QString &control, QObject *chart);
   ~TouchControlItem();
 
 protected:
@@ -43,7 +43,10 @@ protected:
   
 private:
   int key = -1;
-  AbstractChart *chart = nullptr;
-  
+  QObject *chart = nullptr;
+
+  QGraphicsOpacityEffect *opacityEffect;
+  QPropertyAnimation *activatedAnimation = nullptr;
+
 };
 #endif/*__OCCURITY_TOUCHCONTROLITEM_H__*/

@@ -27,7 +27,6 @@
 
 #include "optotypechart.h"
 #include "optosymbol.h"
-#include "touchcontrolitem.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -93,32 +92,6 @@ void OptotypeChart::init()
   addItem(sizeItem);
   addItem(titleItem);
   addItem(copyrightItem);
-  if(mainSettings.touchControls) {
-    TouchControlItem *upItem = new TouchControlItem(QPixmap(":touch_up.png"), Qt::Key_Up, this);
-    TouchControlItem *downItem = new TouchControlItem(QPixmap(":touch_down.png"), Qt::Key_Down, this);
-    TouchControlItem *leftItem = new TouchControlItem(QPixmap(":touch_left.png"), Qt::Key_Left, this);
-    TouchControlItem *rightItem = new TouchControlItem(QPixmap(":touch_right.png"), Qt::Key_Right, this);
-    upItem->setZValue(1.0);
-    downItem->setZValue(1.0);
-    leftItem->setZValue(1.0);
-    rightItem->setZValue(1.0);
-    if(mainSettings.leftHandedOperator) {
-      upItem->setPos(0, 0);
-      downItem->setPos(128, 0);
-      leftItem->setPos(256, 0);
-      rightItem->setPos(384, 0);
-    } else {
-      upItem->setPos(mainSettings.width - (128 * 4), 0);
-      downItem->setPos(mainSettings.width - (128 * 3), 0);
-      leftItem->setPos(mainSettings.width - (128 * 2), 0);
-      rightItem->setPos(mainSettings.width - 128, 0);
-    }
-
-    addItem(upItem);
-    addItem(downItem);
-    addItem(leftItem);
-    addItem(rightItem);
-  }
   copyrightItem->setPos((mainSettings.width / 2.0) - (copyrightItem->boundingRect().width() / 2.0), mainSettings.height - 35);
 
   setSize(startSize);

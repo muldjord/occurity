@@ -58,6 +58,16 @@ void AbstractChart::setType(const QString &type)
   }
 }
 
+void AbstractChart::setTouchControls(const QString &controls)
+{
+  if(mainSettings.touchControls) {
+    for(const auto &control: controls.split(",")) {
+      touchControls.append(new TouchControlItem(control, this));
+      addItem(touchControls.last());
+    }
+  }
+}
+
 QString AbstractChart::getType()
 {
   if(type == OPTOTYPECHART) {
@@ -97,6 +107,35 @@ void AbstractChart::setSizeLocked(const bool &sizeLocked)
 bool AbstractChart::isSizeLocked()
 {
   return sizeLocked;
+}
+
+void AbstractChart::updateTouchControls()
+{
+  if(mainSettings.touchControls) {
+    double touchScaleFactor = 1.0;
+    if(mainSettings.width < 1920) {
+      touchScaleFactor = mainSettings.width / 1920.0;
+      for(auto *control: touchControls) {
+        control->setScale(touchScaleFactor);
+      }
+    }
+    double touchX = 0;
+    if(mainSettings.leftHandedOperator) {
+      touchX = mainSettings.width;
+      for(const auto *control: touchControls) {
+        touchX -= control->boundingRect().width() * touchScaleFactor;
+      }
+    }
+    for(auto *control: touchControls) {
+      control->setPos(touchX, 0);
+      control->show();
+      touchX += control->boundingRect().width() * touchScaleFactor;
+    }
+  } else {
+    for(auto *control: touchControls) {
+      control->hide();
+    }
+  }
 }
 
 void AbstractChart::setBgColor(QString color)

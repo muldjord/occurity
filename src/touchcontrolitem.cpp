@@ -30,12 +30,39 @@
 #include <stdio.h>
 
 #include <QApplication>
+#include <QKeyEvent>
 
-TouchControlItem::TouchControlItem(const QPixmap &pixmap, const int &key, AbstractChart *chart)
-  : QGraphicsPixmapItem(pixmap), key(key), chart(chart)
+TouchControlItem::TouchControlItem(const QString &control, QObject *chart)
+  : chart(chart)
 {
   setAcceptedMouseButtons(Qt::LeftButton);
   setFlag(QGraphicsItem::ItemIsSelectable);
+
+  if(control == "left") {
+    key = Qt::Key_Left;
+    setPixmap(QPixmap(":touch_left.png"));
+  } else if(control == "right") {
+    key = Qt::Key_Right;
+    setPixmap(QPixmap(":touch_right.png"));
+  } else if(control == "up") {
+    key = Qt::Key_Up;
+    setPixmap(QPixmap(":touch_up.png"));
+  } else if(control == "down") {
+    key = Qt::Key_Down;
+    setPixmap(QPixmap(":touch_down.png"));
+  }
+
+  setZValue(1.0);
+
+  opacityEffect = new QGraphicsOpacityEffect;
+  opacityEffect->setOpacity(1.0);
+  setGraphicsEffect(opacityEffect);
+
+  activatedAnimation = new QPropertyAnimation(opacityEffect, "opacity");
+  activatedAnimation->setDuration(200.0);
+  activatedAnimation->setStartValue(0.4);
+  activatedAnimation->setEndValue(1.0);
+  activatedAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 }
 
 TouchControlItem::~TouchControlItem()
@@ -46,6 +73,7 @@ void TouchControlItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
   if(event->button() == Qt::LeftButton && key != -1) {
     QKeyEvent *keyEvent = new QKeyEvent(QEvent::KeyPress, key, Qt::NoModifier);
-    qApp->postEvent(chart, keyEvent);
+    QApplication::sendEvent(chart, keyEvent);
+    activatedAnimation->start();
   }
 }
