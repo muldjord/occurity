@@ -386,6 +386,12 @@ void MainWindow::updateFromConfig()
   if(!config.contains("enableVideoPlayer")) {
     config.setValue("enableVideoPlayer", true);
   }
+  if(!config.contains("touchControls")) {
+    config.setValue("touchControls", false);
+  }
+  if(!config.contains("leftHandedOperator")) {
+    config.setValue("leftHandedOperator", false);
+  }
 
   // Folders
   if(!config.contains("folders/optotypes")) {
@@ -409,6 +415,9 @@ void MainWindow::updateFromConfig()
   mainSettings.networkPort = config.value("network/port", 80).toInt();
 
   mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
+
+  mainSettings.touchControls = config.value("touchControls").toBool();
+  mainSettings.leftHandedOperator = config.value("leftHandedOperator").toBool();
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
