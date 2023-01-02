@@ -26,6 +26,7 @@
  */
 
 #include "svgchart.h"
+#include "touchcontrolitem.h"
 
 #include <stdio.h>
 #include <math.h>
@@ -37,6 +38,22 @@
 SvgChart::SvgChart(MainSettings &mainSettings, QObject *parent) :
   AbstractChart(mainSettings, parent)
 {
+  if(mainSettings.touchControls) {
+    TouchControlItem *leftItem = new TouchControlItem(QPixmap(":touch_left.png"), Qt::Key_Left, this);
+    TouchControlItem *rightItem = new TouchControlItem(QPixmap(":touch_right.png"), Qt::Key_Right, this);
+    leftItem->setZValue(1.0);
+    rightItem->setZValue(1.0);
+    if(mainSettings.leftHandedOperator) {
+      leftItem->setPos(0, 0);
+      rightItem->setPos(128, 0);
+    } else {
+      leftItem->setPos(mainSettings.width - 128 * 2, 0);
+      rightItem->setPos(mainSettings.width - (128), 0);
+    }
+
+    addItem(leftItem);
+    addItem(rightItem);
+  }
 }
 
 SvgChart::~SvgChart()
