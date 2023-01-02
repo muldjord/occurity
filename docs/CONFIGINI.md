@@ -12,7 +12,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 * `rowSkipDelta=4`: The number of lines skipped when pressing `PgUp` and `PgDn` on optotype charts.
 * `pinCode=4242`: Sets the pincode to be entered in order to unlock the Preferences and Job Runner dialogs. It can be any length as long as it only contains numbers. Default is `4242`.
 * `enableVideoPlayer=true`: Enables or disables the integrated attention video player.
-* `touchControls=true`: Enables touch controls. Controls are configured on a per-chart basis as documented [here](CHARTSXML.md) .
+* `touchControls=true`: Enables touch controls. Controls are configured on a per-chart basis as documented in the `chart` node [here](CHARTSXML.md).
 * `leftHandedOperator=true`: Moves all touch controls to the right side of the screen.
 
 ## [folders]
