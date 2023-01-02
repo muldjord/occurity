@@ -5,7 +5,7 @@
    viewBox="0 0 211.66667 211.66666"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="splash.svg"
    inkscape:export-filename="/home/muldjord/programming/occurity/icons/splash.png"
    inkscape:export-xdpi="186.5"
@@ -44,11 +44,11 @@
        inkscape:collect="always"
        id="linearGradient876">
       <stop
-         style="stop-color:#ea4cfd;stop-opacity:1"
+         style="stop-color:#4cfbfd;stop-opacity:1"
          offset="0"
          id="stop872" />
       <stop
-         style="stop-color:#afffec;stop-opacity:1"
+         style="stop-color:#ffc4af;stop-opacity:1"
          offset="1"
          id="stop874" />
     </linearGradient>
@@ -101,9 +101,9 @@
      inkscape:snap-to-guides="false"
      inkscape:snap-others="true"
      inkscape:snap-nodes="true"
-     inkscape:window-width="1852"
-     inkscape:window-height="1136"
-     inkscape:window-x="68"
+     inkscape:window-width="2486"
+     inkscape:window-height="1376"
+     inkscape:window-x="74"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="1.5"
@@ -192,7 +192,10 @@
        height="211.6398"
        x="-5.010977e-16"
        y="0.026863758"
-       ry="0.29083025" />
+       ry="0.29083025"
+       inkscape:export-filename="/home/muldjord/programming/occurity/icons/splash.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
     <rect
        style="display:inline;fill:url(#linearGradient1028);fill-opacity:1;stroke:none;stroke-width:1.94276;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
        id="rect866"
