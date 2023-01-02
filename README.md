@@ -172,7 +172,9 @@ Occurity comes with a number of default charts. All charts can easily be customi
 ## Releases
 
 #### Version x.x.x (unimplemented)
-* Add optional on-screen buttons to allow Occurity to be operated using a touch-screen or mouse
+
+#### Version 1.1.0 (In progress, unreleased)
+* Added on-screen touch controls
 
 #### Version 1.0.2 (29dec2022)
 * Added `startingChart` config variable to allow setting initially displayed chart
