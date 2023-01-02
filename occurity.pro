@@ -24,6 +24,7 @@ HEADERS += src/mainwindow.h \
            src/svgchart.h \
            src/optotypechart.h \
            src/optosymbol.h \
+           src/touchcontrolitem.h \
            src/jobrunner.h \
            src/messagebox.h
 
@@ -39,6 +40,7 @@ SOURCES += src/main.cpp \
            src/svgchart.cpp \
            src/optotypechart.cpp \
            src/optosymbol.cpp \
+           src/touchcontrolitem.cpp \
            src/jobrunner.cpp \
            src/messagebox.cpp
 
