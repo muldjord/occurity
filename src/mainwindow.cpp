@@ -41,7 +41,6 @@
 
 MainWindow::MainWindow(QSettings &config) : config(config)
 {
-  setCursor(Qt::BlankCursor);
   printf("Running Occurity v" VERSION "\n");
   setWindowTitle("Occurity v" VERSION);
 
@@ -370,6 +369,9 @@ void MainWindow::updateFromConfig()
   }
 
   // General
+  if(!config.contains("showMouse")) {
+    config.setValue("showMouse", false);
+  }
   if(!config.contains("chartsXml")) {
     config.setValue("chartsXml", "charts.xml");
   }
@@ -411,6 +413,12 @@ void MainWindow::updateFromConfig()
 
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
+
+  if(config.value("showMouse", false).toBool()) {
+    setCursor(Qt::ArrowCursor);
+  } else {
+    setCursor(Qt::BlankCursor);
+  }
 
   mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
