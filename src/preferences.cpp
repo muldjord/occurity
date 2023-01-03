@@ -29,6 +29,7 @@
 #include "about.h"
 #include "slider.h"
 #include "combobox.h"
+#include "checkbox.h"
 
 #include <stdio.h>
 #include <QVBoxLayout>
@@ -43,7 +44,7 @@
 Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 600);
+  setFixedSize(1200, 700);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
@@ -69,6 +70,10 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
   Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
+  CheckBox *showMouseCursor = new CheckBox(config, "", "showMouse", tr("Show mouse cursor"), "", this);
+  CheckBox *showTouchControls = new CheckBox(config, "", "touchControls", tr("Show touch controls"), "", this);
+  CheckBox *leftHandedOperator = new CheckBox(config, "", "leftHandedOperator", tr("Left handed operator"), "", this);
+
   QVBoxLayout *configLayout = new QVBoxLayout;
   configLayout->addWidget(rulerWidth);
   configLayout->addWidget(rulerLabel, 0, Qt::AlignCenter);
@@ -78,6 +83,9 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   configLayout->addWidget(hexRed);
   configLayout->addWidget(hexGreen);
   configLayout->addWidget(rowSkipDelta);
+  configLayout->addWidget(showMouseCursor);
+  configLayout->addWidget(showTouchControls);
+  configLayout->addWidget(leftHandedOperator);
 
   QHBoxLayout *layout = new QHBoxLayout;
   layout->addLayout(configLayout);
