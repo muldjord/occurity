@@ -45,7 +45,7 @@ public slots:
   void resetToDefault();
 
 private slots:
-  void saveToConfig(int);
+  void saveToConfig();
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;

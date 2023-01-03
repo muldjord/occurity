@@ -46,8 +46,6 @@ ComboBox::ComboBox(QSettings &config, const QString &group, const QString &name,
   if(!config.contains(key)) {
     config.setValue(key, defaultValue);
   }
-
-  //connect(comboBox, qOverload<int>(&QComboBox::currentIndexChanged), this, &ComboBox::saveToConfig);
 }
 
 ComboBox::~ComboBox()
@@ -73,7 +71,7 @@ void ComboBox::resetToDefault()
   }
 }
 
-void ComboBox::saveToConfig(int)
+void ComboBox::saveToConfig()
 {
   config.setValue(key, comboBox->currentData().toString());
 
@@ -85,12 +83,12 @@ void ComboBox::keyPressEvent(QKeyEvent *event)
   if(event->key() == Qt::Key_Left) {
     if(comboBox->currentIndex() > 0) {
       comboBox->setCurrentIndex(comboBox->currentIndex() - 1);
-      saveToConfig(comboBox->currentIndex());
+      saveToConfig();
     }
   } else if(event->key() == Qt::Key_Right) {
     if(comboBox->currentIndex() < comboBox->count() - 1) {
       comboBox->setCurrentIndex(comboBox->currentIndex() + 1);
-      saveToConfig(comboBox->currentIndex());
+      saveToConfig();
     }
   }
 }
