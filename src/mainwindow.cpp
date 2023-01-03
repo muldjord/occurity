@@ -146,6 +146,7 @@ bool MainWindow::loadCharts(QString chartsXml)
   for(int a = 0; a < groupNodes.count(); ++a) {
     QDomElement xmlGroup = groupNodes.at(a).toElement();
     int numKey = -1;
+    QString touchControlsGroup = xmlGroup.attribute("touchcontrols").toLower().simplified().replace(" ", "");
     if(xmlGroup.hasAttribute("numkey")) {
       bool isInt = false;
       int tmpNumKey = xmlGroup.attribute("numkey").toInt(&isInt);
@@ -180,7 +181,8 @@ bool MainWindow::loadCharts(QString chartsXml)
         chart->setNumKey((Qt::Key)(numKey + 48));
       }
       chart->setBgColor(xmlChart.attribute("bgcolor"));
-      chart->setTouchControls(xmlChart.attribute("touchcontrols"));
+      QString touchControlsChart = xmlChart.attribute("touchcontrols").toLower().simplified().replace(" ", "");
+      chart->setTouchControls(touchControlsChart + "," + touchControlsGroup);
       printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
       if(chart->getType() == "optotype") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
