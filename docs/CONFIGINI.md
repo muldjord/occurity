@@ -2,6 +2,7 @@
 You can configure several options of Occurity to fit your needs. The first time Occurity is started the Preferences dialog will appear on screen. Remember to set everything up appropriately. To change these settings later, either press the `p` key on the keyboard (pincode required, see below) and change the values using the arrow keys and enter to close, or simply edit the `config.ini` file in any editor.
 
 ## [General]
+* `showMouse=false`: Set this to true to show the mouse cursor.
 * `chartsXml="charts.xml"`: Allows you to override the default xml file that defines the charts. Default is `charts.xml`. The format of `charts.xml` is documented [here](docs/CHARTSXML.md).
 * `physDistance=310`: The distance from the monitor to the patient in centimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
 * `rulerWidth=125`: The physical width of the ruler shown in the Preferences dialog in millimeters. This MUST be set correctly in order for Occurity to show the optotypes at their correct sizes.
