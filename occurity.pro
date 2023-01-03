@@ -19,6 +19,7 @@ HEADERS += src/mainwindow.h \
            src/about.h \
            src/slider.h \
            src/combobox.h \
+           src/checkbox.h \
            src/abstractchart.h \
            src/svgchart.h \
            src/optotypechart.h \
@@ -35,6 +36,7 @@ SOURCES += src/main.cpp \
            src/about.cpp \
            src/slider.cpp \
            src/combobox.cpp \
+           src/checkbox.cpp \
            src/abstractchart.cpp \
            src/svgchart.cpp \
            src/optotypechart.cpp \
