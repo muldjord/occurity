@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <charts>
-  <group numkey="1">
-    <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true" fadetimings="0;50;150;150" fadelevels="1.0;0.0;0.15">
+  <group numkey="1" touchcontrols="left,right,up,down,crowding,single">
+    <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">VHCNO</row>
       <row size="0.067">SVHCZ</row>
       <row size="0.08">OZDVK</row>
@@ -59,12 +59,12 @@
       <row size="2.0">RDOSN</row>
     </chart>
   </group>
-  <group numkey="2">
+  <group numkey="2" touchcontrols="left,right,up,down,crowding,single">
     <chart caption="Tumbling E" type="optotype" optotype="tumblinge" startsize="0.1" sizelock="true">
       <row size="0.05">Ee;Es;En;Ee;Ew</row>
       <row size="0.067">Ew;Es;Ee;Ew;En</row>
       <row size="0.08">Es;Ew;En;Ee;Es</row>
-      <row size="0.1">Ee;Ew;En;Ee;Es</row>
+      <row size="0.1">Ee;Es;Ee;Ew;En</row>
       <row size="0.125">Ew;Es;Ee;En;Ew</row>
       <row size="0.16">En;Ee;Es;Ew;En</row>
       <row size="0.2">Es;En;Ew;Es;Ee</row>
@@ -99,7 +99,7 @@
       <row size="2.0">Ce;Cnw;Cne;Cw;Csw</row>
     </chart>
   </group>
-  <group numkey="3">
+  <group numkey="3" touchcontrols="left,right,up,down,crowding,single">
     <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1" sizelock="true">
       <row size="0.05">32596</row>
       <row size="0.067">59632</row>
@@ -121,7 +121,7 @@
     </chart>
   </group>
   <group numkey="5">
-    <chart caption="Astigmatism dots" type="svg" source="svg/astigmatism_dots.svg" scaling="distance">
+    <chart caption="Astigmatism dots" type="svg" source="svg/astigmatism_dots.svg" scaling="distance" touchcontrols="left,right">
       <layer id="dots"/>
       <layer id="mask"/>
     </chart>
@@ -131,12 +131,12 @@
     <chart caption="Worth four dots" type="svg" source="svg/worth_four_dots.svg" bgcolor="black" scaling="distance">
       <layer id="worthfourdots"/>
     </chart>
-    <chart caption="Coincidence" type="svg" source="svg/coincidence.svg" bgcolor="black" scaling="distance">
+    <chart caption="Coincidence" type="svg" source="svg/coincidence.svg" bgcolor="black" scaling="distance" touchcontrols="left,right">
       <layer id="horizontal"/>
       <layer id="vertical"/>
     </chart>
   </group>
-  <group numkey="7">
+  <group numkey="7" touchcontrols="left,right,up,down,crowding,single">
     <chart caption="HOTV 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
       <row size="0.05">OHVTV</row>
       <row size="0.067">VTOHO</row>
