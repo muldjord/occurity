@@ -35,8 +35,6 @@ PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
   : QDialog(parent), correctPinCode(correctPinCode)
 {
   setWindowTitle(tr("Pincode:"));
-  //setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-  //setFixedSize(200, 80);
   QHBoxLayout *layout = new QHBoxLayout;
   for(int a = 0; a < correctPinCode.length(); ++a) {
     QLabel *asteriskLabel = new QLabel;
