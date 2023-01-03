@@ -40,16 +40,22 @@ TouchControlItem::TouchControlItem(const QString &control, QObject *chart)
 
   if(control == "left") {
     key = Qt::Key_Left;
-    setPixmap(QPixmap(":touch_left.png"));
+    setPixmap(QPixmap(":touch-left.png"));
   } else if(control == "right") {
     key = Qt::Key_Right;
-    setPixmap(QPixmap(":touch_right.png"));
+    setPixmap(QPixmap(":touch-right.png"));
   } else if(control == "up") {
     key = Qt::Key_Up;
-    setPixmap(QPixmap(":touch_up.png"));
+    setPixmap(QPixmap(":touch-up.png"));
   } else if(control == "down") {
     key = Qt::Key_Down;
-    setPixmap(QPixmap(":touch_down.png"));
+    setPixmap(QPixmap(":touch-down.png"));
+  } else if(control == "crowding") {
+    key = Qt::Key_C;
+    setPixmap(QPixmap(":touch-crowding.png"));
+  } else if(control == "single") {
+    key = Qt::Key_M;
+    setPixmap(QPixmap(":touch-single.png"));
   }
 
   setZValue(1.0);
