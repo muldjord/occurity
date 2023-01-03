@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866668"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="touch-single.svg"
+   inkscape:export-filename="/home/muldjord/programming/occurity/icons/touch-crowding.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="true"
+     units="px"
+     width="128px"
+     inkscape:zoom="7.2466938"
+     inkscape:cx="71.687864"
+     inkscape:cy="74.99972"
+     inkscape:window-width="2486"
+     inkscape:window-height="1376"
+     inkscape:window-x="74"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7557" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#b2b2b2;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stop-color:#000000"
+       id="rect846"
+       width="29.934944"
+       height="29.934946"
+       x="1.9658612"
+       y="1.9658602"
+       ry="7.1336036" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.329156;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 15.707026,10.807913 v 0.01059 L 10.80693,23.061005 h 2.640044 l 1.307505,-3.265877 h 4.358351 l 1.306864,3.265877 h 2.640042 L 18.155148,10.805662 Z m 1.226629,3.544425 1.198386,2.994385 h -2.396772 z"
+       id="rect5188"
+       inkscape:export-filename="/home/muldjord/programming/occurity/icons/touch-single.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:#000000;fill-opacity:0.5;stroke:none;stroke-width:0.329111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 4.957996,10.80651 c -2.036499,0 -3.676163,1.639652 -3.676163,3.676151 0,0.944516 0.355603,1.801189 0.937015,2.450995 0.672184,0.751258 1.647152,1.225168 2.739148,1.225168 h 1.2251687 3.676163 c 0.6788293,0 1.2251683,0.546327 1.2251683,1.225168 0,0.67883 -0.546339,1.225168 -1.2251683,1.225168 H 4.957996 c -0.678841,0 -1.225814,-0.546338 -1.225814,-1.225168 H 1.281833 c 0,2.0365 1.639664,3.676164 3.676163,3.676164 h 4.9013317 c 2.0364873,0 3.6755053,-1.639664 3.6755053,-3.676164 0,-2.036499 -1.639018,-3.67615 -3.6755053,-3.67615 H 8.6335137 4.957996 c -0.678841,0 -1.225814,-0.54634 -1.225814,-1.225181 0,-0.678829 0.546973,-1.225169 1.225814,-1.225169 h 4.9013317 c 0.6788293,0 1.2251683,0.54634 1.2251683,1.225169 h 2.450337 c 0,-2.036499 -1.639006,-3.676151 -3.6755053,-3.676151 z"
+       id="rect6053" />
+    <path
+       style="fill:#000000;fill-opacity:0.5;stroke:none;stroke-width:0.329111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
+       d="m 20.331833,10.806513 v 4.901329 2.450982 4.901329 h 2.450343 v -4.901329 h 7.352314 v 4.901329 h 2.450343 V 10.806513 H 30.13449 v 4.901329 h -7.352314 v -4.901329 z"
+       id="rect6134" />
+  </g>
+</svg>
