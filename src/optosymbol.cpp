@@ -40,27 +40,47 @@ OptoSymbol::OptoSymbol(const QString &optoSymbol,
   opacityEffect->setOpacity(0.0);
   setGraphicsEffect(opacityEffect);
 
+  int fadeInDuration = 0;
+  int fadeOutDuration = 25;
+  int fadeInOutInDuration = 25;
+  int fadeInOutOutDuration = 25;
+  if(fadeTimings.count(";") == 3) {
+    fadeInDuration = fadeTimings.split(";").at(0).toInt();
+    fadeOutDuration = fadeTimings.split(";").at(1).toInt();
+    fadeInOutInDuration = fadeTimings.split(";").at(2).toInt();
+    fadeInOutOutDuration = fadeTimings.split(";").at(3).toInt();
+  }
+
+  double fadeInEndValue = 1.0;
+  double fadeOutEndValue = 0.0;
+  double fadeInOutInEndValue = 0.0;
+  if(fadeLevels.count(";") == 2) {
+    fadeInEndValue = fadeLevels.split(";").at(0).toDouble();
+    fadeOutEndValue = fadeLevels.split(";").at(1).toDouble();
+    fadeInOutInEndValue = fadeLevels.split(";").at(2).toDouble();
+  }
+  
   fadeInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeInAnimation->setDuration(fadeTimings.count(';') != 3?0:fadeTimings.split(";").at(0).toInt());
+  fadeInAnimation->setDuration(fadeInDuration);
   //fadeInAnimation->setStartValue(0.0);
-  fadeInAnimation->setEndValue(fadeLevels.count(';') != 2?1.0:fadeLevels.split(";").at(0).toDouble());
+  fadeInAnimation->setEndValue(fadeInEndValue);
   fadeInAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
   fadeOutAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeOutAnimation->setDuration(fadeTimings.count(';') != 3?50:fadeTimings.split(";").at(1).toInt());
+  fadeOutAnimation->setDuration(fadeOutDuration);
   //fadeOutAnimation->setStartValue(1.0);
-  fadeOutAnimation->setEndValue(fadeLevels.count(';') != 2?0.0:fadeLevels.split(";").at(1).toDouble());
+  fadeOutAnimation->setEndValue(fadeOutEndValue);
   fadeOutAnimation->setEasingCurve(QEasingCurve::InOutQuad);
   connect(fadeOutAnimation, &QPropertyAnimation::finished, this, &OptoSymbol::fadeDoneHide);
 
   QPropertyAnimation *fadeInOutInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeInOutInAnimation->setDuration(fadeTimings.count(';') != 3?150:fadeTimings.split(";").at(2).toInt());
+  fadeInOutInAnimation->setDuration(fadeInOutInDuration);
   fadeInOutInAnimation->setStartValue(0.0);
-  fadeInOutInAnimation->setEndValue(fadeLevels.count(';') != 2?0.15:fadeLevels.split(";").at(2).toDouble());
+  fadeInOutInAnimation->setEndValue(fadeInOutInEndValue);
   fadeInOutInAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 
   QPropertyAnimation *fadeInOutOutAnimation = new QPropertyAnimation(opacityEffect, "opacity");
-  fadeInOutOutAnimation->setDuration(fadeTimings.count(';') != 3?150:fadeTimings.split(";").at(3).toInt());
+  fadeInOutOutAnimation->setDuration(fadeInOutOutDuration);
   fadeInOutOutAnimation->setEndValue(0.0);
   fadeInOutOutAnimation->setEasingCurve(QEasingCurve::InOutQuad);
 

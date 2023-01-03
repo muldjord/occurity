@@ -66,8 +66,8 @@ private slots:
   
 private:
   QString startSize = "0.16";
-  QString fadeTimings = "0;50;150;150";
-  QString fadeLevels = "1.0;0.0;0.15";
+  QString fadeTimings = ""; // Defaults are in optosymbol.cpp
+  QString fadeLevels = ""; // Defaults are in optosymbol.cpp
 
   QGraphicsProxyWidget *animItem = nullptr;
 
