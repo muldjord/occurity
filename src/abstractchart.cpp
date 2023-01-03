@@ -121,7 +121,7 @@ void AbstractChart::updateTouchControls()
     }
     double touchX = 0;
     if(mainSettings.leftHandedOperator) {
-      touchX = mainSettings.width;
+      touchX = mainSettings.width * touchScaleFactor;
       for(const auto *control: touchControls) {
         touchX -= control->boundingRect().width() * touchScaleFactor;
       }
