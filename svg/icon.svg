@@ -5,44 +5,20 @@
    viewBox="0 0 211.66667 211.66666"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="icon.svg"
    inkscape:export-filename="/home/muldjord/programming/occurity/icons/icon.png"
    inkscape:export-xdpi="15.36"
    inkscape:export-ydpi="15.36"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
-     id="defs2">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient876">
-      <stop
-         style="stop-color:#ea4cfd;stop-opacity:1"
-         offset="0"
-         id="stop872" />
-      <stop
-         style="stop-color:#afffec;stop-opacity:1"
-         offset="1"
-         id="stop874" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient876"
-       id="linearGradient878"
-       x1="55.5625"
-       y1="0.75603634"
-       x2="55.5625"
-       y2="77.485207"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.9427595,0,0,2.1618876,1.6806405e-7,26.99237)" />
-  </defs>
+     id="defs2" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -61,9 +37,9 @@
      inkscape:snap-to-guides="false"
      inkscape:snap-others="true"
      inkscape:snap-nodes="true"
-     inkscape:window-width="1852"
-     inkscape:window-height="1136"
-     inkscape:window-x="68"
+     inkscape:window-width="2486"
+     inkscape:window-height="1376"
+     inkscape:window-x="74"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      fit-margin-top="1.5"
@@ -145,14 +121,6 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="License text">
-    <rect
-       style="display:inline;fill:url(#linearGradient878);fill-opacity:1;stroke:none;stroke-width:0.540983;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-       id="rect870"
-       width="211.66664"
-       height="211.6398"
-       x="-5.010977e-16"
-       y="0.026863758"
-       ry="0.29083025" />
     <g
        id="g4627"
        transform="translate(0,0.38359743)">
