@@ -23,7 +23,7 @@ This node is the parent node containing all charts.
 ```
 This groups several charts together on the same number key. It supports the following attributes, some of which are required:
 * `numkey="1"` (required): This is the number key assigned to charts in this group. Activating this number key on the keyboard, or a flirc supported remote control, will then switch between the charts contained in the group.
-* `touchcontrols="left,right,up,down"`: A comma-separated list of the touch controls that should be enabled on this specific group of charts if `touchControls` is set to true in [config.ini](CONFIGINI.md). Available controls are `left`, `right`, `up`, `down`. Note that not all controls have functionality for all chart types. In that case the control will be visible but do nothing.
+* `touchcontrols="left,right,up,down,crowding,single"`: A comma-separated list of the touch controls that should be enabled on this specific group of charts if `touchControls` is set to true in [config.ini](CONFIGINI.md). Note that not all controls have functionality for all chart types. In that case the control will be visible but do nothing.
 
 ## 'chart' nodes
 ```
@@ -36,7 +36,7 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 * `type="optotype"` (required): The chart type. Currently supports `optotype` and `svg`.
 * `bgcolor="white"`: Sets the background color of the chart (can be `black`, `white` or hex as `#AABBCC`).
 * `sizelock="true"`: If this is set to true and you switch to another chart with the same attribute, it will, if possible, inherit the size of the previous chart, giving a consistent size between chart changes.
-* `touchcontrols="left,right,up,down"`: A comma-separated list of the touch controls that should be enabled on this specific chart if `touchControls` is set to true in [config.ini](CONFIGINI.md). Available controls are `left`, `right`, `up`, `down`. Note that not all controls have functionality for all chart types. In that case the control will be visible but do nothing.
+* `touchcontrols="left,right,up,down,crowding,single"`: A comma-separated list of the touch controls that should be enabled on this specific chart if `touchControls` is set to true in [config.ini](CONFIGINI.md). Note that not all controls have functionality for all chart types. In that case the control will be visible but do nothing.
 
 ### 'optotype' chart type specific
 * `optotype="sloan"` (required): Which optotype is used by this chart. This MUST correspond to the name of a subdirectory located in the `optotypes` subfolder. In this case `optotypes/sloan`.
