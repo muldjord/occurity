@@ -26,6 +26,7 @@
  */
 
 #include "pindialog.h"
+#include "touchcontrols.h"
 
 #include <QKeyEvent>
 #include <QHBoxLayout>
@@ -42,6 +43,8 @@ PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
     asterisks.append(asteriskLabel);
     layout->addWidget(asterisks.last());
   }
+  TouchControls *touchControls = new TouchControls(true, this);
+  layout->addWidget(touchControls);
   setLayout(layout);
 }
 

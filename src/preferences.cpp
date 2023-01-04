@@ -30,6 +30,7 @@
 #include "slider.h"
 #include "combobox.h"
 #include "checkbox.h"
+#include "touchcontrols.h"
 
 #include <stdio.h>
 #include <QVBoxLayout>
@@ -90,6 +91,8 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   QHBoxLayout *layout = new QHBoxLayout;
   layout->addLayout(configLayout);
   layout->addWidget(tabWidget);
+  TouchControls *touchControls = new TouchControls(false, this);
+  layout->addWidget(touchControls);
 
   setLayout(layout);
 
@@ -109,6 +112,10 @@ bool Preferences::eventFilter(QObject *, QEvent *event)
       return true;
     } else if(keyEvent->key() == Qt::Key_Down) {
       focusNextChild();
+      return true;
+    } else if(keyEvent->key() == Qt::Key_Left) {
+      return true;
+    } else if(keyEvent->key() == Qt::Key_Right) {
       return true;
     } else if(keyEvent->key() == Qt::Key_Enter ||
               keyEvent->key() == Qt::Key_Return ||
