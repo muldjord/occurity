@@ -56,6 +56,9 @@ TouchControlItem::TouchControlItem(const QString &control, QObject *chart)
   } else if(control == "single") {
     key = Qt::Key_M;
     setPixmap(QPixmap(":touch-single.png"));
+  } else if(control == "preferences") {
+    key = Qt::Key_P;
+    setPixmap(QPixmap(":touch-preferences.png"));
   }
 
   setZValue(1.0);
@@ -78,8 +81,8 @@ TouchControlItem::~TouchControlItem()
 void TouchControlItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
   if(event->button() == Qt::LeftButton && key != -1) {
-    QKeyEvent *keyEvent = new QKeyEvent(QEvent::KeyPress, key, Qt::NoModifier);
-    QApplication::sendEvent(chart, keyEvent);
     activatedAnimation->start();
+    QApplication::postEvent(chart, new QKeyEvent(QEvent::KeyPress, key, Qt::NoModifier));
   }
+  ungrabMouse(); // Otherwise the 'Preferences' item will keep the mouse input indefinitely
 }
