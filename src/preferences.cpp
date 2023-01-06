@@ -49,11 +49,6 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
-  /* This shouldn't be necessary as mainwindow is parent and QDialogs are always centered on parent widget
-  move(QApplication::desktop()->width() / 2 - (width() / 2),
-       QApplication::desktop()->height() / 2 - (height() / 2));
-  */
-
   About *tabWidget = new About(this);
   tabWidget->setFocusPolicy(Qt::NoFocus);
   tabWidget->setMinimumWidth(600);
@@ -74,9 +69,9 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
   Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
-  CheckBox *showMouseCursor = new CheckBox(config, "", "showMouse", tr("Show mouse cursor"), "", this);
-  CheckBox *showTouchControls = new CheckBox(config, "", "touchControls", tr("Show touch controls"), "", this);
-  CheckBox *leftHandedOperator = new CheckBox(config, "", "leftHandedOperator", tr("Left handed operator"), "", this);
+  CheckBox *showMouseCursor = new CheckBox(config, "touch", "showMouse", tr("Show mouse cursor"), "", this);
+  CheckBox *showTouchControls = new CheckBox(config, "touch", "touchControls", tr("Show touch controls (requires restart)"), "", this);
+  CheckBox *leftHandedOperator = new CheckBox(config, "touch", "leftHandedOperator", tr("Left handed operator"), "", this);
 
   QVBoxLayout *configLayout = new QVBoxLayout;
   configLayout->addWidget(rulerWidth);

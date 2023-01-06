@@ -369,9 +369,6 @@ void MainWindow::updateFromConfig()
   }
 
   // General
-  if(!config.contains("showMouse")) {
-    config.setValue("showMouse", false);
-  }
   if(!config.contains("chartsXml")) {
     config.setValue("chartsXml", "charts.xml");
   }
@@ -393,11 +390,14 @@ void MainWindow::updateFromConfig()
   if(!config.contains("enableVideoPlayer")) {
     config.setValue("enableVideoPlayer", true);
   }
-  if(!config.contains("touchControls")) {
-    config.setValue("touchControls", false);
+  if(!config.contains("touch/touchControls")) {
+    config.setValue("touch/touchControls", false);
   }
-  if(!config.contains("leftHandedOperator")) {
-    config.setValue("leftHandedOperator", false);
+  if(!config.contains("touch/leftHandedOperator")) {
+    config.setValue("touch/leftHandedOperator", false);
+  }
+  if(!config.contains("touch/showMouse")) {
+    config.setValue("touch/showMouse", false);
   }
 
   // Folders
@@ -414,12 +414,6 @@ void MainWindow::updateFromConfig()
   resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
   resetTimer.start();
 
-  if(config.value("showMouse", false).toBool()) {
-    setCursor(Qt::ArrowCursor);
-  } else {
-    setCursor(Qt::BlankCursor);
-  }
-
   mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
   mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
@@ -429,8 +423,13 @@ void MainWindow::updateFromConfig()
 
   mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
 
-  mainSettings.touchControls = config.value("touchControls").toBool();
-  mainSettings.leftHandedOperator = config.value("leftHandedOperator").toBool();
+  mainSettings.touchControls = config.value("touch/touchControls").toBool();
+  mainSettings.leftHandedOperator = config.value("touch/leftHandedOperator").toBool();
+  if(config.value("touch/showMouse", false).toBool()) {
+    setCursor(Qt::ArrowCursor);
+  } else {
+    setCursor(Qt::BlankCursor);
+  }
 
   mainSettings.pinCode = config.value("pinCode").toString();
 
