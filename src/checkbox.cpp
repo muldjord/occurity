@@ -43,6 +43,7 @@ CheckBox::CheckBox(QSettings &config, const QString &group, const QString &name,
   }
 
   setChecked(config.value(key, false).toBool());
+  connect(this, &QCheckBox::clicked, this, &CheckBox::valueChanged);
 }
 
 CheckBox::~CheckBox()
@@ -52,6 +53,11 @@ CheckBox::~CheckBox()
 void CheckBox::resetToDefault()
 {
   setChecked(defaultValue);
+}
+
+void CheckBox::valueChanged(bool)
+{
+  saveToConfig();
 }
 
 void CheckBox::saveToConfig()

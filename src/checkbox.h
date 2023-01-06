@@ -45,6 +45,7 @@ public slots:
   void resetToDefault();
 
 private slots:
+  void valueChanged(bool);
   void saveToConfig();
 
 protected:

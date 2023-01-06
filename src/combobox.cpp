@@ -46,6 +46,8 @@ ComboBox::ComboBox(QSettings &config, const QString &group, const QString &name,
   if(!config.contains(key)) {
     config.setValue(key, defaultValue);
   }
+
+  connect(comboBox, QOverload<int>::of(&QComboBox::activated), this, &ComboBox::itemSelected);
 }
 
 ComboBox::~ComboBox()
@@ -71,6 +73,11 @@ void ComboBox::resetToDefault()
   }
 }
 
+void ComboBox::itemSelected(int)
+{
+  saveToConfig();
+}
+
 void ComboBox::saveToConfig()
 {
   config.setValue(key, comboBox->currentData().toString());
@@ -92,4 +99,3 @@ void ComboBox::keyPressEvent(QKeyEvent *event)
     }
   }
 }
-
