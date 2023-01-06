@@ -15,5 +15,6 @@
     <file alias="touch-right.png">icons/touch-right.png</file>
     <file alias="touch-crowding.png">icons/touch-crowding.png</file>
     <file alias="touch-single.png">icons/touch-single.png</file>
+    <file alias="touch-preferences.png">icons/touch-preferences.png</file>
   </qresource>
 </RCC>
