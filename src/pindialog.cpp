@@ -30,22 +30,25 @@
 
 #include <QKeyEvent>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QTimer>
 
 PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
   : QDialog(parent), correctPinCode(correctPinCode)
 {
   setWindowTitle(tr("Pincode:"));
-  QHBoxLayout *layout = new QHBoxLayout;
+  QHBoxLayout *hLayout = new QHBoxLayout;
   for(int a = 0; a < correctPinCode.length(); ++a) {
     QLabel *asteriskLabel = new QLabel;
     asteriskLabel->setPixmap(QPixmap(":pinblank.png"));
     asterisks.append(asteriskLabel);
-    layout->addWidget(asterisks.last());
+    hLayout->addWidget(asterisks.last());
   }
+  QVBoxLayout *vLayout = new QVBoxLayout;
   TouchControls *touchControls = new TouchControls(true, this);
-  layout->addWidget(touchControls);
-  setLayout(layout);
+  vLayout->addLayout(hLayout);
+  vLayout->addWidget(touchControls);
+  setLayout(vLayout);
 }
 
 void PinDialog::keyPressEvent(QKeyEvent *event)
@@ -81,7 +84,9 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
     } else if(event->key() == Qt::Key_9) {
       pinCode.append("9");
     }
-    asterisks.at(pinCode.length() - 1)->setPixmap(QPixmap(":pinfilled.png"));
+    if(pinCode.length() < correctPinCode.length()) {
+      asterisks.at(pinCode.length() - 1)->setPixmap(QPixmap(":pinfilled.png"));
+    }
   }
   if(pinCode.length() == correctPinCode.length()) {
     if(pinCode == correctPinCode) {
@@ -93,18 +98,7 @@ void PinDialog::keyPressEvent(QKeyEvent *event)
       for(auto *asterisk: asterisks) {
         asterisk->setPixmap(QPixmap(":pinincorrect.png"));
       }
-      shakeHead();
+      QTimer::singleShot(500, this, &PinDialog::reject);
     }
   }
-}
-
-void PinDialog::shakeHead()
-{
-  if(headShakes < 8) {
-    move(pos().x() + (headShakes % 2 == 0?10:-10), pos().y());
-    headShakes++;
-    QTimer::singleShot(75, this, &PinDialog::shakeHead);
-    return;
-  }
-  reject();
 }

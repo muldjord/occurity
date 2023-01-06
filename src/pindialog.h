@@ -41,15 +41,10 @@ public:
 protected:
   void keyPressEvent(QKeyEvent *event) override;
 
-private slots:
-  void shakeHead();
-
 private:
   QList<QLabel *> asterisks;
   const QString &correctPinCode;
   QString pinCode = "";
-
-  int headShakes = 0;
 
 };
 #endif/*__OCCURITY_PINDIALOG_H__*/
