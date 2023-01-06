@@ -30,7 +30,6 @@
 #include "slider.h"
 #include "combobox.h"
 #include "checkbox.h"
-#include "touchcontrols.h"
 
 #include <stdio.h>
 #include <QVBoxLayout>
@@ -41,6 +40,7 @@
 #include <QDesktopWidget>
 #include <QScrollArea>
 #include <QTabWidget>
+#include <QDialogButtonBox>
 
 Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
@@ -49,10 +49,13 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
+  /* This shouldn't be necessary as mainwindow is parent and QDialogs are always centered on parent widget
   move(QApplication::desktop()->width() / 2 - (width() / 2),
        QApplication::desktop()->height() / 2 - (height() / 2));
+  */
 
   About *tabWidget = new About(this);
+  tabWidget->setFocusPolicy(Qt::NoFocus);
   tabWidget->setMinimumWidth(600);
 
   Slider *rulerWidth = new Slider(config, "", "rulerWidth", tr("Physical length of ruler (mm):"), 50, 800, 138, 1, this);
@@ -88,11 +91,15 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   configLayout->addWidget(showTouchControls);
   configLayout->addWidget(leftHandedOperator);
 
-  QHBoxLayout *layout = new QHBoxLayout;
-  layout->addLayout(configLayout);
-  layout->addWidget(tabWidget);
-  TouchControls *touchControls = new TouchControls(false, this);
-  layout->addWidget(touchControls);
+  QHBoxLayout *hLayout = new QHBoxLayout;
+  hLayout->addLayout(configLayout);
+  hLayout->addWidget(tabWidget);
+
+  QVBoxLayout *layout = new QVBoxLayout;
+  layout->addLayout(hLayout);
+  QDialogButtonBox *closeButton = new QDialogButtonBox(QDialogButtonBox::Ok, this);
+  connect(closeButton, &QDialogButtonBox::accepted, this, &QDialog::accept);
+  layout->addWidget(closeButton);
 
   setLayout(layout);
 
@@ -112,10 +119,6 @@ bool Preferences::eventFilter(QObject *, QEvent *event)
       return true;
     } else if(keyEvent->key() == Qt::Key_Down) {
       focusNextChild();
-      return true;
-    } else if(keyEvent->key() == Qt::Key_Left) {
-      return true;
-    } else if(keyEvent->key() == Qt::Key_Right) {
       return true;
     } else if(keyEvent->key() == Qt::Key_Enter ||
               keyEvent->key() == Qt::Key_Return ||
