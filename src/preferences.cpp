@@ -92,6 +92,15 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
 
   QVBoxLayout *layout = new QVBoxLayout;
   layout->addLayout(hLayout);
+  setStyleSheet("QPushButton {"
+                "background-color: #b2b2b2;"
+                "border-style: outset;"
+                "border-width: 6px;"
+                "border-radius: 15px;"
+                "border-color: black;"
+                "font: bold 60px;"
+                "padding: 6px;"
+                "}");
   QDialogButtonBox *closeButton = new QDialogButtonBox(QDialogButtonBox::Ok, this);
   connect(closeButton, &QDialogButtonBox::accepted, this, &QDialog::accept);
   layout->addWidget(closeButton);
