@@ -78,7 +78,6 @@ void Slider::resetToDefault()
 
 void Slider::saveToConfig()
 {
-  printf("SLIDER VALUE: %d\n", valueSlider->value());
   valueLineEdit->setText(QString::number(valueSlider->value()));
 
   QString value = valueLineEdit->text();
