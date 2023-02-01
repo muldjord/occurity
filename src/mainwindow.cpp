@@ -460,7 +460,7 @@ void MainWindow::updateFromConfig()
 
 void MainWindow::spawnPreferences()
 {
-  PinDialog pinDialog(mainSettings.pinCode, this);
+  PinDialog pinDialog(mainSettings.pinCode, mainSettings.touchControls, this);
   if(pinDialog.exec() == QDialog::Accepted) {
     printf("Spawning Preferences...\n");
     Preferences prefs(config, charts, this);
@@ -471,7 +471,7 @@ void MainWindow::spawnPreferences()
 
 void MainWindow::spawnJobRunner()
 {
-  PinDialog pinDialog(mainSettings.pinCode, this);
+  PinDialog pinDialog(mainSettings.pinCode, mainSettings.touchControls, this);
   if(pinDialog.exec() == QDialog::Accepted) {
     printf("Spawning job runner...\n");
     JobRunner jobRunner(mainSettings, this);

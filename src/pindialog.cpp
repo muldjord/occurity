@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <QTimer>
 
-PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
+PinDialog::PinDialog(const QString &correctPinCode, const bool &showTouchControls, QWidget *parent)
   : QDialog(parent), correctPinCode(correctPinCode)
 {
   setWindowTitle(tr("Pincode:"));
@@ -47,7 +47,9 @@ PinDialog::PinDialog(const QString &correctPinCode, QWidget *parent)
   QVBoxLayout *vLayout = new QVBoxLayout;
   TouchControls *touchControls = new TouchControls(true, this);
   vLayout->addLayout(hLayout);
-  vLayout->addWidget(touchControls);
+  if(showTouchControls) {
+    vLayout->addWidget(touchControls);
+  }
   setLayout(vLayout);
 }
 

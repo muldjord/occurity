@@ -35,7 +35,7 @@ class PinDialog : public QDialog
   Q_OBJECT
 
 public:
-  PinDialog(const QString &correctPinCode, QWidget *parent = nullptr);
+  PinDialog(const QString &correctPinCode, const bool &showTouchControls, QWidget *parent = nullptr);
   bool pinCorrect();
 
 protected:
