@@ -45,7 +45,7 @@
 Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 700);
+  setFixedSize(1200, 750);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
