@@ -54,6 +54,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   mainSettings.width = res.width();
   mainSettings.height = res.height();
   printf("  Monitor resolution: %d x %d\n", mainSettings.width, mainSettings.height);
+
   updateFromConfig();
 
   if(!QFile::exists(mainSettings.chartsXml)) {
@@ -65,6 +66,10 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   } else {
     printf("Charts xml loading failed!\n");
     exit(1);
+  }
+
+  while(!config.contains("rulerWidth")) {
+    spawnPreferences();
   }
 
   installEventFilter(this);
@@ -315,7 +320,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     }
     if(keyEvent->key() == Qt::Key_P) {
       spawnPreferences();
-      updateFromConfig();
+      // updateFromConfig run from spawnPreferences
       return true;
     } else if(keyEvent->key() == Qt::Key_J) {
       spawnJobRunner();
@@ -362,10 +367,6 @@ void MainWindow::updateFromConfig()
   }
   if(config.contains("videosFolder")) {
     config.remove("videosFolder");
-  }
-
-  while(!config.contains("rulerWidth")) {
-    spawnPreferences();
   }
 
   // General
@@ -466,6 +467,8 @@ void MainWindow::spawnPreferences()
     Preferences prefs(config, charts, this);
     prefs.exec();
     activateWindow();
+    // ALWAYS run updateFromConfig after changing preferences to make sure new values are set in charts
+    updateFromConfig();
   }
 }
 
