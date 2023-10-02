@@ -125,6 +125,7 @@
       <layer id="dots"/>
       <layer id="mask"/>
     </chart>
+    <chart caption="Astigmatism rays" type="svg" source="svg/astigmatism_rays.svg" scaling="height"/>
   </group>
   <group numkey="6" touchcontrols="preferences">
     <chart caption="RG" type="svg" source="svg/redgreen_mirrored.svg" bgcolor="black" scaling="width"/>
