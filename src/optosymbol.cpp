@@ -40,8 +40,8 @@ OptoSymbol::OptoSymbol(const QString &optoSymbol,
   opacityEffect->setOpacity(0.0);
   setGraphicsEffect(opacityEffect);
 
-  int fadeInDuration = 0;
-  int fadeOutDuration = 25;
+  int fadeInDuration = 15;
+  int fadeOutDuration = 15;
   int fadeInOutInDuration = 25;
   int fadeInOutOutDuration = 25;
   if(fadeTimings.count(";") == 3) {
