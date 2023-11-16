@@ -175,6 +175,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version 1.1.0 (In progress, unreleased)
 * Added on-screen touch controls
+* Added astigmastism rays chart
 
 #### Version 1.0.2 (29dec2022)
 * Added `startingChart` config variable to allow setting initially displayed chart
