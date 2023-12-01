@@ -1,0 +1,15 @@
+title:Update videos from '%USBPATH%/occurity/videos' to '%HOME%/occurity/videos'
+category:Update jobs
+
+message:Setting source and destination paths.
+srcpath:%USBPATH%/occurity
+dstpath:%HOME%/occurity
+
+message:Removing old videos folder and and copying new from USB.
+rmpath:%DSTPATH%/videos
+cppath:videos
+
+message:Videos succesfully updated!
+
+# Ask for system reboot
+reboot:ask
