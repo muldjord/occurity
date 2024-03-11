@@ -5,7 +5,7 @@
    viewBox="0 0 211.66667 211.66666"
    version="1.1"
    id="svg8"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    sodipodi:docname="splash.svg"
    inkscape:export-filename="/home/muldjord/programming/occurity/icons/splash.png"
    inkscape:export-xdpi="96"
@@ -44,11 +44,11 @@
        inkscape:collect="always"
        id="linearGradient876">
       <stop
-         style="stop-color:#4cfbfd;stop-opacity:1"
+         style="stop-color:#4cfd65;stop-opacity:1;"
          offset="0"
          id="stop872" />
       <stop
-         style="stop-color:#ffc4af;stop-opacity:1"
+         style="stop-color:#b4afff;stop-opacity:1;"
          offset="1"
          id="stop874" />
     </linearGradient>
@@ -91,20 +91,20 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.8347716"
-     inkscape:cx="377.94769"
-     inkscape:cy="391.12495"
+     inkscape:cx="374.95286"
+     inkscape:cy="391.72392"
      inkscape:document-units="mm"
-     inkscape:current-layer="g4576"
+     inkscape:current-layer="layer2"
      showgrid="false"
      units="px"
      inkscape:snap-grids="true"
      inkscape:snap-to-guides="false"
      inkscape:snap-others="true"
      inkscape:snap-nodes="true"
-     inkscape:window-width="1846"
-     inkscape:window-height="1016"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-width="2490"
+     inkscape:window-height="1371"
+     inkscape:window-x="70"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
      fit-margin-top="1.5"
      fit-margin-left="0.5"
@@ -118,7 +118,9 @@
      inkscape:bbox-nodes="true"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:document-rotation="0"
-     inkscape:pagecheckerboard="0">
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
        id="grid852" />
@@ -286,7 +288,7 @@
            x="24.680105"
            y="186.27475"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.11218px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#c7cff3;fill-opacity:1;stroke:none;stroke-width:0.97138;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:markers stroke fill"
-           id="tspan981-1">Copyright (c) 2023 by Lars Bisballe, Klinik for Øjensygdomme, Aarhus University Hospital</tspan></text>
+           id="tspan981-1">Copyright (c) 2024 by Lars Bisballe, Klinik for Øjensygdomme, Aarhus University Hospital</tspan></text>
     </g>
   </g>
 </svg>
