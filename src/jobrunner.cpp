@@ -799,6 +799,12 @@ void JobRunner::setHardcodedVars()
   QByteArray arch = unameProcess.readAllStandardOutput().simplified();
   vars["%ARCH%"] = arch;
 
+  // Set %HOSTNAME% to the currently assigned hostname (eg. 'raspberrypi4-64' or 'raspberrypi3').
+  unameProcess.start("uname", {"-n"});
+  unameProcess.waitForFinished(30000);
+  QByteArray hostname = unameProcess.readAllStandardOutput().simplified();
+  vars["%HOSTNAME%"] = hostname;
+  
   QString usbPath = getUsbPath();
   if(!usbPath.isEmpty()) {
     // SEt %WORKDIR% so it can be used in the .job files

@@ -61,6 +61,7 @@ Some hardcoded variables are available. These can be used without setting them w
 * %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
 * %USER%: The user name of the currently logged in user (eg. `pi`).
 * %ARCH%: The currently running CPU architecture (eg. `aarch64` or 'x86_64').
+* %HOSTNAME%: The currently assigned hostname (with Yocto this is eg. `raspberrypi4-64` or 'raspberrypi3').
 * %USBPATH%: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if 'USBPEN' is contained within the drive identifiers / label.
 
 #### addexclude:FILE|PATH
