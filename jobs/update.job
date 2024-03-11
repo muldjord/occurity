@@ -1,8 +1,8 @@
-title:Apply update from '%USBPATH%/occurity/releases/%ARCH%/occurity' to '%HOME%/occurity'
+title:Apply update from '%USBPATH%/occurity/releases/%HOSTNAME%/occurity' to '%HOME%/occurity'
 category:Update jobs
 
 message:Setting source and destination paths.
-srcpath:%USBPATH%/occurity/releases/%ARCH%/occurity
+srcpath:%USBPATH%/occurity/releases/%HOSTNAME%/occurity
 dstpath:%HOME%/occurity
 
 # Set %VERSION% variable to the new version
