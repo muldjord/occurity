@@ -10,9 +10,6 @@ category:Other jobs
 #mvpath:%HOME%/test
 #mvfile:%HOME%/test.file
 
-message:Expected: DEPENDS! Check for internet connection and Check for 'sudo' right when using 'apt-get install'
-aptinstall:
-
 message:Expected: SUCCESS! Sets the '%VERSION%' variable to the current Occurity version
 loadvars:%HOME%/programming/occurity/VERSION
 
