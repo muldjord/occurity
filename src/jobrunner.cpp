@@ -68,7 +68,7 @@ JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
 
   QList<QVBoxLayout*> categoryLayouts;
   QList<QRadioButton *> jobButtonsList;
-  QDir jobDir(mainSettings.jobsFolder, "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
+  QDir jobDir(!QDir::currentPath().contains("/programming/") && !getUsbPath().isEmpty()?getUsbPath() + "/occurity/jobs":mainSettings.jobsFolder, "*.job", QDir::Name, QDir::Files | QDir::NoDotAndDotDot);
   for(const auto &jobInfo: jobDir.entryInfoList()) {
     QFile jobFile(jobInfo.absoluteFilePath());
     if(jobFile.open(QIODevice::ReadOnly)) {
