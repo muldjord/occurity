@@ -1,5 +1,0 @@
-title:Add 'lxterminal' icon to desktop
-category:Tools
-
-message:Adding 'lxterminal' icon to desktop
-cpfile:%WORKDIR%/lxterminal.desktop;%HOME%/Desktop/lxterminal.desktop
