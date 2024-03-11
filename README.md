@@ -173,6 +173,12 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
+#### Version 1.2.0 (in progress, unreleased)
+* Added 'sync' command to jobrunner which syncs the filesystem. This command is also auto-added at the end of all jobs.
+* Added '%ARCH' hardcoded variable to jobrunner variables.
+* Splash screen is now closed before preferences instantiation in cases where no 'config.ini' is found when Occurity is started.
+* Removed 'secret' functionality as it was no longer in use.
+
 #### Version 1.1.0 (16nov2023)
 * Added on-screen touch controls
 * Added astigmastism rays chart
