@@ -11,7 +11,7 @@ category:Other jobs
 #mvfile:%HOME%/test.file
 
 message:Expected: SUCCESS! Sets the '%VERSION%' variable to the current Occurity version
-loadvars:%HOME%/programming/occurity/VERSION
+loadvars:%WORKDIR%/VERSION
 
 #message:Expected: FAIL! 'srcpath' must be set when using a non-relative filepath
 #loadvars:this/path/is/relative/test.file
