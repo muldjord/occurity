@@ -60,6 +60,8 @@ Some hardcoded variables are available. These can be used without setting them w
 * %HOME%: The current user home directory (eg. `/home/pi`).
 * %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
 * %USER%: The user name of the currently logged in user (eg. `pi`).
+* %ARCH%: The currently running CPU architecture (eg. `aarch64` or 'x86_64').
+* %USBPATH%: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if 'USBPEN' is contained within the drive identifiers / label.
 
 #### addexclude:FILE|PATH
 Adds either a FILE or PATH to the global exclude list. This list is used by several of the available file and path manipulation commands. If a match is found the file or path will be ignored by those commands. Any subdirectories of an excluded path will also be excluded.
@@ -162,6 +164,11 @@ Shuts down the computer. `force` will shutdown without asking the user. `ask` wi
 
 * Example 1: `shutdown:force`
 * Example 2: `shutdown:ask`
+
+#### sync:
+Synchronizes any cached writes to persistent storage. This command is auto-added to the end of all jobs even when it is not in the job file.
+
+* Example 1: `sync:`
 
 #### exit:MESSAGE
 Exits the running job with MESSAGE. This is useful while testing a job where you want a job to run until a specific command and then exit without having to comment all remaining commands.
