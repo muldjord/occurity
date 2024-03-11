@@ -350,6 +350,11 @@ void JobRunner::runJob(const QString &filename)
         addStatus(STATUS, command.parameters.at(0));
       }
 
+    } else if(command.type == "sync") {
+      if(command.parameters.length() == 1) {
+        syncFileSystem();
+      }
+
     } else if(command.type == "exit") {
       if(command.parameters.length() == 1) {
         addStatus(STATUS, "Exit: '" + command.parameters.at(0) + "'");
@@ -359,6 +364,9 @@ void JobRunner::runJob(const QString &filename)
     }
     progressBar->setValue(progressBar->value() + 1);
   }
+
+  syncFileSystem();
+
   if(abortJob) {
     progressBar->setFormat("Job process failed at %p% :(");
   } else {
@@ -781,8 +789,15 @@ void JobRunner::setHardcodedVars()
     // SEt %HOME% so it can be used in the .job files
     vars["%HOME%"] = QDir::homePath();
   }
-  // SEt %WORKDIR% so it can be used in the .job files
+  // Set %WORKDIR% so it can be used in the .job files
   vars["%WORKDIR%"] = QDir::currentPath();
+
+  // Set %ARCH% to the currently running hardware (eg. 'aarch64' or 'x86_64').
+  QProcess unameProcess;
+  unameProcess.start("uname", {"-m"});
+  unameProcess.waitForFinished(30000);
+  QByteArray arch = unameProcess.readAllStandardOutput().simplified();
+  vars["%ARCH%"] = arch;
 
   QString usbPath = getUsbPath();
   if(!usbPath.isEmpty()) {
@@ -937,6 +952,18 @@ bool JobRunner::shutdown(const QString &argument)
   if(doShutdown) {
     QProcess::execute("bash", {"./scripts/shutdown.sh"});
   }
+  return true;
+}
+
+bool JobRunner::syncFileSystem()
+{
+  addStatus(INIT, "Syncing file system, please wait...");
+  int returnCode = QProcess::execute("sync", {});
+  if(returnCode != 0) {
+    addStatus(WARNING, "Sync failed with error code " + QString::number(returnCode) + "!");
+    return false;
+  }
+  addStatus(INFO, "Sync completed!");
   return true;
 }
 
