@@ -68,10 +68,6 @@ MainWindow::MainWindow(QSettings &config) : config(config)
     exit(1);
   }
 
-  while(!config.contains("rulerWidth")) {
-    spawnPreferences();
-  }
-
   installEventFilter(this);
 
   if(mainSettings.enableVideoPlayer) {
@@ -79,10 +75,6 @@ MainWindow::MainWindow(QSettings &config) : config(config)
                                   mainSettings.width, mainSettings.height,
                                   this);
   }
-
-  secretTimer.setInterval(400);
-  secretTimer.setSingleShot(true);
-  connect(&secretTimer, &QTimer::timeout, [this] () { allowSecret = true; });
 
   hiberCooldownTimer.setInterval(10000);
   hiberCooldownTimer.setSingleShot(true);
@@ -97,7 +89,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   resetTimer.setSingleShot(true);
   resetTimer.start();
 
-  init();
+  QTimer::singleShot(100, this, &MainWindow::init);
 }
 
 MainWindow::~MainWindow()
@@ -109,6 +101,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
+  while(!config.contains("rulerWidth")) {
+    spawnPreferences();
+  }
+
   if(!charts.isEmpty()) {
     if(mainSettings.startingChart.isEmpty()) {
       setScene(charts.first());
@@ -263,24 +259,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
     resetTimer.start();
 
     QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-
-    // Check for secret "2018" shutdown sequence check
-    if(allowSecret) {
-      if(keyEvent->key() == Qt::Key_2 && secretState == 0) {
-        secretState = 1;
-      } else if(keyEvent->key() == Qt::Key_0 && secretState == 1) {
-        secretState = 2;
-      } else if(keyEvent->key() == Qt::Key_1 && secretState == 2) {
-        secretState = 3;
-      } else if(keyEvent->key() == Qt::Key_8 && secretState == 3) {
-        printf("Shutdown requested by user, initiating shutdown...\n");
-        QProcess::execute("bash", QStringList({"./scripts/shutdown.sh"}));
-      } else {
-        secretState = 0;
-      }
-      allowSecret = false;
-      secretTimer.start();
-    }
 
     QList<int> chartPool;
     AbstractChart *currentChart = nullptr;
