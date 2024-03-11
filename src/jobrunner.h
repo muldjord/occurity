@@ -107,6 +107,7 @@ private:
   bool runCommand(const QString &program, QList<QString> args, const int &maxWaitSecs = 600, const bool &critical = true);
   bool reboot(const QString &argument);
   bool shutdown(const QString &argument);
+  bool syncFileSystem();
   QString varsReplace(QString string = "");
   QString getCommandString(const Command &command);
   QString getUsbPath();
