@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
   QSettings config("config.ini", QSettings::IniFormat);
 
-  QPixmap pixmap(":splash.png");
+  QPixmap pixmap(":splash.svg");
   QSplashScreen *splash = new QSplashScreen(pixmap);
   splash->setCursor(Qt::BlankCursor);
 

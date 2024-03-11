@@ -3,7 +3,7 @@
   <qresource prefix="/">
     <file alias="LICENSE">LICENSE</file>
     <file alias="icon.png">icons/icon.png</file>
-    <file alias="splash.png">icons/splash.png</file>
+    <file alias="splash.svg">icons/splash.svg</file>
     <file alias="ruler.png">icons/ruler.png</file>
     <file alias="pinblank.png">icons/pinblank.png</file>
     <file alias="pinfilled.png">icons/pinfilled.png</file>
