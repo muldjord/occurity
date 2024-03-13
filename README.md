@@ -174,10 +174,12 @@ Occurity comes with a number of default charts. All charts can easily be customi
 #### Version x.x.x (unimplemented)
 
 #### Version 1.2.0 (in progress, unreleased)
-* Added 'sync' command to jobrunner which syncs the filesystem. This command is also auto-added at the end of all jobs.
-* Added '%ARCH' hardcoded variable to jobrunner variables.
-* Splash screen is now closed before preferences instantiation in cases where no 'config.ini' is found when Occurity is started.
-* Removed 'secret' functionality as it was no longer in use.
+* Added 'sync:' command to jobrunner which syncs the filesystem. This command is also auto-added at the end of all jobs
+* Added '%ARCH%' hardcoded variable to jobrunner variables (becomes `aarch64` when using Yocto on a Raspberry Pi 4)
+* Added '%HOSTNAME%' hardcoded variable to jobrunner variables (becomes `raspberrypi4-64` when using Yocto on a Raspberry Pi 4)
+* Splash screen is now closed before preferences instantiation in cases where no 'config.ini' is found when Occurity is started
+* Removed 'secret' functionality as it was no longer in use
+* Updated JOBS to include note about USBPEN functionality
 
 #### Version 1.1.0 (16nov2023)
 * Added on-screen touch controls
