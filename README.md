@@ -12,10 +12,8 @@ Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 ### Hardware
 In order to install a system using Occurity you need the following hardware:
-* A Raspberry Pi (3B+ or later is recommended)
-  * At least an 8 GB SD flash card
-  * A Raspberry Pi case (Recommended, but you might have plans to built it into a monitor)
-  * A Raspberry Pi power supply
+* A Raspberry Pi (3 or 4)
+* At least a 2 GB SD flash card
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
 * A [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) (Optional)
   * A remote control that works with flirc. Most do (Optional)
@@ -49,66 +47,75 @@ In theory most remote controls you might have lying around should work with the 
 
 Note! The [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) emulates a keyboard. For the remote to work, you need to install the Flirc software on a supported OS and configure the buttons on your remote to correspond with [these](README.md#keyboard-controls) keyboard keys.
 
-## Software and configuration
+## Building and Occurity SDCard image for Raspberry Pi
+The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `nanbield` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
-### Operating system
-* [Latest Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os)
-Install it on your Pi SD card and plug it into your Pi.
+The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
 
-#### System configurations
-I recommend applying the following settings on your Pi system to optimize it for use with Occurity.
-
-##### Appearance Settings
-* Raspberry menu->Preferences->Appearance Settings
-  * Desktop
-    * Layout: No Image
-    * Color: Black
-    * Remove marking in "Wastebasket"
-  * Taskbar
-    * Size: Small
-    * Position: Bottom
-    * Color: Black
-    * Test color: White 
-
-##### Disable removable media pop-up
-Open a File Manager. In Edit->Preferences->Volume Management remove checkmark from "Show available options for removable media"
-
-##### Update notifications
-* Right-click the panel and choose `Panel Settings`. Go to `Notifications` and remove checkmark in `Show notifications`.
-
-##### raspi-config
-Run `sudo raspi-config` in a terminal and set the following options:
-* 1 System Options->S5 Boot / Auto login->B4 Desktop Autologin
-* 1 System Options->S6 Network at Boot->No
-* 1 System Options->S7 Splash Screen->Yes (You can set this to 'No' if you don't want to expose your support for the Raspberry Pi platform)
-* 2 Display Options->D2 Underscan->No
-* 2 Display Options->D3 Screen Blanking->No
-* 6 Advanced Options->A2 GL Driver->Enable (Not relevant on RPi4)
-* 6 Advanced Options->A8 Glamor->Enable (Not relevant on RPi4)
-
-##### /etc/xdg/lxsession/LXDE-pi/autostart
-Add the following line to the bottom of the file:
+### Package pre-requisites
+Install the required packages. Run these commands from a terminal on your Ubuntu 22.04 system:
 ```
-@/home/pi/occurity/Occurity
-```
-Remove the following line to stop the screensaver from starting:
-```
-@xscreensaver -no-splash
-```
-Occurity will now autostart when the user logs in. You should also consider commenting the `lxpanel` line to stop the panel from being loaded. But be aware that this will make it harder to launch software. To remedy this it is recommended to first copy the `lxterminal.desktop` shortcut to `/home/USER/Desktop` before rebooting. This will place a terminal icon on the desktop for easy access.
-
-Note that disabling the panel will also complicate wifi connections as the tray icon for connecting to access points will no longer be available. You can of course always re-enable the panel by re-adding the `lxpanel` command to `/etc/xdg/lxsession/LXDE-pi/autostart`.
-
-##### /etc/sudoers.d/pi (Optional)
-To allow the use of the `apt*` commands through the Occurity Job Runner scripting language (activated with `j` on the keyboard), it is necessary to allow the `pi` (or whichever user will run Occurity) user to manipulate packages without having to enter a password. This can be achieved by creating `/etc/sudoers.d/pi` (or whichever username will be running Occurity) and inserting the following:
-```
-pi ALL = NOPASSWD : /usr/bin/apt-get
+$ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev python3-subunit mesa-common-dev zstd liblz4-tool file locales libacl1
+$ sudo locale-gen en_US.UTF-8
 ```
 
-#### Installing Occurity
+### Setting up Yocto
+Run the following commands to clone Yocto and the required layers:
+```
+$ cd
+$ git clone https://git.yoctoproject.org/poky
+$ cd poky/
+$ git checkout -t origin/nanbield -b occurity
+$ git clone -b nanbield https://git.yoctoproject.org/meta-raspberrypi
+$ git clone https://github.com/openembedded/meta-openembedded
+$ git clone https://github.com/meta-qt5/meta-qt5
+$ git clone https://github.com/muldjord/meta-occurity
+$ source oe-init-build-env
+$ bitbake-layers add-layer ../meta-raspberrypi
+$ bitbake-layers add-layer ../meta-openembedded/meta-oe
+$ bitbake-layers add-layer ../meta-qt5
+$ bitbake-layers add-layer ../meta-occurity
+```
+### Add required Yocto configs
+You should now be at the `poky/build` directory. Edit `conf/local.conf` and add the following lines to the very top of the file:
+```
+LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch commercial"
+WKS_FILE = "sdimage-raspberrypi.wks"
+IMAGE_FSTYPES += "wic.gz wic.bmap"
+DISABLE_OVERSCAN = "1"
+MACHINE ?= "raspberrypi4-64"
+```
+NOTE!!! If you are building for a Raspberry Pi 3 change the MACHINE to `raspberrypi3-64`.
 
-##### Software prerequisites
-Run the following commands in a terminal on the Pi to install the prerequisites needed for Occurity to function correctly.
+### Build the image
+You are now ready to build the image. Depending on your host machine this can take a long time (several hours). Run the following commands to start the build:
+```
+$ bitbake core-image-sato
+```
+Bitbake is Yocto's build system. It pulls in all required source code and compiles and configures everything needed for an embedded Linux system running Occurity on a Raspberry Pi.
+
+### Flash the final image to an SDCard
+If everything went well you will now have a working Occurity image that can be flashed onto an SDCard. Start by decompressing the image:
+```
+$ qzip -d --force tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic.gz
+```
+Now insert your SDCard and find the dev node it resides on using any tool. Here's how to do it with `fdisk`:
+```
+$ sudo fdisk -l
+```
+WARNING!!! Make absolutely sure you know what you are doing at this point! If you use the wrong device note in the following commands you have a risk of rendering your entire system unusable! I am not responsible if you end up flashing the image to the wrong device!
+
+When you are 100% sure you have the correct base device node for your SDCard, run the following command to flash the image to the SDCard:
+```
+$ sudo dd if=tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic of=/dev/YOURDEVICENODE bs=512k
+```
+If this completed without errors you are done! Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Check the rest of the documentation on how to configure and use it.
+
+## Building Occurity on Ubuntu
+NOTE!!! If you've already built the Raspberry Pi image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
+
+### Software prerequisites
+Run the following commands in a terminal on Ubuntu to install the prerequisites needed for Occurity to function correctly.
 ```
 $ sudo apt update
 $ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
@@ -116,8 +123,8 @@ $ sudo apt remove gstreamer1.0-plugins-bad
 ```
 The `gstreamer1.0-plugins-bad` package might not be installed already. But try removing it to be sure. Having it installed is known to break h.264 video playback needed by the Occurity attention video player.
 
-##### Download and compile
-Open a terminal on the Pi and run the following commands. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `0.7.2`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
+### Download and compile
+Open a terminal on Ubuntu and run the following commands. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `1.2.0`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
 ```
 $ cd
 $ mkdir occurity
@@ -128,10 +135,10 @@ $ qmake
 $ make
 ```
 
-##### Running Occurity
-You should now have a `/home/USER/occurity/Occurity` executable ready to run. Provided that you added Occurity to autostart as described previously, you should now be able to simply restart, and Occurity will run automatically. Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
+### Running Occurity
+You should now have a `/home/USER/occurity/Occurity` executable ready to run. Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
 
-### Optotypes
+## Optotypes
 Occurity comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
 
 ## Keyboard controls
