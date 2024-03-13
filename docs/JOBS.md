@@ -1,6 +1,8 @@
 # The Job Runner dialog
 In order to maintain and update Occurity an integrated Job Runner has been implemented. It is a powerful tool that can help perform any number of defined tasks. All available jobs are located in the [jobs folder](CONFIGINI.md#folders). The default jobs folder is `./jobs`. To create a new job, create a new `.job` file in this folder. The available commands are documented below.
 
+One way to use these jobs is with a USB pen for updating necessary files. Format a USB pen with a FAT32 partition and make sure `USBPEN` is part of the partition label (Occurity looks for this when starting the jobrunner). Any job that uses the `%USBPATH%` variable will look for this and can then be used to update videos or charts using the commands as documented below.
+
 ## Command format
 A single line of the scripting language is made up of the command type, followed by a `:`, followed by the required arguments. If more arguments are allowed / required they are separated by `;`.
 
@@ -62,7 +64,7 @@ Some hardcoded variables are available. These can be used without setting them w
 * %USER%: The user name of the currently logged in user (eg. `pi`).
 * %ARCH%: The currently running CPU architecture (eg. `aarch64` or 'x86_64').
 * %HOSTNAME%: The currently assigned hostname (with Yocto this is eg. `raspberrypi4-64` or 'raspberrypi3').
-* %USBPATH%: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if 'USBPEN' is contained within the drive identifiers / label.
+* %USBPATH%: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if 'USBPEN' is contained within the partition label.
 
 #### addexclude:FILE|PATH
 Adds either a FILE or PATH to the global exclude list. This list is used by several of the available file and path manipulation commands. If a match is found the file or path will be ignored by those commands. Any subdirectories of an excluded path will also be excluded.
