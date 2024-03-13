@@ -19,7 +19,7 @@ You can configure several options of Occurity to fit your needs. The first time 
 ## [folders]
 * `optotypes="your/optotypes/folder"`: Defines the optotypes folder to load chart optotypes from. Read more about the customizable optotype format [here](OPTOTYPES.md). Default is `./optotypes`.
 * `videos="your/videos/folder"`: Defines the attention videos folder. Only supports `.mp4` video files. Default is `./videos`. Recommended codec is h.264.
-* `jobs="your/jobs/folder"`: Defines the jobs folder. All `.job` files within this folder will be accessible through the Job Runner dialog (open with `j`). Default is `./jobs`.
+* `jobs="your/jobs/folder"`: Defines the jobs folder. All `.job` files within this folder will be accessible through the Job Runner dialog (open with `j`). If a USB pen with a FAT32 partition named `USBPEN` is inserted which includes job files located at `%USBPATH%/occurity/jobs` those jobs will instead take priority over the jobs found at the configured folder. Default is `./jobs`.
 
 ## [network] (Optional)
 The following variables are used when determining if a network connection exists when running the `aptinstall` and `aptremove` job commands. Occurity DOES NOT require a network connection for anything other than this. If the host can't be contacted, a dialog box will appear which asks whether the `apt` command is critical for the job to function properly. If not, it will continue executing the job. Otherwise it will end the job. No Occurity jobs make use of these commands by default.
