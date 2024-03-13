@@ -103,7 +103,7 @@ Now insert your SDCard and find the dev node it resides on using any tool. Here'
 ```
 $ sudo fdisk -l
 ```
-WARNING!!! Make absolutely sure you know what you are doing at this point! If you use the wrong device note in the following commands you have a risk of rendering your entire system unusable! I am not responsible if you end up flashing the image to the wrong device!
+WARNING!!! Make absolutely sure you know what you are doing at this point! If you use the wrong device node in the following commands you have a risk of rendering your entire system unusable! I am not responsible if you end up flashing the image to the wrong device!
 
 When you are 100% sure you have the correct base device node for your SDCard, run the following command to flash the image to the SDCard:
 ```
