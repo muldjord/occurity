@@ -47,7 +47,7 @@ In theory most remote controls you might have lying around should work with the 
 
 Note! The [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) emulates a keyboard. For the remote to work, you need to install the Flirc software on a supported OS and configure the buttons on your remote to correspond with [these](README.md#keyboard-controls) keyboard keys.
 
-## Building and Occurity SDCard image for Raspberry Pi
+## Building an Occurity SDCard image for Raspberry Pi
 The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `nanbield` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
 The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
