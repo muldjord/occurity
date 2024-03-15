@@ -180,7 +180,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.2.0 (in progress, unreleased)
+#### Version 1.2.0 (15mar2024)
 * Added 'sync:' command to jobrunner which syncs the filesystem. This command is also auto-added at the end of all jobs
 * Added '%ARCH%' hardcoded variable to jobrunner variables (becomes `aarch64` when using Yocto on a Raspberry Pi 4)
 * Added '%HOSTNAME%' hardcoded variable to jobrunner variables (becomes `raspberrypi4-64` when using Yocto on a Raspberry Pi 4)
