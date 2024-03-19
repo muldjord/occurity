@@ -11,7 +11,7 @@ Occurity is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 ## What you need
 
 ### Hardware
-In order to install a system using Occurity you need the following hardware:
+In order to install a system running Occurity you need the following hardware:
 * A Raspberry Pi (3 or 4)
 * At least a 2 GB SD flash card
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
@@ -67,7 +67,7 @@ $ git clone https://git.yoctoproject.org/poky
 $ cd poky/
 $ git checkout -t origin/nanbield -b occurity
 $ git clone -b nanbield https://git.yoctoproject.org/meta-raspberrypi
-$ git clone https://github.com/openembedded/meta-openembedded
+$ git clone -b nanbield https://github.com/openembedded/meta-openembedded
 $ git clone https://github.com/meta-qt5/meta-qt5
 $ git clone https://github.com/muldjord/meta-occurity
 $ source oe-init-build-env
