@@ -27,7 +27,7 @@ Occurity displays correctly on any monitor using any resolution provided the fol
 * The physical length of the ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 * The physical distance from the patients eyes to the monitor must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 
-To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype sumbols at chart size 0.1 and 0.25. At 0.1 the width must be exactly 87 mm and at 0.25 the width must be exactly 35 mm. If this is correct your monitor will work with Occurity.
+To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler as described above, temporarily set the patient distance to 600 cm and measure the exact width of the Sloan optotype sumbols at chart size 0.1 and 0.25. At 0.1 the width must be 87 mm and at 0.25 the width must be 35 mm. If this is correct your monitor will work with Occurity.
 
 To test if your monitor scales the distance correctly, you should also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype symbol must be 58 mm at 0.1 and 23 at 0.25.
 
