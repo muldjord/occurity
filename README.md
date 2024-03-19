@@ -60,7 +60,7 @@ $ sudo locale-gen en_US.UTF-8
 ```
 
 ### Setting up Yocto
-Run the following commands to clone Yocto and the required layers. The `source` command sets up the environment required for building the image:
+Run the following commands to clone Yocto and the required layers. The `source` command sets up the environment required for building the image. If you wish to rebuilt the image later you need to re-run this `source` command in order for the `bitbake` related tools to be available and configured:
 ```
 $ cd
 $ git clone https://git.yoctoproject.org/poky
