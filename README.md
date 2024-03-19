@@ -94,6 +94,8 @@ $ bitbake core-image-sato
 ```
 Bitbake is Yocto's build system. It pulls in all required source code and compiles and configures everything needed for an embedded Linux system running Occurity on a Raspberry Pi.
 
+NOTE!!! During the bitbake procedure you might get warnings about `TMPDIR` references. These can be ignored.
+
 ### Flash the final image to an SDCard
 If everything went well you will now have a working Occurity image that can be flashed onto an SDCard. Start by decompressing the image. You should run this command from the `poky/build` directory:
 ```
