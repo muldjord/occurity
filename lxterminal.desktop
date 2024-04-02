@@ -1,8 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Type=Application
-Name=Terminal
-Exec=/usr/bin/lxterminal
-StartupNotify=true
-Categories=Utility
-Icon=lxterminal
