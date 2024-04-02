@@ -47,7 +47,13 @@ In theory most remote controls you might have lying around should work with the 
 
 Note! The [Flirc infrared reciever](https://flirc.tv/more/flirc-usb) emulates a keyboard. For the remote to work, you need to install the Flirc software on a supported OS and configure the buttons on your remote to correspond with [these](README.md#keyboard-controls) keyboard keys.
 
-## Building an Occurity SDCard image for Raspberry Pi
+## How to install Occurity
+You have two options for installing and running Occurity. Either use the pre-built SDCard images or built one yourself from scratch.
+
+## Option 1: Using a pre-built SDCard image
+If you require no customization of the image this is the easiest way to get up and running. Simply download the SDCard image corresponding to your Raspberry Pi from the [latest release files](https://github.com/muldjord/occurity/releases/latest). Decompress the image and flash it to an SDCard. Insert the SDCard in your Raspberry Pi and you are done! Be sure to check the rest of the documentation on how to use Occurity.
+
+## Option 2: Building a custom Occurity SDCard image
 The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `nanbield` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
 The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
@@ -101,17 +107,7 @@ If everything went well you will now have a working Occurity image that can be f
 ```
 $ qzip -d --force tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic.gz
 ```
-Now insert your SDCard and find the dev node it resides on using any tool. Here's how to do it with `fdisk`:
-```
-$ sudo fdisk -l
-```
-WARNING!!! Make absolutely sure you know what you are doing at this point! If you use the wrong device node in the following commands you have a risk of rendering your entire system unusable! I am not responsible if you end up flashing the image to the wrong device!
-
-When you are 100% sure you have the correct base device node for your SDCard, run the following command to flash the image to the SDCard. You should run this command from the `poky/build` directory:
-```
-$ sudo dd if=tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic of=/dev/YOURDEVICENODE bs=512k
-```
-If this completed without errors you are done! Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Check the rest of the documentation on how to configure and use it.
+Now insert your SDCard and flash it with the decompressed image using your favorite SDCard flashing tool (`dd` or similar). Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Be sure to check the rest of the documentation on how to use Occurity.
 
 ## Building Occurity on Ubuntu
 NOTE!!! If you've already built the Raspberry Pi image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
