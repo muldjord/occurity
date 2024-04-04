@@ -244,7 +244,7 @@ void JobRunner::runJob(const QString &filename)
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", QList<QString> { "apt-get", "-y", "install" } + command.parameters);
           } else {
-            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
+            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Please correct this before using this command.");
           }
         }
       }
@@ -256,7 +256,7 @@ void JobRunner::runJob(const QString &filename)
             runCommand("sudo", { "apt-get", "-y", "update" });
             runCommand("sudo", QList<QString> { "apt-get", "-y", "remove" } + command.parameters);
           } else {
-            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Check 'README.md' on how to correct this.");
+            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Please correct this before using this command.");
           }
         }
       }
