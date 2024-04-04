@@ -36,7 +36,7 @@ Occurity displays correctly on any monitor using any resolution provided the fol
 
 To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler in the [Preferences dialog](docs/PREFERENCES.md), temporarily set the patient distance to 600 cm and measure the width of any of the Sloan optotype symbols on the screen at chart size 0.1 and 0.25. At 0.1 the width must be 87 mm and at 0.25 the width must be 35 mm. If this is correct your monitor will work with Occurity.
 
-To test if your monitor scales the distance correctly, you should also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype symbol must be 58 mm at 0.1 and 23 at 0.25.
+To test if your monitor scales the distance correctly, you should also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype symbol must be 58 mm at 0.1 and 23 mm at 0.25.
 
 ##### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
