@@ -27,8 +27,6 @@ In order to install a system running Occurity you need the following hardware:
 * A [Flirc infrared reciever](https://flirc.tv/more/flirc-usb)
   * A remote control that works with flirc. Most do.
 
-Note that Occurity can be installed on any ordinary Debian-derived PC as well (Ubuntu is recommended as this is the OS used to develop Occurity).
-
 #### Monitor
 
 ##### Resolution
