@@ -36,9 +36,6 @@ class OptotypeRow : public QObject
 Q_OBJECT
 
 public:
-  OptotypeRow();
-  OptotypeRow(const OptotypeRow &data);
-  void operator=(const OptotypeRow &data);
   OptotypeRow(const QString &size, const QString &caption, QGraphicsItemGroup *letters);
   ~OptotypeRow();
   QString getSize() const;

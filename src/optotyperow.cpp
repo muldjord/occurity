@@ -29,29 +29,9 @@
 
 #include <stdio.h>
 
-OptotypeRow::OptotypeRow() : QObject()
+OptotypeRow::OptotypeRow(const QString &size, const QString &caption, QGraphicsItemGroup *letters):
+  size(size), caption(caption), letters(letters)
 {
-}
-
-OptotypeRow::OptotypeRow(const OptotypeRow &data) : QObject()
-{
-  this->size = data.size;
-  this->caption = data.caption;
-  this->letters = data.letters;
-}
-
-void OptotypeRow::operator=(const OptotypeRow &data)
-{
-  this->size = data.size;
-  this->caption = data.caption;
-  this->letters = data.letters;
-}
-
-OptotypeRow::OptotypeRow(const QString &size, const QString &caption, QGraphicsItemGroup *letters)
-{
-  this->size = size;
-  this->caption = caption;
-  this->letters = letters;
 }
 
 OptotypeRow::~OptotypeRow()
