@@ -23,6 +23,7 @@ HEADERS += src/mainwindow.h \
            src/abstractchart.h \
            src/svgchart.h \
            src/optotypechart.h \
+           src/optotyperow.h \
            src/optosymbol.h \
            src/touchcontrolitem.h \
            src/touchcontrols.h \
@@ -41,6 +42,7 @@ SOURCES += src/main.cpp \
            src/abstractchart.cpp \
            src/svgchart.cpp \
            src/optotypechart.cpp \
+           src/optotyperow.cpp \
            src/optosymbol.cpp \
            src/touchcontrolitem.cpp \
            src/touchcontrols.cpp \
