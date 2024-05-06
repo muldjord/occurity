@@ -29,6 +29,7 @@
 
 #include "mainsettings.h"
 #include "abstractchart.h"
+#include "optotyperow.h"
 
 #include <QGraphicsItem>
 #include <QGraphicsProxyWidget>
@@ -49,7 +50,7 @@ public:
   void setAnimation(const QString &animation);
   void setSize(const QString &sizeStr) override;
   QString getSize() override;
-  void addRow(const QString &size, const QString &row);
+  void addRow(const QString &size, const QString &row, const QString &caption = "");
   void setStartSize(const QString &startSize);
   void setFadeTimings(const QString &fadeTimings);
   void setFadeLevels(const QString &fadeLevels);
@@ -78,12 +79,11 @@ private:
   int skew = 0;
   double spaceWidth = 0.0;
 
-  void addRow();
   void positionReset();
 
   QList<QGraphicsItem *> hideList;
 
-  QList<QPair<QString, QGraphicsItemGroup *> > rows;
+  QList<OptotypeRow *> rows;
   int currentRowIdx = 0;
   QGraphicsSimpleTextItem *sizeItem;
   QGraphicsSimpleTextItem *copyrightItem;

@@ -45,6 +45,9 @@ OptotypeChart::OptotypeChart(MainSettings &mainSettings, QObject *parent) :
 
 OptotypeChart::~OptotypeChart()
 {
+  for(auto *row: rows) {
+    delete row;
+  }
 }
 
 void OptotypeChart::init()
@@ -133,11 +136,11 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     }
     positionReset();
   } else if(event->key() == Qt::Key_Left) {
-    if(skew > - (rows.at(currentRowIdx).second->childItems().length() / 2)) {
+    if(skew > - (rows.at(currentRowIdx)->getLetters()->childItems().length() / 2)) {
       skew--;
     }
   } else if(event->key() == Qt::Key_Right) {
-    if(skew < rows.at(currentRowIdx).second->childItems().length() / 2) {
+    if(skew < rows.at(currentRowIdx)->getLetters()->childItems().length() / 2) {
       skew++;
     }
   } else if(event->key() == Qt::Key_C) {
@@ -146,10 +149,10 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
     mainSettings.single = !mainSettings.single;
   } else if(event->key() == Qt::Key_R) {
     QList<QPointF> availableCoords;
-    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+    for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
       availableCoords.append(child->pos());
     }
-    for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+    for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
       int chosen = QRandomGenerator::global()->bounded(availableCoords.length());
       child->setPos(availableCoords.at(chosen));
       availableCoords.removeAt(chosen);
@@ -185,7 +188,7 @@ double OptotypeChart::getCrowdingSpan()
   return crowdingSpan;
 }
 
-void OptotypeChart::addRow(const QString &size, const QString &row)
+void OptotypeChart::addRow(const QString &size, const QString &caption, const QString &rowChars)
 {
   /*
     Don't do any resizing / scaling here. It has to be done in updateAll(), otherwise it
@@ -193,8 +196,6 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     Here we simply load all SVG's into QGraphicsSvgItems, move them into place and add them
     to QGraphicsItemGroups.
   */
-  QPair<QString, QGraphicsItemGroup *> rowPair;
-
   OptoSymbol *svgSpace = new OptoSymbol(mainSettings.optotypesFolder + "/" + optotype + "/_.svg",
                                         fadeTimings,
                                         fadeLevels);
@@ -205,12 +206,12 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
 
   int curX = 0;
   QList<QString> letters;
-  if(row.contains(";")) {
-    for(const auto &letter: row.split(";")) {
+  if(rowChars.contains(";")) {
+    for(const auto &letter: rowChars.split(";")) {
       letters.append(letter);
     }
   } else {
-    for(const auto &letter: row) {
+    for(const auto &letter: rowChars) {
       letters.append(letter);
     }
   }
@@ -228,51 +229,54 @@ void OptotypeChart::addRow(const QString &size, const QString &row)
     }
   }
 
-  rowPair.first = size;
-  rowPair.second = layer;
+  OptotypeRow *optotypeRow = new OptotypeRow(size, caption, layer);
 
-  rows.append(rowPair);
+  rows.append(optotypeRow);
 }
 
 void OptotypeChart::updateAll()
 {
-  QString sizeStr = "";
+  QString rowCaption = "";
   for(int a = 0; a < rows.length(); ++a) {
     if(a == currentRowIdx) {
-      sizeStr = rows.at(a).first;
-      double decimalSize = sizeStr.toDouble();
+      if(mainSettings.useRowCaptions && !rows.at(a)->getCaption().isEmpty()) {
+        rowCaption = rows.at(a)->getCaption();
+      } else {
+        rowCaption = rows.at(a)->getSize();
+      }
+      double decimalSize = rows.at(a)->getSize().toDouble();
       double arcMinScaled = ((mainSettings.pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * 100.0) * mainSettings.distanceFactor;
       double spaceWidthScaled = (spaceWidth / 100.0) * arcMinScaled;
 
       // Scale row to current decimalSize and patient distance
-      rows.at(a).second->setScale((mainSettings.pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings.distanceFactor);
+      rows.at(a)->getLetters()->setScale((mainSettings.pxPerArcMin / ((10.0 * decimalSize) * 100.0)) * mainSettings.distanceFactor);
 
       // Calculate skew
-      double currentSkew = ((rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() + spaceWidthScaled) / rows.at(a).second->childItems().length()) * skew;
+      double currentSkew = ((rows.at(a)->getLetters()->mapRectToScene(rows.at(a)->getLetters()->boundingRect()).width() + spaceWidthScaled) / rows.at(a)->getLetters()->childItems().length()) * skew;
 
       // Always use mapRectToScene to make sure current scaling is taken into account
-      rows.at(a).second->setX((mainSettings.width / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).width() / 2) + currentSkew);
-      rows.at(a).second->setY((mainSettings.height / 2) - (rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() / 2));
+      rows.at(a)->getLetters()->setX((mainSettings.width / 2) - (rows.at(a)->getLetters()->mapRectToScene(rows.at(a)->getLetters()->boundingRect()).width() / 2) + currentSkew);
+      rows.at(a)->getLetters()->setY((mainSettings.height / 2) - (rows.at(a)->getLetters()->mapRectToScene(rows.at(a)->getLetters()->boundingRect()).height() / 2));
 
-      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+      for(QGraphicsItem *graphicsItem: rows.at(a)->getLetters()->childItems()) {
         static_cast<OptoSymbol *>(graphicsItem)->fadeIn();
-        //rows.at(a).second->show();
+        //rows.at(a)->getLetters()->show();
       }
 
       // Show / hide optotypes depending on whether they are cut off at screen edges
       // or if single is set
-      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+      for(QGraphicsItem *graphicsItem: rows.at(a)->getLetters()->childItems()) {
         OptoSymbol *optoSymbol = static_cast<OptoSymbol *>(graphicsItem);
         if(mainSettings.single) {
-          if(rows.at(a).second->mapToScene(optoSymbol->pos()).x() + (rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
-             rows.at(a).second->mapToScene(optoSymbol->pos()).x() + (rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
+          if(rows.at(a)->getLetters()->mapToScene(optoSymbol->pos()).x() + (rows.at(a)->getLetters()->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) >= mainSettings.width / 2.0 - 2 &&
+             rows.at(a)->getLetters()->mapToScene(optoSymbol->pos()).x() + (rows.at(a)->getLetters()->mapRectToScene(optoSymbol->boundingRect()).width() / 2.0) <= mainSettings.width / 2.0 + 2) {
             optoSymbol->fadeIn();
           } else {
             optoSymbol->fadeInOut();
           }
         } else {
-          if(rows.at(a).second->mapToScene(optoSymbol->pos()).x() < 0 ||
-             rows.at(a).second->mapToScene(optoSymbol->pos()).x() + rows.at(a).second->mapRectToScene(optoSymbol->boundingRect()).width() > mainSettings.width) {
+          if(rows.at(a)->getLetters()->mapToScene(optoSymbol->pos()).x() < 0 ||
+             rows.at(a)->getLetters()->mapToScene(optoSymbol->pos()).x() + rows.at(a)->getLetters()->mapRectToScene(optoSymbol->boundingRect()).width() > mainSettings.width) {
             optoSymbol->fadeInOut();
           } else {
             optoSymbol->fadeIn();
@@ -293,32 +297,32 @@ void OptotypeChart::updateAll()
         double leftX = 100000000;
         int rightMost = 0;
         double rightX = 0;
-        for(int b = 0; b < rows.at(a).second->childItems().length(); ++b) {
-          if(static_cast<OptoSymbol *>(rows.at(a).second->childItems().at(b))->isHidden()) {
+        for(int b = 0; b < rows.at(a)->getLetters()->childItems().length(); ++b) {
+          if(static_cast<OptoSymbol *>(rows.at(a)->getLetters()->childItems().at(b))->isHidden()) {
             continue;
           }
-          if(rows.at(a).second->childItems().at(b)->pos().x() <= leftX) {
+          if(rows.at(a)->getLetters()->childItems().at(b)->pos().x() <= leftX) {
             leftMost = b;
-            leftX = rows.at(a).second->childItems().at(b)->pos().x();
+            leftX = rows.at(a)->getLetters()->childItems().at(b)->pos().x();
           }
-          if(rows.at(a).second->childItems().at(b)->pos().x() >= rightX) {
+          if(rows.at(a)->getLetters()->childItems().at(b)->pos().x() >= rightX) {
             rightMost = b;
-            rightX = rows.at(a).second->childItems().at(b)->pos().x();
+            rightX = rows.at(a)->getLetters()->childItems().at(b)->pos().x();
           }
         }
 
-        crowdRect->setRect(rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).x() - ((crowdingSpan + 0.5) * arcMinScaled),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).y() - ((crowdingSpan + 0.5) * arcMinScaled),
-                           rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(rightMost)->pos()).x() - rows.at(a).second->mapToScene(rows.at(a).second->childItems().at(leftMost)->pos()).x() + rows.at(a).second->mapRectToScene(rows.at(a).second->childItems().at(rightMost)->boundingRect()).width() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled),
-                           rows.at(a).second->mapRectToScene(rows.at(a).second->boundingRect()).height() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled));
+        crowdRect->setRect(rows.at(a)->getLetters()->mapToScene(rows.at(a)->getLetters()->childItems().at(leftMost)->pos()).x() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a)->getLetters()->mapToScene(rows.at(a)->getLetters()->childItems().at(leftMost)->pos()).y() - ((crowdingSpan + 0.5) * arcMinScaled),
+                           rows.at(a)->getLetters()->mapToScene(rows.at(a)->getLetters()->childItems().at(rightMost)->pos()).x() - rows.at(a)->getLetters()->mapToScene(rows.at(a)->getLetters()->childItems().at(leftMost)->pos()).x() + rows.at(a)->getLetters()->mapRectToScene(rows.at(a)->getLetters()->childItems().at(rightMost)->boundingRect()).width() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled),
+                           rows.at(a)->getLetters()->mapRectToScene(rows.at(a)->getLetters()->boundingRect()).height() + (((crowdingSpan + 0.5) * 2.0) * arcMinScaled));
         crowdRect->show();
       } else {
         crowdRect->hide();
       }
     } else {
-      for(QGraphicsItem *graphicsItem: rows.at(a).second->childItems()) {
+      for(QGraphicsItem *graphicsItem: rows.at(a)->getLetters()->childItems()) {
         static_cast<OptoSymbol *>(graphicsItem)->fadeOut();
-        //rows.at(a).second->hide();
+        //rows.at(a)->getLetters()->hide();
       }
     }
   }
@@ -328,7 +332,7 @@ void OptotypeChart::updateAll()
   font.setPixelSize(mainSettings.pxPerArcMin * mainSettings.distanceFactor * 1.5);
 
   // Add the optoSymbol size visual help
-  sizeItem->setText(sizeStr);
+  sizeItem->setText(rowCaption);
   sizeItem->setFont(font);
   sizeItem->setX(10);
   sizeItem->setY(mainSettings.height - sizeItem->boundingRect().height() - 10);
@@ -366,7 +370,7 @@ void OptotypeChart::resetAll()
 void OptotypeChart::setSize(const QString &sizeStr)
 {
   for(int a = 0; a < rows.length(); ++a) {
-    if(rows.at(a).first == sizeStr) {
+    if(rows.at(a)->getSize() == sizeStr) {
       currentRowIdx = a;
       break;
     }
@@ -377,13 +381,13 @@ void OptotypeChart::setSize(const QString &sizeStr)
 
 QString OptotypeChart::getSize()
 {
-  return rows.at(currentRowIdx).first;
+  return rows.at(currentRowIdx)->getSize();
 }
 
 void OptotypeChart::positionReset()
 {
   // Reset positions for all optotype symbols in row in case they've been randomized
-  for(const auto &child: rows.at(currentRowIdx).second->childItems()) {
+  for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
     child->setPos(child->data(0).toPointF());
   }
 }
