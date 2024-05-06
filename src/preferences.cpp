@@ -45,7 +45,7 @@
 Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 750);
+  setFixedSize(1200, 800);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
@@ -69,6 +69,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
   Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
+  CheckBox *useRowCaptions = new CheckBox(config, "", "useRowCaptions", tr("Use row captions"), false, this);
   CheckBox *showMouseCursor = new CheckBox(config, "touch", "showMouse", tr("Show mouse cursor"), false, this);
   CheckBox *showTouchControls = new CheckBox(config, "touch", "touchControls", tr("Show touch controls (requires restart)"), false, this);
   CheckBox *leftHandedOperator = new CheckBox(config, "touch", "leftHandedOperator", tr("Left handed operator"), false, this);
@@ -82,6 +83,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   configLayout->addWidget(hexRed);
   configLayout->addWidget(hexGreen);
   configLayout->addWidget(rowSkipDelta);
+  configLayout->addWidget(useRowCaptions);
   configLayout->addWidget(showMouseCursor);
   configLayout->addWidget(showTouchControls);
   configLayout->addWidget(leftHandedOperator);
