@@ -49,13 +49,14 @@ Must be nested in the `group` node. This defines a single chart to be used by th
 #### 'row' node
 Must be nested inside a `chart` node. A single `row` node defines a row in the chart. It has the following format:
 ```
-<row size="0.1">NCKZO</row>
+<row size="0.1" caption="Row caption">NCKZO</row>
 ```
 or
 ```
-<row size="0.1">one;two;three;four;five</row>
+<row size="0.1" caption="Row caption">one;two;three;four;five</row>
 ```
-Size defines the size used by the row (required). This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
+* `size="0.1"` (required): Defines the size used by the row. This is defined as 0.1 being equal to 5 arc-minutes at a distance of 6 meters.
+* `caption="Row caption"` (optional): Defines the caption shown in the lower-left corner of the monitor when this row is selected. Row captions can be enabled / disabled in the Preferences dialog. If captions are disabled it will instead use the decimal size as caption.
 
 You can fill in the contents of a row in two different ways. Either by simply entering the letters that should be used. These letters MUST correspond to the filenames of the optotype specific subdirectory located in the `optotypes` subdirectory. In the first examples above the files must be called `N.svg`, `C.svg` and so on.
 
