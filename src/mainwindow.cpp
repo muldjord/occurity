@@ -214,9 +214,10 @@ bool MainWindow::loadCharts(QString chartsXml)
         for(int b = 0; b < xmlRows.count(); ++b) {
           QDomElement xmlRow = xmlRows.at(b).toElement();
           QString rowSize = xmlRow.attribute("size");
+          QString rowCaption = xmlRow.attribute("caption");
           QString rowChars = xmlRow.text();
-          static_cast<OptotypeChart*>(chart)->addRow(rowSize, rowChars);
-          printf("    Row: '%s', size '%s'\n", xmlRow.text().toStdString().c_str(), xmlRow.attribute("size").toStdString().c_str());
+          static_cast<OptotypeChart*>(chart)->addRow(rowSize, rowCaption, rowChars);
+          printf("    Row: '%s', size '%s', caption '%s'\n", qPrintable(rowChars), qPrintable(rowSize), qPrintable(rowCaption));
         }
         QList<QString> rowSizeStrings;
         for(auto &str : rowSizeMap.keys()) {
@@ -363,6 +364,9 @@ void MainWindow::updateFromConfig()
   if(!config.contains("rowSkipDelta")) {
     config.setValue("rowSkipDelta", 4);
   }
+  if(!config.contains("useRowCaptions")) {
+    config.setValue("useRowCaptions", false);
+  }
   if(!config.contains("pinCode")) {
     config.setValue("pinCode", "4242");
   }
@@ -396,6 +400,8 @@ void MainWindow::updateFromConfig()
   mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
 
   mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
+
+  mainSettings.useRowCaptions = config.value("useRowCaptions").toBool();
 
   mainSettings.networkHost = config.value("network/host", "www.kernel.org").toString();
   mainSettings.networkPort = config.value("network/port", 80).toInt();
