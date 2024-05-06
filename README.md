@@ -185,7 +185,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.2.2 (In progress, unreleased)
+#### Version 1.2.2 (06May2024)
 * Added row caption support. This allows users to set a caption for each row of the optotype charts.
 * Changed sleep scripts to use `xset` instead of `xrandr` for (hopefully) better support for more monitors.
 
