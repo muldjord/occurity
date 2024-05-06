@@ -39,6 +39,7 @@ struct MainSettings {
   QString pinCode = "4242";
   QString jobsFolder = "./jobs";
   QString optotypesFolder = "./optotypes";
+  bool useRowCaptions = false;
   bool enableVideoPlayer = true;
   QString videosFolder = "./videos";
   bool updatePretend = false;
