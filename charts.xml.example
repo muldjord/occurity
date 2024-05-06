@@ -2,122 +2,122 @@
 <charts>
   <group numkey="1" touchcontrols="left,right,up,down,crowding,single,preferences">
     <chart caption="Sloan 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">VHCNO</row>
-      <row size="0.067">SVHCZ</row>
-      <row size="0.08">OZDVK</row>
-      <row size="0.1">NCKZO</row>
-      <row size="0.125">RHSDK</row>
-      <row size="0.16">DOVHR</row>
-      <row size="0.2">CZRHS</row>
-      <row size="0.25">ONHRC</row>
-      <row size="0.32">DKSNV</row>
-      <row size="0.4">ZSOKN</row>
-      <row size="0.5">CKDNR</row>
-      <row size="0.63">SRZKD</row>
-      <row size="0.8">HZOVC</row>
-      <row size="1.0">NVDOK</row>
-      <row size="1.25">VHCNO</row>
-      <row size="1.6">SVHCZ</row>
-      <row size="2.0">OZDVK</row>
+      <row size="0.05" caption="20/400">VHCNO</row>
+      <row size="0.067" caption="20/320">SVHCZ</row>
+      <row size="0.08" caption="20/250">OZDVK</row>
+      <row size="0.1" caption="20/200">NCKZO</row>
+      <row size="0.125" caption="20/160">RHSDK</row>
+      <row size="0.16" caption="20/125">DOVHR</row>
+      <row size="0.2" caption="20/100">CZRHS</row>
+      <row size="0.25" caption="20/80">ONHRC</row>
+      <row size="0.32" caption="20/63">DKSNV</row>
+      <row size="0.4" caption="20/50">ZSOKN</row>
+      <row size="0.5" caption="20/40">CKDNR</row>
+      <row size="0.63" caption="20/32">SRZKD</row>
+      <row size="0.8" caption="20/25">HZOVC</row>
+      <row size="1.0" caption="20/20">NVDOK</row>
+      <row size="1.25" caption="20/16">VHCNO</row>
+      <row size="1.6" caption="20/12.5">SVHCZ</row>
+      <row size="2.0" caption="20/10">OZDVK</row>
     </chart>
     <chart caption="Sloan 2" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">ODHKR</row>
-      <row size="0.067">ZKCSN</row>
-      <row size="0.08">CRHDV</row>
-      <row size="0.1">DSRKN</row>
-      <row size="0.125">CKZOH</row>
-      <row size="0.16">ONRKD</row>
-      <row size="0.2">KZVDC</row>
-      <row size="0.25">VSHZO</row>
-      <row size="0.32">HDKCR</row>
-      <row size="0.4">CSRHN</row>
-      <row size="0.5">SVZDK</row>
-      <row size="0.63">NCVOZ</row>
-      <row size="0.8">RHSDV</row>
-      <row size="1.0">SNROH</row>
-      <row size="1.25">ODHKR</row>
-      <row size="1.6">ZKCSN</row>
-      <row size="2.0">CRHDV</row>
+      <row size="0.05" caption="20/400">ODHKR</row>
+      <row size="0.067" caption="20/320">ZKCSN</row>
+      <row size="0.08" caption="20/250">CRHDV</row>
+      <row size="0.1" caption="20/200">DSRKN</row>
+      <row size="0.125" caption="20/160">CKZOH</row>
+      <row size="0.16" caption="20/125">ONRKD</row>
+      <row size="0.2" caption="20/100">KZVDC</row>
+      <row size="0.25" caption="20/80">VSHZO</row>
+      <row size="0.32" caption="20/63">HDKCR</row>
+      <row size="0.4" caption="20/50">CSRHN</row>
+      <row size="0.5" caption="20/40">SVZDK</row>
+      <row size="0.63" caption="20/32">NCVOZ</row>
+      <row size="0.8" caption="20/25">RHSDV</row>
+      <row size="1.0" caption="20/20">SNROH</row>
+      <row size="1.25" caption="20/16">ODHKR</row>
+      <row size="1.6" caption="20/12.5">ZKCSN</row>
+      <row size="2.0" caption="20/10">CRHDV</row>
     </chart>
     <chart caption="Sloan R" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">SZRDN</row>
-      <row size="0.067">HCDRO</row>
-      <row size="0.08">RDOSN</row>
-      <row size="0.1">HVZDS</row>
-      <row size="0.125">NCVKD</row>
-      <row size="0.16">CZSHN</row>
-      <row size="0.2">ONVSR</row>
-      <row size="0.25">KDNRO</row>
-      <row size="0.32">ZKCSV</row>
-      <row size="0.4">DVOHC</row>
-      <row size="0.5">OHVCK</row>
-      <row size="0.63">HZCKO</row>
-      <row size="0.8">NCKHD</row>
-      <row size="1.0">ZHCSR</row>
-      <row size="1.25">SZRDN</row>
-      <row size="1.6">HCDRO</row>
-      <row size="2.0">RDOSN</row>
+      <row size="0.05" caption="20/400">SZRDN</row>
+      <row size="0.067" caption="20/320">HCDRO</row>
+      <row size="0.08" caption="20/250">RDOSN</row>
+      <row size="0.1" caption="20/200">HVZDS</row>
+      <row size="0.125" caption="20/160">NCVKD</row>
+      <row size="0.16" caption="20/125">CZSHN</row>
+      <row size="0.2" caption="20/100">ONVSR</row>
+      <row size="0.25" caption="20/80">KDNRO</row>
+      <row size="0.32" caption="20/63">ZKCSV</row>
+      <row size="0.4" caption="20/50">DVOHC</row>
+      <row size="0.5" caption="20/40">OHVCK</row>
+      <row size="0.63" caption="20/32">HZCKO</row>
+      <row size="0.8" caption="20/25">NCKHD</row>
+      <row size="1.0" caption="20/20">ZHCSR</row>
+      <row size="1.25" caption="20/16">SZRDN</row>
+      <row size="1.6" caption="20/12.5">HCDRO</row>
+      <row size="2.0" caption="20/10">RDOSN</row>
     </chart>
   </group>
   <group numkey="2" touchcontrols="left,right,up,down,crowding,single,preferences">
     <chart caption="Tumbling E" type="optotype" optotype="tumblinge" startsize="0.1" sizelock="true">
-      <row size="0.05">Ee;Es;En;Ee;Ew</row>
-      <row size="0.067">Ew;Es;Ee;Ew;En</row>
-      <row size="0.08">Es;Ew;En;Ee;Es</row>
-      <row size="0.1">Ee;Es;Ee;Ew;En</row>
-      <row size="0.125">Ew;Es;Ee;En;Ew</row>
-      <row size="0.16">En;Ee;Es;Ew;En</row>
-      <row size="0.2">Es;En;Ew;Es;Ee</row>
-      <row size="0.25">Ew;Ee;En;Ee;Es</row>
-      <row size="0.32">Ee;En;Es;En;Ew</row>
-      <row size="0.4">Ew;Es;Ee;Ew;En</row>
-      <row size="0.5">Es;Ee;En;Es;Ew</row>
-      <row size="0.63">En;Ew;Es;En;Ee</row>
-      <row size="0.8">Ee;Es;Ee;Ew;En</row>
-      <row size="1.0">Es;Ew;En;Ee;Es</row>
-      <row size="1.25">Ew;En;Es;Ew;Ee</row>
-      <row size="1.6">Ee;Es;En;Ee;Ew</row>
-      <row size="2.0">En;Ew;Ee;Es;En</row>
+      <row size="0.05" caption="20/400">Ee;Es;En;Ee;Ew</row>
+      <row size="0.067" caption="20/320">Ew;Es;Ee;Ew;En</row>
+      <row size="0.08" caption="20/250">Es;Ew;En;Ee;Es</row>
+      <row size="0.1" caption="20/200">Ee;Es;Ee;Ew;En</row>
+      <row size="0.125" caption="20/160">Ew;Es;Ee;En;Ew</row>
+      <row size="0.16" caption="20/125">En;Ee;Es;Ew;En</row>
+      <row size="0.2" caption="20/100">Es;En;Ew;Es;Ee</row>
+      <row size="0.25" caption="20/80">Ew;Ee;En;Ee;Es</row>
+      <row size="0.32" caption="20/63">Ee;En;Es;En;Ew</row>
+      <row size="0.4" caption="20/50">Ew;Es;Ee;Ew;En</row>
+      <row size="0.5" caption="20/40">Es;Ee;En;Es;Ew</row>
+      <row size="0.63" caption="20/32">En;Ew;Es;En;Ee</row>
+      <row size="0.8" caption="20/25">Ee;Es;Ee;Ew;En</row>
+      <row size="1.0" caption="20/20">Es;Ew;En;Ee;Es</row>
+      <row size="1.25" caption="20/16">Ew;En;Es;Ew;Ee</row>
+      <row size="1.6" caption="20/12.5">Ee;Es;En;Ee;Ew</row>
+      <row size="2.0" caption="20/10">En;Ew;Ee;Es;En</row>
     </chart>
     <chart caption="Landolt C" type="optotype" optotype="landoltc" startsize="0.1" sizelock="true">
-      <row size="0.05">Cs;Cnw;Cw;Cse;Cne</row>
-      <row size="0.067">Cw;Cne;Cs;Cn;Ce</row>
-      <row size="0.08">Cse;Cw;Cnw;Cne;Cn</row>
-      <row size="0.1">Cw;Cnw;Cn;Cse;Ce</row>
-      <row size="0.125">Cne;Cs;Ce;Cw;Cn</row>
-      <row size="0.16">Csw;Cn;Cw;Cse;Cne</row>
-      <row size="0.2">Cnw;Cne;Cn;Ce;Cse</row>
-      <row size="0.25">Ce;Cw;Cs;Csw;Cnw</row>
-      <row size="0.32">Cne;Csw;Ce;Cs;Cw</row>
-      <row size="0.4">Cnw;Cne;Cn;Ce;Cse</row>
-      <row size="0.5">Ce;Cs;Csw;Cnw;Cn</row>
-      <row size="0.63">Csw;Ce;Cn;Cw;Cnw</row>
-      <row size="0.8">Cnw;Cn;Cs;Ce;Cse</row>
-      <row size="1.0">Ce;Cne;Cn;Cnw;Csw</row>
-      <row size="1.25">Cnw;Cn;Ce;Cw;Cse</row>
-      <row size="1.6">Cse;Cs;Cnw;Csw;Ce</row>
-      <row size="2.0">Ce;Cnw;Cne;Cw;Csw</row>
+      <row size="0.05" caption="20/400">Cs;Cnw;Cw;Cse;Cne</row>
+      <row size="0.067" caption="20/320">Cw;Cne;Cs;Cn;Ce</row>
+      <row size="0.08" caption="20/250">Cse;Cw;Cnw;Cne;Cn</row>
+      <row size="0.1" caption="20/200">Cw;Cnw;Cn;Cse;Ce</row>
+      <row size="0.125" caption="20/160">Cne;Cs;Ce;Cw;Cn</row>
+      <row size="0.16" caption="20/125">Csw;Cn;Cw;Cse;Cne</row>
+      <row size="0.2" caption="20/100">Cnw;Cne;Cn;Ce;Cse</row>
+      <row size="0.25" caption="20/80">Ce;Cw;Cs;Csw;Cnw</row>
+      <row size="0.32" caption="20/63">Cne;Csw;Ce;Cs;Cw</row>
+      <row size="0.4" caption="20/50">Cnw;Cne;Cn;Ce;Cse</row>
+      <row size="0.5" caption="20/40">Ce;Cs;Csw;Cnw;Cn</row>
+      <row size="0.63" caption="20/32">Csw;Ce;Cn;Cw;Cnw</row>
+      <row size="0.8" caption="20/25">Cnw;Cn;Cs;Ce;Cse</row>
+      <row size="1.0" caption="20/20">Ce;Cne;Cn;Cnw;Csw</row>
+      <row size="1.25" caption="20/16">Cnw;Cn;Ce;Cw;Cse</row>
+      <row size="1.6" caption="20/12.5">Cse;Cs;Cnw;Csw;Ce</row>
+      <row size="2.0" caption="20/10">Ce;Cnw;Cne;Cw;Csw</row>
     </chart>
   </group>
   <group numkey="3" touchcontrols="left,right,up,down,crowding,single,preferences">
     <chart caption="Numbers" type="optotype" optotype="numbers" startsize="0.1" sizelock="true">
-      <row size="0.05">32596</row>
-      <row size="0.067">59632</row>
-      <row size="0.08">65923</row>
-      <row size="0.1">96235</row>
-      <row size="0.125">35962</row>
-      <row size="0.16">62359</row>
-      <row size="0.2">59623</row>
-      <row size="0.25">23596</row>
-      <row size="0.32">35629</row>
-      <row size="0.4">62935</row>
-      <row size="0.5">39256</row>
-      <row size="0.63">25639</row>
-      <row size="0.8">63925</row>
-      <row size="1.0">92563</row>
-      <row size="1.25">56392</row>
-      <row size="1.6">69523</row>
-      <row size="2.0">52639</row>
+      <row size="0.05" caption="20/400">32596</row>
+      <row size="0.067" caption="20/320">59632</row>
+      <row size="0.08" caption="20/250">65923</row>
+      <row size="0.1" caption="20/200">96235</row>
+      <row size="0.125" caption="20/160">35962</row>
+      <row size="0.16" caption="20/125">62359</row>
+      <row size="0.2" caption="20/100">59623</row>
+      <row size="0.25" caption="20/80">23596</row>
+      <row size="0.32" caption="20/63">35629</row>
+      <row size="0.4" caption="20/50">62935</row>
+      <row size="0.5" caption="20/40">39256</row>
+      <row size="0.63" caption="20/32">25639</row>
+      <row size="0.8" caption="20/25">63925</row>
+      <row size="1.0" caption="20/20">92563</row>
+      <row size="1.25" caption="20/16">56392</row>
+      <row size="1.6" caption="20/12.5">69523</row>
+      <row size="2.0" caption="20/10">52639</row>
     </chart>
   </group>
   <group numkey="5" touchcontrols="preferences">
@@ -139,42 +139,42 @@
   </group>
   <group numkey="7" touchcontrols="left,right,up,down,crowding,single,preferences">
     <chart caption="HOTV 1" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">OHVTV</row>
-      <row size="0.067">VTOHO</row>
-      <row size="0.08">TOTVH</row>
-      <row size="0.1">VOTHO</row>
-      <row size="0.125">HTVOT</row>
-      <row size="0.16">OHOTV</row>
-      <row size="0.2">TVHOH</row>
-      <row size="0.25">VOVHT</row>
-      <row size="0.32">OHTOV</row>
-      <row size="0.4">TOVHO</row>
-      <row size="0.5">HVTOT</row>
-      <row size="0.63">OTHVH</row>
-      <row size="0.8">VOTHT</row>
-      <row size="1.0">HVOTV</row>
-      <row size="1.25">TOTVH</row>
-      <row size="1.6">VTOHO</row>
-      <row size="2.0">OHVTV</row>
+      <row size="0.05" caption="20/400">OHVTV</row>
+      <row size="0.067" caption="20/320">VTOHO</row>
+      <row size="0.08" caption="20/250">TOTVH</row>
+      <row size="0.1" caption="20/200">VOTHO</row>
+      <row size="0.125" caption="20/160">HTVOT</row>
+      <row size="0.16" caption="20/125">OHOTV</row>
+      <row size="0.2" caption="20/100">TVHOH</row>
+      <row size="0.25" caption="20/80">VOVHT</row>
+      <row size="0.32" caption="20/63">OHTOV</row>
+      <row size="0.4" caption="20/50">TOVHO</row>
+      <row size="0.5" caption="20/40">HVTOT</row>
+      <row size="0.63" caption="20/32">OTHVH</row>
+      <row size="0.8" caption="20/25">VOTHT</row>
+      <row size="1.0" caption="20/20">HVOTV</row>
+      <row size="1.25" caption="20/16">TOTVH</row>
+      <row size="1.6" caption="20/12.5">VTOHO</row>
+      <row size="2.0" caption="20/10">OHVTV</row>
     </chart>
     <chart caption="HOTV 2" type="optotype" optotype="sloan" startsize="0.1" sizelock="true">
-      <row size="0.05">HVTOV</row>
-      <row size="0.067">OTVHT</row>
-      <row size="0.08">THOVH</row>
-      <row size="0.1">HOTVO</row>
-      <row size="0.125">VTHOV</row>
-      <row size="0.16">TOVHO</row>
-      <row size="0.2">VHOHT</row>
-      <row size="0.25">OTHVT</row>
-      <row size="0.32">HOVTV</row>
-      <row size="0.4">TVHOH</row>
-      <row size="0.5">VHOTV</row>
-      <row size="0.63">OTHVT</row>
-      <row size="0.8">HOTHV</row>
-      <row size="1.0">THOVH</row>
-      <row size="1.25">HVTOV</row>
-      <row size="1.6">OTVHT</row>
-      <row size="2.0">HOTVO</row>
+      <row size="0.05" caption="20/400">HVTOV</row>
+      <row size="0.067" caption="20/320">OTVHT</row>
+      <row size="0.08" caption="20/250">THOVH</row>
+      <row size="0.1" caption="20/200">HOTVO</row>
+      <row size="0.125" caption="20/160">VTHOV</row>
+      <row size="0.16" caption="20/125">TOVHO</row>
+      <row size="0.2" caption="20/100">VHOHT</row>
+      <row size="0.25" caption="20/80">OTHVT</row>
+      <row size="0.32" caption="20/63">HOVTV</row>
+      <row size="0.4" caption="20/50">TVHOH</row>
+      <row size="0.5" caption="20/40">VHOTV</row>
+      <row size="0.63" caption="20/32">OTHVT</row>
+      <row size="0.8" caption="20/25">HOTHV</row>
+      <row size="1.0" caption="20/20">THOVH</row>
+      <row size="1.25" caption="20/16">HVTOV</row>
+      <row size="1.6" caption="20/12.5">OTVHT</row>
+      <row size="2.0" caption="20/10">HOTVO</row>
     </chart>
   </group>
 </charts>
