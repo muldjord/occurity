@@ -45,7 +45,7 @@
 Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts, QWidget *parent)
   : QDialog(parent), config(config)
 {
-  setFixedSize(1200, 800);
+  setFixedSize(1200, 850);
   setWindowIcon(QIcon(":icon.png"));
   setWindowTitle("Occurity v" VERSION);
 
@@ -53,23 +53,24 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   tabWidget->setFocusPolicy(Qt::NoFocus);
   tabWidget->setMinimumWidth(600);
 
-  Slider *rulerWidth = new Slider(config, "", "rulerWidth", tr("Physical length of ruler (mm):"), 50, 800, 138, 1, this);
+  Slider *rulerWidth = new Slider(config, "main", "rulerWidth", tr("Physical length of ruler (mm):"), 50, 800, 138, 1, this);
   rulerWidth->setFocus();
   QLabel *rulerLabel = new QLabel(this);
   rulerLabel->setPixmap(QPixmap(":ruler.png"));
-  Slider *patientDistance = new Slider(config, "", "patientDistance", tr("Patient distance to monitor (cm):"), 50, 1000, 600, 10, this);
+  Slider *patientDistance = new Slider(config, "main", "patientDistance", tr("Patient distance to monitor (cm):"), 50, 1000, 600, 10, this);
 
-  ComboBox *startingChart = new ComboBox(config, "", "startingChart", tr("Starting chart:"), "", this);
+  ComboBox *startingChart = new ComboBox(config, "main", "startingChart", tr("Starting chart:"), "", this);
   for(const auto *chart: charts) {
     startingChart->addConfigItem(chart->objectName(), chart->objectName());
   }
 
-  Slider *sizeResetTime = new Slider(config, "", "sizeResetTime", tr("Idle time before size reset (seconds):"), 10, 3600, 240, 10, this);
-  Slider *hexRed = new Slider(config, "", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
-  Slider *hexGreen = new Slider(config, "", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
-  Slider *rowSkipDelta = new Slider(config, "", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
+  Slider *minutesBeforeSizeReset = new Slider(config, "main", "minutesBeforeSizeReset", tr("Idle time before size reset (minutes):"), 1, 240, 4, 1, this);
+  Slider *minutesBeforeSleep = new Slider(config, "main", "minutesBeforeSleep", tr("Idle time before putting the monitor to sleep (minutes):"), 5, 480, 120, 5, this);
+  Slider *hexRed = new Slider(config, "main", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
+  Slider *hexGreen = new Slider(config, "main", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
+  Slider *rowSkipDelta = new Slider(config, "main", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
-  CheckBox *useRowCaptions = new CheckBox(config, "", "useRowCaptions", tr("Use row captions"), false, this);
+  CheckBox *useRowCaptions = new CheckBox(config, "main", "useRowCaptions", tr("Use row captions"), false, this);
   CheckBox *showMouseCursor = new CheckBox(config, "touch", "showMouse", tr("Show mouse cursor"), false, this);
   CheckBox *showTouchControls = new CheckBox(config, "touch", "touchControls", tr("Show touch controls (requires restart)"), false, this);
   CheckBox *leftHandedOperator = new CheckBox(config, "touch", "leftHandedOperator", tr("Left handed operator"), false, this);
@@ -79,7 +80,8 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   configLayout->addWidget(rulerLabel, 0, Qt::AlignCenter);
   configLayout->addWidget(patientDistance);
   configLayout->addWidget(startingChart);
-  configLayout->addWidget(sizeResetTime);
+  configLayout->addWidget(minutesBeforeSizeReset);
+  configLayout->addWidget(minutesBeforeSleep);
   configLayout->addWidget(hexRed);
   configLayout->addWidget(hexGreen);
   configLayout->addWidget(rowSkipDelta);
