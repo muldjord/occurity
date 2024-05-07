@@ -185,6 +185,14 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
+#### Version 1.2.3 (In progress, unreleased)
+* Improved the sleep key 'q' functionality to now work both for putting the monitor to sleep and making it wake up again. Any other key will also wake it up.
+* Renamed all instances of hibernate to sleep as 'hibernate' is misleading. It only puts the monitor to sleep not the entire system.
+* Added 'minutesBeforeSleep' to Preferences dialog.
+* Size reset is now in minutes instead of seconds.
+* Renamed 'General' config.ini section to 'main'
+* Renamed 'sizeResetTime' config variable to 'minutesBeforeSizeReset' for better clarity.
+
 #### Version 1.2.2 (06May2024)
 * Added row caption support. This allows users to set a caption for each row of the optotype charts.
 * Changed sleep scripts to use `xset` instead of `xrandr` for (hopefully) better support for more monitors.
