@@ -35,10 +35,8 @@
 #include <QDirIterator>
 #include <QKeyEvent>
 #include <QEventLoop>
-#include <QNetworkInterface>
 #include <QScrollBar>
 #include <QStorageInfo>
-#include <QTcpSocket>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -237,31 +235,7 @@ void JobRunner::runJob(const QString &filename)
       break;
     }
 
-    if(command.type == "aptinstall") {
-      if(command.parameters.length() >= 1) {
-        if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get", "--help" }, 1, true)) {
-            runCommand("sudo", { "apt-get", "-y", "update" });
-            runCommand("sudo", QList<QString> { "apt-get", "-y", "install" } + command.parameters);
-          } else {
-            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Please correct this before using this command.");
-          }
-        }
-      }
-
-    } else if(command.type == "aptremove") {
-      if(command.parameters.length() == 1) {
-        if(hasInternet(getCommandString(command))) {
-          if(runCommand("sudo", { "apt-get", "--help" }, 1, true)) {
-            runCommand("sudo", { "apt-get", "-y", "update" });
-            runCommand("sudo", QList<QString> { "apt-get", "-y", "remove" } + command.parameters);
-          } else {
-            addStatus(FATAL, "Current user is probably not set up to use 'apt-get' in '/etc/sudoers/sudoers.d/'. Please correct this before using this command.");
-          }
-        }
-      }
-
-    } else if(command.type == "addexclude") {
+    if(command.type == "addexclude") {
       if(command.parameters.length() == 1) {
         addExclude(command.parameters.at(0));
       }
@@ -971,24 +945,6 @@ bool JobRunner::syncFileSystem()
   }
   addStatus(INFO, "Sync completed!");
   return true;
-}
-
-bool JobRunner::hasInternet(const QString &command)
-{
-  QTcpSocket testSocket;
-  testSocket.connectToHost(mainSettings.networkHost, mainSettings.networkPort);
-  if(testSocket.waitForConnected(1000)) {
-    testSocket.close();
-    return true;
-  }
-  MessageBox messageBox(QMessageBox::Question, "No internet", "The command '" + command + "' requires an internet connection.\n\nIs this command critical for this job procedure to proceed as expected?", QMessageBox::Yes | QMessageBox::No, this);
-  messageBox.exec();
-  if(messageBox.result() == QMessageBox::Yes) {
-    addStatus(FATAL, "Job cancelled due to missing internet connection!");
-  } else {
-    addStatus(WARNING, "No internet connection detected, continuing anyway!");
-  }
-  return false;
 }
 
 bool JobRunner::mvFile(QString srcFile, QString dstFile)

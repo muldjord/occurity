@@ -140,24 +140,6 @@ WARNING! This command can be dangerous to use! It removes ENTIRE directory trees
 * Example 1: `rmpath:%HOME%/occurity/optotypes`
 * Example 2: `rmpath:/tmp/tempdir`
 
-#### aptinstall:PACKAGE1;PACKAGE2;...
-In some cases it can be necessary to install further packages using the `sudo apt-get install` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
-
-To allow the use of the `apt` commands, it is necessary to let the user running Occurity run these commands without having to provide a password. Go [here](../README.md#etcsudoersdpi-optional) to read more.
-
-Note! `sudo apt-get update` will automatically be run before installing any new packages.
-
-* Example 1: `aptinstall:qtmultimedia5-dev;libqt5multimedia5-plugins`
-
-#### aptremove:PACKAGE1;PACKAGE2;...
-In some cases it can be necessary to remove packages using the `sudo apt-get remove` command. This command allows just that. Be aware that in order for this command to work, you need to do the following.
-
-To allow the use of the `apt` commands, it is necessary to let the user running Occurity run these commands without having to provide a password. Go [here](../README.md#etcsudoersdpi-optional) to read more.
-
-Note! `sudo apt-get update` will automatically be run before removing any packages.
-
-* Example 1: `aptremove:gstreamer1.0-plugins-bad`
-
 #### reboot:force|ask
 Reboots the computer. `force` will restart without asking the user. `ask` will allow the user to cancel the reboot through a dialog.
 
