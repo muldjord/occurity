@@ -64,7 +64,7 @@ Slider::Slider(QSettings &config, const QString &group, const QString &name, con
   }
 
   valueLineEdit->setText(QString::number(valueSlider->value())); // Hack to make sure the initial value is displayed, even if it's equal to minValue in which case valueChanged is never emitted on construction
-  valueSlider->setValue(config.value(name, this->defaultValue).toInt());
+  valueSlider->setValue(config.value(key, this->defaultValue).toInt());
 }
 
 Slider::~Slider()
