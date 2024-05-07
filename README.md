@@ -192,6 +192,8 @@ Occurity comes with a number of default charts. All charts can easily be customi
 * Size reset is now in minutes instead of seconds.
 * Renamed 'General' config.ini section to 'main'
 * Renamed 'sizeResetTime' config variable to 'minutesBeforeSizeReset' for better clarity.
+* Removed obsolete 'aptinstall' and 'aptremove' jobrunner commands and all related functions and configs.
+* Fixed bug in Slider where value would only be set in Preferences if config variable was in 'General' section.
 
 #### Version 1.2.2 (06May2024)
 * Added row caption support. This allows users to set a caption for each row of the optotype charts.
