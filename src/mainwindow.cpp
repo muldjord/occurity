@@ -76,16 +76,12 @@ MainWindow::MainWindow(QSettings &config) : config(config)
                                   this);
   }
 
-  hiberCooldownTimer.setInterval(10000);
-  hiberCooldownTimer.setSingleShot(true);
-  connect(&hiberCooldownTimer, &QTimer::timeout, [this] () { allowHibernate = true; });
+  // Initial interval was set in updateFromConfig;
+  sleepTimer.setSingleShot(true);
+  connect(&sleepTimer, &QTimer::timeout, this, &MainWindow::monitorSleep);
+  sleepTimer.start();
 
-  hiberTimer.setInterval(mainSettings.hibernateTime);
-  hiberTimer.setSingleShot(true);
-  connect(&hiberTimer, &QTimer::timeout, this, &MainWindow::hibernate);
-  hiberTimer.start();
-
-  // Initial interval is set in updateFromConfig;
+  // Initial interval was set in updateFromConfig;
   resetTimer.setSingleShot(true);
   resetTimer.start();
 
@@ -101,7 +97,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
-  while(!config.contains("rulerWidth")) {
+  while(!config.contains("main/rulerWidth")) {
     spawnPreferences();
   }
 
@@ -253,8 +249,8 @@ bool MainWindow::loadCharts(QString chartsXml)
 bool MainWindow::eventFilter(QObject *, QEvent *event)
 {
   if(event->type() == QEvent::KeyPress) {
-    // Reset hibernation inactivity timer
-    hiberTimer.start();
+    // Reset sleep timer
+    sleepTimer.start();
 
     // Restart reset timer
     resetTimer.start();
@@ -305,74 +301,50 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       spawnJobRunner();
       return true;
     } else if(keyEvent->key() == Qt::Key_Q) {
-      if(allowHibernate) {
-        flipHibernate();
-        return true;
+      if(monitorIsOn) {
+        monitorSleep();
+      } else {
+        monitorIsOn = true;
       }
+      return true;
     } else if(keyEvent->key() == Qt::Key_D && videoPlayer != nullptr) {
       videoPlayer->startVideo();
       return true;
     }
+    monitorIsOn = true;
   }
   return false;
 }
 
 void MainWindow::updateFromConfig()
 {
-  // Convert obsolete 'physDistance' variable to 'patientDistance'
-  if(config.contains("physDistance")) {
-    config.setValue("patientDistance", config.value("physDistance").toInt());
-    config.remove("physDistance");
+  // Main
+  if(!config.contains("main/chartsXml")) {
+    config.setValue("main/chartsXml", "charts.xml");
+  }
+  if(!config.contains("main/startingChart")) {
+    config.setValue("main/startingChart", "Sloan 1");
+  }
+  if(!config.contains("main/minutesBeforeSizeReset")) {
+    config.setValue("main/minutesBeforeSizeReset", 240);
+  }
+  if(!config.contains("main/minutesBeforeSleep")) {
+    config.setValue("main/minutesBeforeSleep", 120);
+  }
+  if(!config.contains("main/rowSkipDelta")) {
+    config.setValue("main/rowSkipDelta", 4);
+  }
+  if(!config.contains("main/useRowCaptions")) {
+    config.setValue("main/useRowCaptions", false);
+  }
+  if(!config.contains("main/pinCode")) {
+    config.setValue("main/pinCode", "4242");
+  }
+  if(!config.contains("main/enableVideoPlayer")) {
+    config.setValue("main/enableVideoPlayer", true);
   }
 
-  // Convert obsolete 'optotypesDir' variable to 'folders/optotypes'
-  if(config.contains("optotypesDir")) {
-    config.setValue("folders/optotypes", config.value("optotypesDir").toString());
-    config.remove("optotypesDir");
-  }
-  
-  // Convert obsolete 'physHeight' variable to 'rulerWidth'
-  if(config.contains("physHeight")) {
-    config.setValue("rulerWidth", ((double)config.value("physHeight").toInt() / (double)mainSettings.height) * 500);
-    config.remove("physHeight");
-  }
-
-  // Remove obsolete variables if they exist
-  if(config.contains("jobsFolder")) {
-    config.remove("jobsFolder");
-  }
-  if(config.contains("updatesFolder")) {
-    config.remove("updatesFolder");
-  }
-  if(config.contains("videosFolder")) {
-    config.remove("videosFolder");
-  }
-
-  // General
-  if(!config.contains("chartsXml")) {
-    config.setValue("chartsXml", "charts.xml");
-  }
-  if(!config.contains("startingChart")) {
-    config.setValue("startingChart", "Sloan 1");
-  }
-  if(!config.contains("sizeResetTime")) {
-    config.setValue("sizeResetTime", 240);
-  }
-  if(!config.contains("hibernateTime")) {
-    config.setValue("hibernateTime", 120);
-  }
-  if(!config.contains("rowSkipDelta")) {
-    config.setValue("rowSkipDelta", 4);
-  }
-  if(!config.contains("useRowCaptions")) {
-    config.setValue("useRowCaptions", false);
-  }
-  if(!config.contains("pinCode")) {
-    config.setValue("pinCode", "4242");
-  }
-  if(!config.contains("enableVideoPlayer")) {
-    config.setValue("enableVideoPlayer", true);
-  }
+  // Touch controls
   if(!config.contains("touch/touchControls")) {
     config.setValue("touch/touchControls", false);
   }
@@ -394,19 +366,17 @@ void MainWindow::updateFromConfig()
     config.setValue("folders/videos", "./videos");
   }
 
-  resetTimer.setInterval(config.value("sizeResetTime").toInt() * 1000);
+  resetTimer.setInterval(config.value("main/minutesBeforeSizeReset").toInt() * 1000 * 60); // Minutes
   resetTimer.start();
 
-  mainSettings.hibernateTime = config.value("hibernateTime").toInt() * 1000 * 60; // Minutes
+  sleepTimer.setInterval(config.value("main/minutesBeforeSleep").toInt() * 1000 * 60); // Minutes
+  // Don't start sleepTimer here, just set the interval. The next keypress will start it.
 
-  mainSettings.rowSkipDelta = config.value("rowSkipDelta").toInt();
+  mainSettings.rowSkipDelta = config.value("main/rowSkipDelta").toInt();
 
-  mainSettings.useRowCaptions = config.value("useRowCaptions").toBool();
+  mainSettings.useRowCaptions = config.value("main/useRowCaptions").toBool();
 
-  mainSettings.networkHost = config.value("network/host", "www.kernel.org").toString();
-  mainSettings.networkPort = config.value("network/port", 80).toInt();
-
-  mainSettings.enableVideoPlayer = config.value("enableVideoPlayer").toBool();
+  mainSettings.enableVideoPlayer = config.value("main/enableVideoPlayer").toBool();
 
   mainSettings.touchControls = config.value("touch/touchControls").toBool();
   mainSettings.leftHandedOperator = config.value("touch/leftHandedOperator").toBool();
@@ -416,7 +386,7 @@ void MainWindow::updateFromConfig()
     setCursor(Qt::BlankCursor);
   }
 
-  mainSettings.pinCode = config.value("pinCode").toString();
+  mainSettings.pinCode = config.value("main/pinCode").toString();
 
   mainSettings.optotypesFolder = config.value("folders/optotypes").toString();
 
@@ -424,18 +394,18 @@ void MainWindow::updateFromConfig()
 
   mainSettings.videosFolder = config.value("folders/videos").toString();
 
-  mainSettings.patientDistance = config.value("patientDistance").toDouble(); // Cm
-  mainSettings.rulerWidth = config.value("rulerWidth").toDouble(); // Mm
+  mainSettings.patientDistance = config.value("main/patientDistance").toDouble(); // Cm
+  mainSettings.rulerWidth = config.value("main/rulerWidth").toDouble(); // Mm
 
   mainSettings.distanceFactor = mainSettings.patientDistance / 600.0;
   mainSettings.pxPerMm = 500.0 / mainSettings.rulerWidth;
   // At 6 m distance (size 0.1) a letter should be 87.3 mm tall on screen (5 arc minutes)
   mainSettings.pxPerArcMin = (87.3 / 5.0) * mainSettings.pxPerMm;
-  mainSettings.hexRed = "#" + QString::number(config.value("redValue").toInt(), 16) + "0000";
-  mainSettings.hexGreen = "#00" + QString::number(config.value("greenValue").toInt(), 16) + "00";
+  mainSettings.hexRed = "#" + QString::number(config.value("main/redValue").toInt(), 16) + "0000";
+  mainSettings.hexGreen = "#00" + QString::number(config.value("main/greenValue").toInt(), 16) + "00";
 
-  mainSettings.chartsXml = config.value("chartsXml").toString();
-  mainSettings.startingChart = config.value("startingChart").toString();
+  mainSettings.chartsXml = config.value("main/chartsXml").toString();
+  mainSettings.startingChart = config.value("main/startingChart").toString();
 
   printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
   printf("  Pixels per arc minute: %f\n", mainSettings.pxPerArcMin);
@@ -467,24 +437,8 @@ void MainWindow::spawnJobRunner()
   }
 }
 
-void MainWindow::hibernate()
+void MainWindow::monitorSleep()
 {
-  flipHibernate(true);
-}
-
-void MainWindow::flipHibernate(bool forceHibernate)
-{
-  int exitState = QProcess::execute("bash", {"./scripts/displaystate.sh"});
-  // On error exitState is -1 or -2. If display is on it is 42. All other cases it is 0.
-  if(exitState >= 0) {
-    if(exitState == 42) {
-      QProcess::execute("bash", {"./scripts/hibernate.sh"});
-    } else if(!forceHibernate) {
-      QProcess::execute("bash", {"./scripts/wakeup.sh"});
-    }
-  }
-  // Disallow new hibernation for a while, as it queue's each time allowing for some
-  // weird behaviour.
-  allowHibernate = false;
-  hiberCooldownTimer.start();
+  QProcess::execute("bash", {"./scripts/sleep.sh"});
+  monitorIsOn = false;
 }

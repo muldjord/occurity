@@ -53,11 +53,9 @@ signals:
 
 private slots:
   void init();
-  void hibernate();
+  void monitorSleep();
 
 private:
-  void flipHibernate(bool forceHibernate = false);
-
   QSettings &config;
   MainSettings mainSettings;
   VideoPlayer *videoPlayer = nullptr;
@@ -68,14 +66,13 @@ private:
   void updateFromConfig();
   QList<AbstractChart*> charts;
 
-  // Automatic hibernation timer shutting down monitor signal after X minutes of inactivity
-  QTimer hiberTimer;
+  // Sleep timer that puts monitor to sleep after X minutes of inactivity
+  QTimer sleepTimer;
 
   // Timer that resets all charts after being idle for configured time
   QTimer resetTimer;
 
-  // Cooldown for switching monitor on or off using 'q' to allow hibernation to complete
-  QTimer hiberCooldownTimer;
-  bool allowHibernate = true;
+  // The following bool is needed to make a 'q' button press work for making the monitor wake up again
+  bool monitorIsOn = true;
 };
 #endif/*__OCCURITY_MAINWINDOW_H__*/
