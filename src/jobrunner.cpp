@@ -37,6 +37,7 @@
 #include <QEventLoop>
 #include <QScrollBar>
 #include <QStorageInfo>
+#include <QApplication>
 
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
@@ -223,7 +224,7 @@ void JobRunner::runJob(const QString &filename)
       addStatus(CODE, getCommandString(command));
     }
 
-    // Check if %USBPATH% is used. Quit if it hasn't been set
+    // Check if %USBPATH% is used. Break if it hasn't been set
     for(const auto &parameter: command.parameters) {
       if(parameter.contains("%USBPATH%") && !vars.contains("%USBPATH%")) {
         addStatus(FATAL, "%USBPATH% used but not detected! USB device must be formatted as a FAT filesystem, be named 'USBPEN' and has to be inserted prior to opening job runner. Job cancelled!");
@@ -335,6 +336,10 @@ void JobRunner::runJob(const QString &filename)
         break;
       }
 
+    } else if(command.type == "quit") {
+      if(command.parameters.length() == 1) {
+        quitApp(command.parameters.at(0));
+      }
     }
     progressBar->setValue(progressBar->value() + 1);
   }
@@ -459,11 +464,6 @@ void JobRunner::addStatus(const int &status, const QString &text)
   }
   outputList->addItem(item);
   outputList->scrollToBottom();
-  /*
-  QEventLoop waiter;
-  QTimer::singleShot(delay, &waiter, &QEventLoop::quit);
-  waiter.exec();
-  */
 }
 
 bool JobRunner::cpFile(const QString &srcFile, const QString &dstFile)
@@ -931,6 +931,26 @@ bool JobRunner::shutdown(const QString &argument)
   }
   if(doShutdown) {
     QProcess::execute("bash", {"./scripts/shutdown.sh"});
+  }
+  return true;
+}
+
+bool JobRunner::quitApp(const QString &argument)
+{
+  addStatus(INIT, "Quit requested...");
+  if(argument == "force") {
+    addStatus(INFO, "Quitting forced, quitting now!");
+    QApplication::quit();
+  } else if(argument == "ask") {
+    MessageBox messageBox(QMessageBox::Question, "Quit?", "Do you wish to quit Occurity?", QMessageBox::Yes | QMessageBox::No, this);
+    messageBox.exec();
+    if(messageBox.result() == QMessageBox::Yes) {
+      addStatus(INFO, "Accepted by user, quitting Occurity now...");
+      QApplication::quit();
+    } else {
+      addStatus(WARNING, "Cancelled by user!");
+      return false;
+    }
   }
   return true;
 }
