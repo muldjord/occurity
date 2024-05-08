@@ -70,7 +70,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   Slider *hexGreen = new Slider(config, "main", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
   Slider *rowSkipDelta = new Slider(config, "main", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
-  CheckBox *useRowCaptions = new CheckBox(config, "main", "useRowCaptions", tr("Use row captions"), false, this);
+  CheckBox *useRowCaptions = new CheckBox(config, "main", "useRowCaptions", tr("Use row captions for optotype charts"), false, this);
   CheckBox *showMouseCursor = new CheckBox(config, "touch", "showMouse", tr("Show mouse cursor"), false, this);
   CheckBox *showTouchControls = new CheckBox(config, "touch", "touchControls", tr("Show touch controls (requires restart)"), false, this);
   CheckBox *leftHandedOperator = new CheckBox(config, "touch", "leftHandedOperator", tr("Left handed operator"), false, this);
