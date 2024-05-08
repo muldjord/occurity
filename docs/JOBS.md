@@ -152,6 +152,12 @@ Shuts down the computer. `force` will shutdown without asking the user. `ask` wi
 * Example 1: `shutdown:force`
 * Example 2: `shutdown:ask`
 
+#### quit:force|ask
+Quits Occurity. `force` will quit without asking the user. `ask` will allow the user to cancel the quit request through a dialog.
+
+* Example 1: `quit:force`
+* Example 2: `quit:ask`
+
 #### sync:
 Synchronizes any cached writes to persistent storage. This command is auto-added to the end of all jobs even when it is not in the job file.
 
