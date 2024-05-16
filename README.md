@@ -185,6 +185,9 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
+#### Version 1.2.4 (In progress, unreleased)
+* Added delay to sleep activated by `q` key press to avoid monitor instantly turning back on due to remote control double-presses.
+
 #### Version 1.2.3 (08May2024)
 * Improved the sleep key 'q' functionality to now work both for putting the monitor to sleep and making it wake up again. Any other key will also wake it up.
 * Renamed all instances of hibernate to sleep as 'hibernate' is misleading. It only puts the monitor to sleep not the entire system.
