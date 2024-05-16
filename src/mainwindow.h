@@ -74,5 +74,8 @@ private:
 
   // The following bool is needed to make a 'q' button press work for making the monitor wake up again
   bool monitorIsOn = true;
+
+  // Timer used to delay sleep activation to avoid the monitor turning back on due to remote control double-presses
+  QTimer delayedSleepTimer;
 };
 #endif/*__OCCURITY_MAINWINDOW_H__*/

@@ -81,6 +81,10 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   connect(&sleepTimer, &QTimer::timeout, this, &MainWindow::monitorSleep);
   sleepTimer.start();
 
+  delayedSleepTimer.setInterval(1000);
+  delayedSleepTimer.setSingleShot(true);
+  connect(&delayedSleepTimer, &QTimer::timeout, this, &MainWindow::monitorSleep);
+
   // Initial interval was set in updateFromConfig;
   resetTimer.setSingleShot(true);
   resetTimer.start();
@@ -302,7 +306,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       return true;
     } else if(keyEvent->key() == Qt::Key_Q) {
       if(monitorIsOn) {
-        monitorSleep();
+        delayedSleepTimer.start();
       } else {
         monitorIsOn = true;
       }
