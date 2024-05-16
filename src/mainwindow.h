@@ -54,6 +54,7 @@ signals:
 private slots:
   void init();
   void monitorSleep();
+  void monitorOn();
 
 private:
   QSettings &config;
@@ -77,5 +78,8 @@ private:
 
   // Timer used to delay sleep activation to avoid the monitor turning back on due to remote control double-presses
   QTimer delayedSleepTimer;
+
+  // Opposite of the above. If 'q' is pressed while monitor is off the monitorIsOn bool must be set to 'true' after a delay to avoid a double-press to keep turning it off while it already is off.
+  QTimer delayedMonitorOnTimer;
 };
 #endif/*__OCCURITY_MAINWINDOW_H__*/

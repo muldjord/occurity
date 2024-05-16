@@ -85,6 +85,10 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   delayedSleepTimer.setSingleShot(true);
   connect(&delayedSleepTimer, &QTimer::timeout, this, &MainWindow::monitorSleep);
 
+  delayedMonitorOnTimer.setInterval(1000);
+  delayedMonitorOnTimer.setSingleShot(true);
+  connect(&delayedMonitorOnTimer, &QTimer::timeout, this, &MainWindow::monitorOn);
+
   // Initial interval was set in updateFromConfig;
   resetTimer.setSingleShot(true);
   resetTimer.start();
@@ -308,7 +312,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       if(monitorIsOn) {
         delayedSleepTimer.start();
       } else {
-        monitorIsOn = true;
+        delayedMonitorOnTimer.start();
       }
       return true;
     } else if(keyEvent->key() == Qt::Key_D && videoPlayer != nullptr) {
@@ -445,4 +449,9 @@ void MainWindow::monitorSleep()
 {
   QProcess::execute("bash", {"./scripts/sleep.sh"});
   monitorIsOn = false;
+}
+
+void MainWindow::monitorOn()
+{
+  monitorIsOn = true;
 }
