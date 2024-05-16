@@ -185,7 +185,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.2.4 (In progress, unreleased)
+#### Version 1.2.4 (16May2024)
 * Added delay to sleep activated by `q` key press to avoid monitor instantly turning back on due to remote control double-presses.
 
 #### Version 1.2.3 (08May2024)
