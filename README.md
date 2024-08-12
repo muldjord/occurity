@@ -61,16 +61,32 @@ You have two options for installing and running Occurity. Either use the pre-bui
 If you require no customization of the image this is the easiest way to get up and running. Simply download the SDCard image corresponding to your Raspberry Pi from the [latest release files](https://github.com/muldjord/occurity/releases/latest). Decompress the image and flash it to an SDCard. Insert the SDCard in your Raspberry Pi and you are done! Be sure to check the rest of the documentation on how to use Occurity.
 
 ## Option 2: Building a custom Occurity SDCard image
-The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `nanbield` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
+The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `scarthgap` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
-The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
+The only pre-requisite is a working Ubuntu 24.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
 
 ### Package pre-requisites
-Install the required packages. Run these commands from a terminal on your Ubuntu 22.04 system:
+Install the required packages by running the following two commands:
 ```
-$ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev python3-subunit mesa-common-dev zstd liblz4-tool file locales libacl1
+$ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 python3-subunit zstd liblz4-tool file locales libacl1
 $ sudo locale-gen en_US.UTF-8
 ```
+### Disable 'apparmor_restrict_unprivileged_userns'
+In Ubuntu 24.04 Canonical has added an extra security feature that currently conflicts with the Yocto build system. This needs to be disabled either system wide or for the currently booted environment. Keep in mind that disabling this feature is lessening the security of your system, so only do so if you feel this is acceptable. You cannot proceed without disabling it.
+
+#### Disable system wide
+Add the following line to `/etc/sysctl.conf`:
+```
+kernel.apparmor_restrict_unprivileged_userns=0
+```
+Reboot the system
+
+#### Disable only for currently booted environment
+Run the following command:
+```
+$ sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
+```
+Keep in mind that you need to rerun this command each time you reboot the computer.
 
 ### Setting up Yocto
 Run the following commands to clone Yocto and the required layers. The `source` command sets up the environment required for building the image. If you wish to rebuilt the image later you need to re-run this `source` command in order for the `bitbake` related tools to be available and configured:
@@ -78,10 +94,10 @@ Run the following commands to clone Yocto and the required layers. The `source` 
 $ cd
 $ git clone https://git.yoctoproject.org/poky
 $ cd poky/
-$ git checkout -t origin/nanbield -b occurity
-$ git clone -b nanbield https://git.yoctoproject.org/meta-raspberrypi
-$ git clone -b nanbield https://github.com/openembedded/meta-openembedded
-$ git clone https://github.com/meta-qt5/meta-qt5
+$ git checkout -t origin/scarthgap -b occurity
+$ git clone -b scarthgap https://git.yoctoproject.org/meta-raspberrypi
+$ git clone -b scarthgap https://github.com/openembedded/meta-openembedded
+$ git clone -b scarthgap https://github.com/meta-qt5/meta-qt5
 $ git clone https://github.com/muldjord/meta-occurity
 $ source oe-init-build-env
 $ bitbake-layers add-layer ../meta-raspberrypi
@@ -89,6 +105,7 @@ $ bitbake-layers add-layer ../meta-openembedded/meta-oe
 $ bitbake-layers add-layer ../meta-qt5
 $ bitbake-layers add-layer ../meta-occurity
 ```
+
 ### Add required Yocto configs
 You should now be at the `poky/build` directory. Edit `conf/local.conf` and add the following lines to the very top of the file:
 ```
