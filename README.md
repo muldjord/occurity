@@ -63,7 +63,7 @@ If you require no customization of the image this is the easiest way to get up a
 ## Option 2: Building a custom Occurity SDCard image
 The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `scarthgap` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
-The only pre-requisite is a working Ubuntu 24.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
+The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
 
 ### Package pre-requisites
 Install the required packages by running the following two commands:
@@ -71,22 +71,6 @@ Install the required packages by running the following two commands:
 $ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 python3-subunit zstd liblz4-tool file locales libacl1
 $ sudo locale-gen en_US.UTF-8
 ```
-### Disable 'apparmor_restrict_unprivileged_userns'
-In Ubuntu 24.04 Canonical has added an extra security feature that currently conflicts with the Yocto build system. This needs to be disabled either system wide or for the currently booted environment. Keep in mind that disabling this feature is lessening the security of your system, so only do so if you feel this is acceptable. You cannot proceed without disabling it.
-
-#### Disable system wide
-Add the following line to `/etc/sysctl.conf`:
-```
-kernel.apparmor_restrict_unprivileged_userns=0
-```
-Reboot the system
-
-#### Disable only for currently booted environment
-Run the following command:
-```
-$ sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0
-```
-Keep in mind that you need to rerun this command each time you reboot the computer.
 
 ### Setting up Yocto
 Run the following commands to clone Yocto and the required layers. The `source` command sets up the environment required for building the image. If you wish to rebuilt the image later you need to re-run this `source` command in order for the `bitbake` related tools to be available and configured:
