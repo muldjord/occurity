@@ -186,7 +186,7 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.2.5 (In progress, unreleased)
+#### Version 1.2.5 (21aug2024)
 * Now sets default size reset to 5 minutes instead of 240
 
 #### Version 1.2.4 (16May2024)
