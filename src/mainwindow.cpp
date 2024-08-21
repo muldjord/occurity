@@ -334,7 +334,7 @@ void MainWindow::updateFromConfig()
     config.setValue("main/startingChart", "Sloan 1");
   }
   if(!config.contains("main/minutesBeforeSizeReset")) {
-    config.setValue("main/minutesBeforeSizeReset", 240);
+    config.setValue("main/minutesBeforeSizeReset", 5);
   }
   if(!config.contains("main/minutesBeforeSleep")) {
     config.setValue("main/minutesBeforeSleep", 120);

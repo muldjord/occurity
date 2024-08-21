@@ -64,7 +64,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
     startingChart->addConfigItem(chart->objectName(), chart->objectName());
   }
 
-  Slider *minutesBeforeSizeReset = new Slider(config, "main", "minutesBeforeSizeReset", tr("Idle time before size reset (minutes):"), 1, 240, 4, 1, this);
+  Slider *minutesBeforeSizeReset = new Slider(config, "main", "minutesBeforeSizeReset", tr("Idle time before size reset (minutes):"), 1, 60, 5, 1, this);
   Slider *minutesBeforeSleep = new Slider(config, "main", "minutesBeforeSleep", tr("Idle time before putting the monitor to sleep (minutes):"), 5, 480, 120, 5, this);
   Slider *hexRed = new Slider(config, "main", "redValue", tr("Red color value:"), 0, 255, 210, 1, this);
   Slider *hexGreen = new Slider(config, "main", "greenValue", tr("Green color value:"), 0, 255, 210, 1, this);
