@@ -40,7 +40,7 @@ public:
 
 protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  
+
 private:
   int key = -1;
   QObject *chart = nullptr;

@@ -41,7 +41,7 @@ public:
   QString getSize() const;
   QString getCaption() const;
   QGraphicsItemGroup *getLetters() const;
-  
+
 private:
   QString size = "";
   QString caption = "";

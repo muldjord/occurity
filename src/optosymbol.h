@@ -46,7 +46,7 @@ public:
 
 private slots:
   void fadeDoneHide();
-  
+
 private:
   QGraphicsOpacityEffect *opacityEffect;
 

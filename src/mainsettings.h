@@ -58,7 +58,7 @@ struct MainSettings {
   // Global chart configs
   bool crowding = false;
   bool single = false;
-  
+
   // Internet check
   QString networkHost = "www.kernel.org";
   int networkPort = 80;

@@ -35,7 +35,7 @@
 class CheckBox : public QCheckBox
 {
   Q_OBJECT
-    
+
 public:
   CheckBox(QSettings &config, const QString &group, const QString &name, const QString &title, const bool &defaultValue, QWidget *parent = nullptr);
   ~CheckBox();

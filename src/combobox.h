@@ -35,7 +35,7 @@
 class ComboBox : public QWidget
 {
   Q_OBJECT
-    
+
 public:
   ComboBox(QSettings &config, const QString &group, const QString &name, const QString &title, QString defaultValue, QWidget *parent = nullptr);
   ~ComboBox();
@@ -47,7 +47,7 @@ public slots:
 private slots:
   void itemSelected(int);
   void saveToConfig();
-  
+
 protected:
   void keyPressEvent(QKeyEvent *event) override;
 

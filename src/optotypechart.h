@@ -64,7 +64,7 @@ protected:
 
 private slots:
   void hideFromList();
-  
+
 private:
   QString startSize = "0.16";
   QString fadeTimings = ""; // Defaults are in optosymbol.cpp

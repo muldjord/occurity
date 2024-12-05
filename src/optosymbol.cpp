@@ -59,7 +59,7 @@ OptoSymbol::OptoSymbol(const QString &optoSymbol,
     fadeOutEndValue = fadeLevels.split(";").at(1).toDouble();
     fadeInOutInEndValue = fadeLevels.split(";").at(2).toDouble();
   }
-  
+
   fadeInAnimation = new QPropertyAnimation(opacityEffect, "opacity");
   fadeInAnimation->setDuration(fadeInDuration);
   //fadeInAnimation->setStartValue(0.0);

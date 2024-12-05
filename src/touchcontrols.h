@@ -35,7 +35,7 @@ class TouchControls : public QWidget
 
 public:
   TouchControls(const bool &numeric, QObject *target);
-  
+
 private slots:
   void sendKey();
 
