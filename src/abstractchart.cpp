@@ -34,6 +34,7 @@
 AbstractChart::AbstractChart(MainSettings &mainSettings, QObject *parent) :
   QGraphicsScene(0, 0, mainSettings.width, mainSettings.height, parent), mainSettings(mainSettings)
 {
+  setBackgroundBrush(QBrush(Qt::white)); // Forces white chart background for dark-mode desktops
   titleItem = new QGraphicsSimpleTextItem();
   QFont font;
   font.setFamily("Arial");

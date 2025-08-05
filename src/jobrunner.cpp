@@ -27,7 +27,9 @@
 
 #include "jobrunner.h"
 #include "messagebox.h"
+#include "version.h"
 
+#include <QApplication>
 #include <QVBoxLayout>
 #include <QFile>
 #include <QProcess>
@@ -42,7 +44,7 @@
 JobRunner::JobRunner(MainSettings &mainSettings, QWidget *parent)
   : QDialog(parent), mainSettings(mainSettings)
 {
-  setWindowTitle("Occurity v" VERSION" jobrunner");
+  setWindowTitle(QApplication::applicationName() + QString(" v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH) + " jobrunner");
   setFixedSize(1200, 800);
 
   setStyleSheet("QLabel {font-weight:bold; margin-top: 5px;} QRadioButton {margin-left: 10px;}");
@@ -387,7 +389,7 @@ bool JobRunner::isExcluded(QString src)
         return true;
       }
     } else if(srcInfo.isDir()) {
-      if(srcInfo.absoluteFilePath() == excludeInfo.absoluteFilePath() || (excludeInfo.absoluteFilePath() == srcInfo.absoluteFilePath().left(excludeInfo.absoluteFilePath().length()) && srcInfo.absoluteFilePath().at(excludeInfo.absoluteFilePath().length()) == "/")) {
+      if(srcInfo.absoluteFilePath() == excludeInfo.absoluteFilePath() || (excludeInfo.absoluteFilePath() == srcInfo.absoluteFilePath().left(excludeInfo.absoluteFilePath().length()) && srcInfo.absoluteFilePath().at(excludeInfo.absoluteFilePath().length()) == '/')) {
         addStatus(WARNING, "Path '" + srcInfo.absoluteFilePath() + "' is marked for exclusion, continuing!");
         return true;
       }
@@ -846,7 +848,7 @@ bool JobRunner::srcPath(const QString &path)
   addStatus(INIT, "Setting source path to '" + tempPath + "'");
   if(!jobDstPath.isEmpty() &&
      tempPath.left(jobDstPath.length()) == jobDstPath &&
-     jobDstPath.at(tempPath.length()) == "/") {
+     jobDstPath.at(tempPath.length()) == '/') {
     addStatus(FATAL, "Source path is located beneath destination path. This is not allowed.");
     return false;
   } else {
@@ -872,7 +874,7 @@ bool JobRunner::dstPath(const QString &path)
   addStatus(INIT, "Setting destination path to '" + tempPath + "'");
   if(!jobSrcPath.isEmpty() &&
      tempPath.left(jobSrcPath.length()) == jobSrcPath &&
-     jobSrcPath.at(tempPath.length()) == "/") {
+     jobSrcPath.at(tempPath.length()) == '/') {
     addStatus(FATAL, "Destination path is located beneath source path. This is not allowed.");
     return false;
   } else {

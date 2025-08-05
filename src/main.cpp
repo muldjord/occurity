@@ -25,6 +25,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 #include "mainwindow.h"
+#include "version.h"
 
 #include <QStyleFactory>
 #include <QApplication>
@@ -80,6 +81,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
+  app.setApplicationName(QObject::tr("Occurity"));
   app.setStyle(QStyleFactory::create("Fusion"));
 
   // Install the custom debug message handler used by qDebug()
@@ -103,9 +105,13 @@ int main(int argc, char *argv[])
   animation->start(QPropertyAnimation::DeleteWhenStopped);
 
   splash->show();
-  splash->showMessage("Running Occurity v" VERSION,
+  splash->showMessage(QString("Running ") + QApplication::applicationName() + QString(" v%1.%2.%3")
+                      .arg(PROJECT_VERSION_MAJOR)
+                      .arg(PROJECT_VERSION_MINOR)
+                      .arg(PROJECT_VERSION_PATCH),
                       Qt::AlignLeft,
                       Qt::white);
+
   app.processEvents();
   if(config.value("showSplash", true).toBool()) {
     QEventLoop q;
@@ -114,8 +120,9 @@ int main(int argc, char *argv[])
   }
 
   QTranslator translator;
-  translator.load("Occurity_" + QLocale::system().name());
-  app.installTranslator(&translator);
+  if(translator.load("Occurity_" + QLocale::system().name())) {
+    app.installTranslator(&translator);
+  }
 
   MainWindow mainWindow(config);
   mainWindow.show();

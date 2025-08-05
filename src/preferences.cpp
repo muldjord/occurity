@@ -30,14 +30,15 @@
 #include "slider.h"
 #include "combobox.h"
 #include "checkbox.h"
+#include "version.h"
 
+#include <QApplication>
 #include <stdio.h>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QKeyEvent>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QScrollArea>
 #include <QTabWidget>
 #include <QDialogButtonBox>
@@ -47,7 +48,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
 {
   setFixedSize(1200, 850);
   setWindowIcon(QIcon(":icon.png"));
-  setWindowTitle("Occurity v" VERSION);
+  setWindowTitle(QApplication::applicationName() + QString(" v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH) + " preferences");
 
   About *tabWidget = new About(this);
   tabWidget->setFocusPolicy(Qt::NoFocus);

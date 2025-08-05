@@ -29,14 +29,15 @@
 
 #include <stdio.h>
 
+#include <QAudioOutput>
 #include <QFileInfo>
 #include <QDir>
 #include <QKeyEvent>
+#include <QBuffer>
+#include <QUrl>
 
-VideoPlayer::VideoPlayer(const QString &videosPath,
-                         const int &width, const int &height,
-                         QWidget *parent) :
-  QVideoWidget(parent)
+VideoPlayer::VideoPlayer(const QString &videosPath, const int &width, const int &height, QWidget *parent)
+  : QVideoWidget(parent)
 {
   setCursor(Qt::BlankCursor);
   setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
@@ -44,6 +45,7 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
   setFixedSize(width, height);
 
   mediaPlayer = new QMediaPlayer();
+  mediaPlayer->setAudioOutput(new QAudioOutput);
   QDir videosDir(videosPath, "*.mp4", QDir::Name, QDir::Files);
   int videosFound = videosDir.entryInfoList().length();
   for(const auto &videoInfo: videosDir.entryInfoList()) {
@@ -55,7 +57,7 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
       if(videoFile.open(QIODevice::ReadOnly)) {
         QBuffer *videoBuffer = new QBuffer();
         videoBuffer->buffer() = videoFile.readAll();
-        printf("Loaded %d bytes of video data from '%s'\n",
+        printf("Loaded %llu bytes of video data from '%s'\n",
                videoBuffer->buffer().length(),
                videoInfo.absoluteFilePath().toStdString().c_str());
         videoFile.close();
@@ -63,9 +65,10 @@ VideoPlayer::VideoPlayer(const QString &videosPath,
       }
     }
   }
+
   mediaPlayer->setVideoOutput(this);
   connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &VideoPlayer::mediaStatusChanged);
-  connect(mediaPlayer, &QMediaPlayer::stateChanged, this, &VideoPlayer::stateChanged);
+  connect(mediaPlayer, &QMediaPlayer::playbackStateChanged, this, &VideoPlayer::playbackStateChanged);
 
   allowActionTimer.setInterval(4000);
   allowActionTimer.setSingleShot(true);
@@ -96,7 +99,7 @@ void VideoPlayer::changeVideo(const int &delta)
   }
   printf("Change to %d\n", videoIdx);
   if(videoBuffers.at(videoIdx)->open(QIODevice::ReadOnly)) {
-    mediaPlayer->setMedia(QMediaContent(), videoBuffers.at(videoIdx));
+    mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
   }
 }
 
@@ -109,7 +112,7 @@ void VideoPlayer::startVideo()
   } else {
     return;
   }
-  if(mediaPlayer->state() == QMediaPlayer::PlayingState) {
+  if(mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
     printf("Pausing!\n");
     mediaPlayer->pause();
   } else {
@@ -148,7 +151,7 @@ void VideoPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status)
   }
 }
 
-void VideoPlayer::stateChanged(QMediaPlayer::State state)
+void VideoPlayer::playbackStateChanged(QMediaPlayer::PlaybackState state)
 {
   printf("STATE: %d\n", state);
 }

@@ -29,9 +29,9 @@
 
 #include <QVideoWidget>
 #include <QMediaPlayer>
-#include <QBuffer>
 #include <QTimer>
 #include <QLabel>
+#include <QBuffer>
 
 class VideoPlayer : public QVideoWidget
 {
@@ -52,7 +52,7 @@ protected:
 private slots:
   void setAllowStop();
   void mediaStatusChanged(QMediaPlayer::MediaStatus status);
-  void stateChanged(QMediaPlayer::State state);
+  void playbackStateChanged(QMediaPlayer::PlaybackState state);
 
 private:
   int videoIdx = -1;
