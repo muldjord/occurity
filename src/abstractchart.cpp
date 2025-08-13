@@ -56,6 +56,8 @@ void AbstractChart::setType(const QString &type)
     this->type = OPTOTYPECHART;
   } else if(type == "svg") {
     this->type = SVGCHART;
+  } else if(type == "video") {
+    this->type = VIDEOCHART;
   }
 }
 
@@ -75,6 +77,8 @@ QString AbstractChart::getType()
     return QString("optotype");
   } else if(type == SVGCHART) {
     return QString("svg");
+  } else if(type == VIDEOCHART) {
+    return QString("video");
   }
 
   return QString("Invalid type");

@@ -81,12 +81,13 @@ $ cd poky/
 $ git checkout -t origin/scarthgap -b occurity
 $ git clone -b scarthgap https://git.yoctoproject.org/meta-raspberrypi
 $ git clone -b scarthgap https://github.com/openembedded/meta-openembedded
-$ git clone -b scarthgap https://github.com/meta-qt5/meta-qt5
+$ git clone https://code.qt.io/yocto/meta-qt6
 $ git clone https://github.com/muldjord/meta-occurity
 $ source oe-init-build-env
 $ bitbake-layers add-layer ../meta-raspberrypi
 $ bitbake-layers add-layer ../meta-openembedded/meta-oe
-$ bitbake-layers add-layer ../meta-qt5
+$ bitbake-layers add-layer ../meta-openembedded/meta-python
+$ bitbake-layers add-layer ../meta-qt6
 $ bitbake-layers add-layer ../meta-occurity
 ```
 

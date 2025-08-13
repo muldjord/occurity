@@ -31,7 +31,6 @@
 #include "abstractchart.h"
 
 #include <QGraphicsSvgItem>
-#include <QDomDocument>
 
 class SvgChart : public AbstractChart
 {

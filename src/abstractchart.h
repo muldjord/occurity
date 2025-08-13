@@ -36,6 +36,7 @@
 
 constexpr int OPTOTYPECHART = 0;
 constexpr int SVGCHART = 1;
+constexpr int VIDEOCHART = 2;
 
 class TouchControlItem;
 
