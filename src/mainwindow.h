@@ -68,7 +68,7 @@ private:
   void updateFromConfig();
 
   QList<AbstractChart*> charts;
-  
+
   // Sleep timer that puts monitor to sleep after X minutes of inactivity
   QTimer sleepTimer;
 

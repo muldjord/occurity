@@ -44,7 +44,7 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 {
   printf("Running %s\n", qPrintable(QApplication::applicationName() + QString(" v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH)));
   setWindowTitle(QApplication::applicationName() + QString(" v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH));
-  
+
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
