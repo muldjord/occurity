@@ -71,13 +71,11 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 
   installEventFilter(this);
 
-  /*
   if(mainSettings.enableVideoPlayer) {
     videoPlayer = new VideoPlayer(mainSettings.videosFolder,
                                   mainSettings.width, mainSettings.height,
                                   this);
   }
-  */
 
   // Initial interval was set in updateFromConfig;
   sleepTimer.setSingleShot(true);
@@ -101,8 +99,8 @@ MainWindow::MainWindow(QSettings &config) : config(config)
 
 MainWindow::~MainWindow()
 {
-  if(videoChart != nullptr) {
-    delete videoChart;
+  if(videoPlayer != nullptr) {
+    delete videoPlayer;
   }
 }
 
@@ -251,19 +249,6 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->updateTouchControls();
       charts.append(chart);
     }
-    // Also initialize the static video player chart if it's enabled
-    if(mainSettings.enableVideoPlayer) {
-      videoChart = new VideoChart(mainSettings, this);
-      videoChart->setType("video");
-      connect(this, &MainWindow::configUpdated, videoChart, &AbstractChart::updateAll);
-      connect(this, &MainWindow::configUpdated, videoChart, &AbstractChart::updateTouchControls);
-      connect(&resetTimer, &QTimer::timeout, videoChart, &AbstractChart::resetAll);
-      videoChart->setObjectName("video");
-      videoChart->setNumKey(Qt::Key_S); // The 'play' button
-      videoChart->setVideosPath(mainSettings.videosFolder);
-      videoChart->init();
-      videoChart->updateTouchControls();
-    }
   }
   printf("\n");
 
@@ -292,7 +277,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       }
     }
     if(currentChart == nullptr) {
-      currentChart = videoChart;
+      qWarning("One or more charts have no recognized type!\n");
     }
     // Set size for all other charts on same button if sizeLock is set
     for(int a = 0; a < charts.length(); ++a) {
@@ -335,9 +320,10 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       }
       return true;
     } else if(keyEvent->key() == Qt::Key_S) {
-      if(scene() != videoChart) {
-        setScene(videoChart);
-      }
+      videoPlayer->show();
+      videoPlayer->setFocus();
+      videoPlayer->playPressed();
+      return true;
     }
     monitorIsOn = true;
   }

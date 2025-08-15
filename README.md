@@ -99,6 +99,8 @@ WKS_FILE = "sdimage-raspberrypi.wks"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
 DISABLE_OVERSCAN = "1"
 MACHINE ?= "raspberrypi4-64"
+DISTRO_FEATURES:append = " opengl"
+PACKAGECONFIG:append:pn-gstreamer1.0-plugins-base = " opengl"
 ```
 NOTE!!! If you are building for a Raspberry Pi 3 change the MACHINE to `raspberrypi3-64`.
 

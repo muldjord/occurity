@@ -52,7 +52,6 @@ set(SOURCES
   src/optotypechart.cpp
   src/optotyperow.cpp
   src/optosymbol.cpp
-  src/videochart.cpp
   src/touchcontrolitem.cpp
   src/touchcontrols.cpp
   src/jobrunner.cpp

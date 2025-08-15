@@ -42,25 +42,20 @@ public:
               const int &width, const int &height,
               QWidget *parent = nullptr);
   ~VideoPlayer();
-  void changeVideo(const int &delta);
-  void startVideo();
-  void stopVideo();
+  void playPressed();
 
 protected:
   void keyPressEvent(QKeyEvent *event) override;
 
-private slots:
-  void setAllowStop();
-  void mediaStatusChanged(QMediaPlayer::MediaStatus status);
-  void playbackStateChanged(QMediaPlayer::PlaybackState state);
-
 private:
+  void pausePressed();
+  void stopPressed();
+  void nextPressed();
+
   int videoIdx = -1;
-  bool allowAction = false;
 
   QMediaPlayer *mediaPlayer = nullptr;
   QList<QBuffer *> videoBuffers;
-  QTimer allowActionTimer;
 
 };
 #endif/*__OCCURITY_VIDEOPLAYER_H__*/

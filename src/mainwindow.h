@@ -30,7 +30,7 @@
 #include "abstractchart.h"
 #include "svgchart.h"
 #include "optotypechart.h"
-#include "videochart.h"
+#include "videoplayer.h"
 #include "mainsettings.h"
 
 #include <QGraphicsView>
@@ -60,7 +60,7 @@ private slots:
 private:
   QSettings &config;
   MainSettings mainSettings;
-  //VideoPlayer *videoPlayer = nullptr;
+  VideoPlayer *videoPlayer = nullptr;
   void loadFonts(QString dirStr);
   bool loadCharts(QString chartsXml);
   void spawnPreferences();
@@ -68,7 +68,6 @@ private:
   void updateFromConfig();
 
   QList<AbstractChart*> charts;
-  VideoChart *videoChart = nullptr;
   
   // Sleep timer that puts monitor to sleep after X minutes of inactivity
   QTimer sleepTimer;

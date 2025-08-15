@@ -67,12 +67,10 @@ VideoPlayer::VideoPlayer(const QString &videosPath, const int &width, const int 
   }
 
   mediaPlayer->setVideoOutput(this);
-  connect(mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &VideoPlayer::mediaStatusChanged);
-  connect(mediaPlayer, &QMediaPlayer::playbackStateChanged, this, &VideoPlayer::playbackStateChanged);
-
-  allowActionTimer.setInterval(4000);
-  allowActionTimer.setSingleShot(true);
-  connect(&allowActionTimer, &QTimer::timeout, this, &VideoPlayer::setAllowStop);
+  if(!videoBuffers.isEmpty()) {
+    videoIdx = 0;
+    mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
+  }
 }
 
 VideoPlayer::~VideoPlayer()
@@ -85,90 +83,63 @@ VideoPlayer::~VideoPlayer()
   }
 }
 
-void VideoPlayer::changeVideo(const int &delta)
-{
-  if(videoIdx != -1 && videoBuffers.at(videoIdx)->isOpen()) {
-    videoBuffers.at(videoIdx)->close();
-  }
-  videoIdx += delta;
-  if(videoIdx >= videoBuffers.length()) {
-    videoIdx = 0;
-  }
-  if(videoIdx < 0) {
-    videoIdx = videoBuffers.length() - 1;
-  }
-  printf("Change to %d\n", videoIdx);
-  if(videoBuffers.at(videoIdx)->open(QIODevice::ReadOnly)) {
-    mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
-  }
-}
-
-void VideoPlayer::startVideo()
-{
-  if(!videoBuffers.isEmpty()) {
-    if(videoIdx == -1) {
-      changeVideo(1);
-    }
-  } else {
-    return;
-  }
-  if(mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
-    printf("Pausing!\n");
-    mediaPlayer->pause();
-  } else {
-    printf("Starting!\n");
-    setFocus();
-    show();
-    mediaPlayer->play();
-    allowAction = false;
-    allowActionTimer.start();
-  }
-}
-
-void VideoPlayer::stopVideo()
-{
-  if(allowAction) {
-    printf("Stopping!\n");
-    mediaPlayer->pause();
-    hide();
-  }
-}
-
-void VideoPlayer::setAllowStop()
-{
-  allowAction = true;
-}
-
-void VideoPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status)
-{
-  printf("STATUS: %d\n", status);
-  if(status == QMediaPlayer::EndOfMedia) {
-    printf("END OF MEDIA! CHANGING VIDEO!\n");
-    changeVideo(1);
-  } else if(status == QMediaPlayer::LoadedMedia) {
-    printf("MEDIA LOADED!\n");
-    startVideo();
-  }
-}
-
-void VideoPlayer::playbackStateChanged(QMediaPlayer::PlaybackState state)
-{
-  printf("STATE: %d\n", state);
-}
-
 void VideoPlayer::keyPressEvent(QKeyEvent *event)
 {
-  if(event->key() == Qt::Key_S) {
-    // Restart current video
-    changeVideo(0);
-  } else if(event->key() == Qt::Key_G) {
-    // Play next video
-    changeVideo(1);
-  } else if(event->key() == Qt::Key_D) {
-    // Play / pause current video
-    startVideo();
-  } else if(event->key() == Qt::Key_F) {
-    // Stop video and hide videoPlayer
-    stopVideo();
+  if(!videoBuffers.isEmpty()) {
+    if(event->key() == Qt::Key_S) {
+      // Play current video
+      playPressed();
+    } else if(event->key() == Qt::Key_D) {
+      // Pause / play current video
+      pausePressed();
+    } else if(event->key() == Qt::Key_F) {
+      // Stop video and reset to beginning
+      stopPressed();
+    } else if(event->key() == Qt::Key_G) {
+      // Switch to next video
+      nextPressed();
+    }
   }
+}
+
+void VideoPlayer::playPressed()
+{
+  printf("Starting video playback!\n");
+  mediaPlayer->play();
+  /*
+  allowStop = false;
+  QTimer::singleShot(2000, [=]() { allowStop = true; });
+  }
+  */
+}
+
+void VideoPlayer::pausePressed()
+{
+  if(mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
+    printf("Pausing video playback!\n");
+    mediaPlayer->pause();
+  } else {
+    printf("Starting video playback after pause!\n");
+    mediaPlayer->play();
+  }
+}
+
+void VideoPlayer::stopPressed()
+{
+  printf("Stopping video playback!\n");
+  mediaPlayer->stop();
+  hide();
+}
+
+void VideoPlayer::nextPressed()
+{
+  videoIdx++;
+
+  if(videoIdx >= videoBuffers.length())
+    videoIdx = 0;
+
+  printf("Changing to video buffer %d\n", videoIdx);
+
+  mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
+  mediaPlayer->play();
 }
