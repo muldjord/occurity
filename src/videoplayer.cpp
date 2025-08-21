@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 #include <QVideoFrame>
+#include <QAudioOutput>
 #include <QFileInfo>
 #include <QDir>
 #include <QKeyEvent>
@@ -65,7 +66,7 @@ VideoPlayer::VideoPlayer(const QString &videosPath, const int &width, const int 
   }
 
   mediaPlayer = new QMediaPlayer();
-  //mediaPlayer->setAudioOutput(new QAudioOutput);
+  mediaPlayer->setAudioOutput(new QAudioOutput);
   QVideoSink *sink = new QVideoSink(this);
   setVideoSink(sink);
   mediaPlayer->setVideoSink(sink);
