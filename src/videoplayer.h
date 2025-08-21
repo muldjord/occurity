@@ -27,13 +27,16 @@
 #ifndef __OCCURITY_VIDEOPLAYER_H__
 #define __OCCURITY_VIDEOPLAYER_H__
 
-#include <QVideoWidget>
+#include <QWidget>
 #include <QMediaPlayer>
+#include <QVideoSink>
 #include <QTimer>
 #include <QLabel>
 #include <QBuffer>
+#include <QPainter>
+#include <QImage>
 
-class VideoPlayer : public QVideoWidget
+class VideoPlayer : public QWidget
 {
   Q_OBJECT
 
@@ -42,12 +45,18 @@ public:
               const int &width, const int &height,
               QWidget *parent = nullptr);
   ~VideoPlayer();
+  void setVideoSink(QVideoSink *sink);
   void playPressed();
 
 protected:
+  void paintEvent(QPaintEvent *) override;
   void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+  void onNewFrame(const QVideoFrame &frame);
+
 private:
+  QImage m_image;
   void pausePressed();
   void stopPressed();
   void nextPressed();
