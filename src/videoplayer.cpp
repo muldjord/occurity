@@ -29,7 +29,6 @@
 
 #include <stdio.h>
 
-#include <QVideoFrame>
 #include <QAudioOutput>
 #include <QFileInfo>
 #include <QDir>
@@ -38,7 +37,7 @@
 #include <QUrl>
 
 VideoPlayer::VideoPlayer(const QString &videosPath, const int &width, const int &height, QWidget *parent)
-  : QWidget(parent)
+  : QVideoWidget(parent)
 {
   setCursor(Qt::BlankCursor);
   setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
@@ -67,9 +66,7 @@ VideoPlayer::VideoPlayer(const QString &videosPath, const int &width, const int 
 
   mediaPlayer = new QMediaPlayer();
   mediaPlayer->setAudioOutput(new QAudioOutput);
-  QVideoSink *sink = new QVideoSink(this);
-  setVideoSink(sink);
-  mediaPlayer->setVideoSink(sink);
+  mediaPlayer->setVideoOutput(this);
   if(!videoBuffers.isEmpty()) {
     videoIdx = 0;
     mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
@@ -83,34 +80,6 @@ VideoPlayer::~VideoPlayer()
       videoBuffer->close();
     }
     delete videoBuffer;
-  }
-}
-
-void VideoPlayer::paintEvent(QPaintEvent *)
-{
-  QPainter p(this);
-  if(!m_image.isNull()) {
-    p.drawImage(rect(), m_image);
-  }
-}
-
-void VideoPlayer::setVideoSink(QVideoSink *sink)
-{
-  connect(sink, &QVideoSink::videoFrameChanged, this, &VideoPlayer::onNewFrame);
-}
-
-void VideoPlayer::onNewFrame(const QVideoFrame &frame) {
-  QVideoFrame f(frame);
-  if(!f.isValid())
-    return;
-
-  f.map(QVideoFrame::ReadOnly);
-  QImage img = f.toImage();
-  f.unmap();
-
-  if(!img.isNull()) {
-    m_image = img.copy();
-    update();
   }
 }
 
