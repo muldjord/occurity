@@ -339,9 +339,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       }
       return true;
     } else if(keyEvent->key() == Qt::Key_S) {
-      videoPlayer->show();
-      videoPlayer->setFocus();
-      videoPlayer->playPressed();
+      if(videoPlayer != nullptr) {
+        videoPlayer->show();
+        videoPlayer->setFocus();
+        videoPlayer->playPressed();
+      }
       return true;
     }
     monitorIsOn = true;
