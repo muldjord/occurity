@@ -40,6 +40,25 @@
 #include <QProcess>
 #include <QDomDocument>
 
+bool videoPlaybackSupported()
+{
+  QFile f("/proc/device-tree/model");
+  if(f.exists()) {
+    if(f.open(QIODevice::ReadOnly)) {
+      QByteArray model = f.readAll();
+      if(model.left(13) == "Raspberry Pi " && model.mid(13, 1).toInt() >= 4) {
+        printf("Detected Raspberry Pi 4 or higher, enabling video playback...\n\n");
+        return true;
+      }
+    }
+  } else {
+    printf("'/proc/device-tree/model' doesn't exist, probably not running on a Yocto image.\n");
+    printf("Assuming user wants video playback so enabling it...\n\n");
+    return true;
+  }
+  return false;
+}
+
 MainWindow::MainWindow(QSettings &config) : config(config)
 {
   printf("Running %s\n", qPrintable(QApplication::applicationName() + QString(" v%1.%2.%3").arg(PROJECT_VERSION_MAJOR).arg(PROJECT_VERSION_MINOR).arg(PROJECT_VERSION_PATCH)));
@@ -63,15 +82,15 @@ MainWindow::MainWindow(QSettings &config) : config(config)
   }
 
   if(loadCharts(mainSettings.chartsXml)) {
-    printf("Charts xml loaded successfully!\n");
+    printf("Charts xml loaded successfully!\n\n");
   } else {
-    printf("Charts xml loading failed!\n");
+    printf("Charts xml loading failed!\n\n");
     exit(1);
   }
 
   installEventFilter(this);
 
-  if(mainSettings.enableVideoPlayer) {
+  if(mainSettings.enableVideoPlayer && videoPlaybackSupported()) {
     videoPlayer = new VideoPlayer(mainSettings.videosFolder,
                                   mainSettings.width, mainSettings.height,
                                   this);
