@@ -157,10 +157,10 @@ The following keyboard keys are in use when running Occurity.
 * `q`: Enable / disable standby
 * `j`: Open Job Runner dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
 * `p`: Open Preferences dialog (requires pin-code, documented [here](docs/CONFIGINI.md))
-* `s`: Restart current attention video
-* `d`: Play / pause current attention video
-* `f`: Stop attention video
-* `g`: Play next attention video
+* `s`: Play attention video (only on RPi4 and above)
+* `d`: Pause / resume attention video (only on RPi4 and above)
+* `f`: Stop attention video (only on RPi4 and above)
+* `g`: Play next attention video (only on RPi4 and above)
 
 ### Optotype chart specific keyboard functions
 * `up`: Change to next row with bigger size
@@ -189,8 +189,11 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.3.0 (in progress, unreleased)
-* Updated to use cmake and Qt6
+#### Version 1.3.0 (27aug2025)
+* MAJOR: Migrated Occurity project to cmake and Qt6 for future-proofing
+* Switched to ffmpeg for video playback backend
+* Video playback no longer supported on RPi3 due to RPi3 and Qt6 video backend limitations
+* Fixed text in about box concerning video playback
 
 #### Version 1.2.5 (21aug2024)
 * Now sets default size reset to 5 minutes instead of 240
