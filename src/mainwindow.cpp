@@ -46,13 +46,19 @@ bool videoPlaybackSupported()
   if(f.exists()) {
     if(f.open(QIODevice::ReadOnly)) {
       QByteArray model = f.readAll();
-      if(model.left(13) == "Raspberry Pi " && model.mid(13, 1).toInt() >= 4) {
-        printf("Detected Raspberry Pi 4 or higher, enabling video playback...\n\n");
+      if(model.left(13) == "Raspberry Pi ") {
+        if(model.mid(13, 1).toInt() >= 4) {
+          printf("Detected Raspberry Pi 4 or higher, enabling video playback...\n\n");
+          return true;
+        }
+      } else {
+        printf("'/proc/device-tree/model' detected, but apparently not a Raspberry Pi.\n");
+        printf("Assuming user wants video playback so enabling it...\n\n");
         return true;
       }
     }
   } else {
-    printf("'/proc/device-tree/model' doesn't exist, probably not running on a Yocto image.\n");
+    printf("'/proc/device-tree/model' doesn't exist, maybe not running on a Yocto image?\n");
     printf("Assuming user wants video playback so enabling it...\n\n");
     return true;
   }
