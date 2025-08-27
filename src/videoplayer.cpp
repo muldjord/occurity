@@ -106,11 +106,6 @@ void VideoPlayer::playPressed()
 {
   printf("Starting video playback!\n");
   mediaPlayer->play();
-  /*
-  allowStop = false;
-  QTimer::singleShot(2000, [=]() { allowStop = true; });
-  }
-  */
 }
 
 void VideoPlayer::pausePressed()
@@ -119,7 +114,7 @@ void VideoPlayer::pausePressed()
     printf("Pausing video playback!\n");
     mediaPlayer->pause();
   } else {
-    printf("Starting video playback after pause!\n");
+    printf("Resuming video playback!\n");
     mediaPlayer->play();
   }
 }
@@ -138,7 +133,7 @@ void VideoPlayer::nextPressed()
   if(videoIdx >= videoBuffers.length())
     videoIdx = 0;
 
-  printf("Changing to video buffer %d\n", videoIdx);
+  printf("Playing next video (index %d)\n", videoIdx);
 
   mediaPlayer->setSourceDevice(videoBuffers.at(videoIdx), QUrl("video/mp4"));
   mediaPlayer->play();
