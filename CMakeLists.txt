@@ -58,14 +58,10 @@ set(SOURCES
   src/messagebox.cpp
 )
 
-set(TRANSLATIONS
-  occurity_da_DK.ts
-)
-
-add_custom_target(update_translations
-  COMMAND lupdate ${SOURCES} -ts ${TRANSLATIONS}
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  COMMENT "Updating translation files..."
+# Update translation from sources, use 'make Occurity_lupdate' to update the ts file
+qt_add_lupdate(Occurity
+  TS_FILES occurity_da_DK.ts
+  SOURCES ${SOURCES}
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "debug")
@@ -84,7 +80,5 @@ if(CMAKE_BUILD_TYPE STREQUAL "debug")
   target_compile_options(Occurity PRIVATE -g)
   target_compile_definitions(Occurity PRIVATE LUA_COMPAT_MODULE USE_DEBUG)
 endif()
-
-add_dependencies(Occurity update_translations)
 
 target_link_libraries(Occurity PRIVATE Qt6::Widgets Qt6::Xml Qt6::SvgWidgets Qt6::MultimediaWidgets Qt6::Multimedia Qt6::Network)
