@@ -156,7 +156,7 @@ void MainWindow::init()
 
 bool MainWindow::loadCharts(QString chartsXml)
 {
-  printf("Loading charts from file: '%s'\n", chartsXml.toStdString().c_str());
+  printf("Loading charts from file: '%s'\n", qPrintable(chartsXml));
 
   QFile xmlFile(chartsXml);
   QByteArray xmlData;
@@ -197,7 +197,7 @@ bool MainWindow::loadCharts(QString chartsXml)
       }
       if(chart == nullptr) {
         printf("PARSE ERROR: Chart type '%s' was not recognized, skipping...\n",
-               chartType.toStdString().c_str());
+               qPrintable(chartType));
         continue;
       }
       chart->installEventFilter(this);
@@ -213,7 +213,7 @@ bool MainWindow::loadCharts(QString chartsXml)
       chart->setBgColor(xmlChart.attribute("bgcolor"));
       QString touchControlsChart = xmlChart.attribute("touchcontrols").toLower().simplified().replace(" ", "");
       chart->setTouchControls(touchControlsChart + "," + touchControlsGroup);
-      printf("  Parsing chart: '%s' with type '%s':\n", chart->objectName().toStdString().c_str(), chart->getType().toStdString().c_str());
+      printf("  Parsing chart: '%s' with type '%s':\n", qPrintable(chart->objectName()), qPrintable(chart->getType()));
       if(chart->getType() == "optotype") {
         if(xmlChart.hasAttribute("sizelock") && xmlChart.attribute("sizelock") == "true") {
           printf("    Size lock: true\n");
@@ -222,7 +222,7 @@ bool MainWindow::loadCharts(QString chartsXml)
           printf("    Size lock: false\n");
         }
         static_cast<OptotypeChart*>(chart)->setOptotype(xmlChart.attribute("optotype"));
-        printf("    Optotype: '%s'\n", static_cast<OptotypeChart*>(chart)->getOptotype().toStdString().c_str());
+        printf("    Optotype: '%s'\n", qPrintable(static_cast<OptotypeChart*>(chart)->getOptotype()));
         if(xmlChart.hasAttribute("crowdingspan")) {
           static_cast<OptotypeChart*>(chart)->setCrowdingSpan(xmlChart.attribute("crowdingspan").toDouble());
         }
@@ -257,16 +257,16 @@ bool MainWindow::loadCharts(QString chartsXml)
         static_cast<SvgChart*>(chart)->setSource(xmlChart.attribute("source"));
         if(xmlChart.hasAttribute("scaling")) {
           static_cast<SvgChart*>(chart)->setScaling(xmlChart.attribute("scaling"));
-          printf("    Scaling: %s\n", xmlChart.attribute("scaling").toStdString().c_str());
+          printf("    Scaling: %s\n", qPrintable(xmlChart.attribute("scaling")));
         }
         QDomNodeList xmlSvgLayers = xmlChart.elementsByTagName("layer");
         for(int b = 0; b < xmlSvgLayers.count(); ++b) {
           QDomElement xmlSvgLayer = xmlSvgLayers.at(b).toElement();
           QString svgLayerId = xmlSvgLayer.attribute("id");
           if(!static_cast<SvgChart*>(chart)->addSvgLayer(svgLayerId)) {
-            printf("  Couldn't add svg layer with id '%s'\n", svgLayerId.toStdString().c_str());
+            printf("  Couldn't add svg layer with id '%s'\n", qPrintable(svgLayerId));
           } else {
-            printf("    SVG layer id: '%s'\n", svgLayerId.toStdString().c_str());
+            printf("    SVG layer id: '%s'\n", qPrintable(svgLayerId));
           }
         }
       }
@@ -327,7 +327,7 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
       }
       currentChart->makeIdle();
       setScene(charts.at(chosen));
-      printf("Chart '%s' activated!\n", charts.at(chosen)->objectName().toStdString().c_str());
+      printf("Chart '%s' activated!\n", qPrintable(charts.at(chosen)->objectName()));
       return true;
     }
     if(keyEvent->key() == Qt::Key_P) {
