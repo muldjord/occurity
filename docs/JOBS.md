@@ -61,12 +61,12 @@ These two variables can now be used in the script command arguments / parameters
 ##### Hardcoded variables
 Some hardcoded variables are available. These can be used without setting them with `setvar` or `loadvars`.
 
-* %HOME%: The current user home directory (eg. `/home/pi`).
-* %WORKDIR%: The Occurity working directory (eg. `/home/pi/occurity`).
-* %USER%: The user name of the currently logged in user (eg. `pi`).
-* %ARCH%: The currently running CPU architecture (eg. `aarch64` or 'x86_64').
-* %HOSTNAME%: The currently assigned hostname (with Yocto this is eg. `raspberrypi4-64` or 'raspberrypi3').
-* %USBPATH%: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if 'USBPEN' is contained within the partition label.
+* `%HOME%`: The current user home directory (eg. `/home/pi`).
+* `%WORKDIR%`: The Occurity working directory (eg. `/home/pi/occurity`).
+* `%USER%`: The user name of the currently logged in user (eg. `pi`).
+* `%ARCH%`: The currently running CPU architecture (eg. `aarch64` or `x86_64`).
+* `%HOSTNAME%`: The currently assigned hostname (with Yocto this is eg. `raspberrypi4-64` or `raspberrypi3-64`).
+* `%USBPATH%`: When a USB pendrive is inserted this variable will be set to the root path of the drive but ONLY if `USBPEN` is contained within the partition label.
 
 #### addexclude:FILE|PATH
 Adds either a FILE or PATH to the global exclude list. This list is used by several of the available file and path manipulation commands. If a match is found the file or path will be ignored by those commands. Any subdirectories of an excluded path will also be excluded.
@@ -76,11 +76,11 @@ Same goes when removing a path. Excluded paths (including subdirectories) and / 
 
 Note 1: `mvpath` does not adhere to the exclude list!
 
-Note 2: Both relative and non-relative FILE and PATH are allowed. If relative it will match with files or paths located relative to the defined `srcpath`.
+Note 2: Both relative and non-relative FILE and PATH are allowed. If it's relative it will match with files or paths located relative to the defined `srcpath`.
 
-* Example 1: `addexclude:optotypes/sloan
-* Example 2: `addexclude:optotypes/README.md
-* Example 3: `addexclude:%WORKDIR%/README.md
+* Example 1: `addexclude:optotypes/sloan`
+* Example 2: `addexclude:optotypes/README.md`
+* Example 3: `addexclude:%WORKDIR%/README.md`
 
 #### setexec:FILENAME
 Runs `chmod +x FILENAME` in order to make the file executable. This is important to apply to files moved or copied from a FAT32 usb pendrive, as they are often not executable. The main executable `Occurity` and all files from the `scripts` subfolder should all have this command run on them after an update to ensure Occurity works as expected. Otherwise Occurity might not start at all or the standby functions might not work as expected.
