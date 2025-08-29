@@ -10,21 +10,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-# Set build type defined with '-DBUILD_TYPE=type'
-if(DEFINED BUILD_TYPE)
-  string(TOLOWER "${BUILD_TYPE}" BUILD_TYPE)
-  if(BUILD_TYPE STREQUAL "debug")
-    set(CMAKE_BUILD_TYPE debug CACHE STRING "Build type" FORCE)
-  elseif(BUILD_TYPE STREQUAL "release")
-    set(CMAKE_BUILD_TYPE release CACHE STRING "Build type" FORCE)
-  else()
-    message(FATAL_ERROR "Unknown build type: ${BUILD_TYPE}")
-  endif()
-endif()
-
-# Default to 'release' type
+# Set build type with '-DCMAKE_BUILD_TYPE=type' where type is usually 'Debug' or 'Release'.
+# Default to 'Release' type
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE release CACHE STRING "Build type" FORCE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -59,16 +48,11 @@ set(SOURCES
 )
 
 # Update translation from sources, use 'make Occurity_lupdate' to update the ts file
+# This function needs to be updated when migrating to Qt6.7 or later as the format has changed
 qt_add_lupdate(Occurity
   TS_FILES occurity_da_DK.ts
   SOURCES ${SOURCES}
 )
-
-if(CMAKE_BUILD_TYPE STREQUAL "debug")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/debug)
-else()
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/release)
-endif()
 
 qt_add_executable(Occurity
   ${SOURCES}
@@ -77,8 +61,37 @@ qt_add_executable(Occurity
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "debug")
-  target_compile_options(Occurity PRIVATE -g)
+# Add LUA debug defines. I'm not sure what LUA_COMPAT_MODULE is used for but it's always been there so...
   target_compile_definitions(Occurity PRIVATE LUA_COMPAT_MODULE USE_DEBUG)
+# target_compile_options(Occurity PRIVATE -g) <-- This is auto-added by cmake for a 'Debug' release
 endif()
 
 target_link_libraries(Occurity PRIVATE Qt6::Widgets Qt6::Xml Qt6::SvgWidgets Qt6::MultimediaWidgets Qt6::Multimedia Qt6::Network)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release CACHE PATH "Install path prefix" FORCE)
+endif()
+
+install(TARGETS Occurity
+  RUNTIME DESTINATION .
+)
+
+install(FILES
+  ${CMAKE_SOURCE_DIR}/AUTHORS
+  ${CMAKE_SOURCE_DIR}/charts.xml.example
+  ${CMAKE_SOURCE_DIR}/LICENSE
+  ${CMAKE_SOURCE_DIR}/occurity_da_DK.qm
+  ${CMAKE_SOURCE_DIR}/README.md
+  DESTINATION .
+)
+
+install(DIRECTORY
+  ${CMAKE_SOURCE_DIR}/optotypes
+  ${CMAKE_SOURCE_DIR}/docs
+  ${CMAKE_SOURCE_DIR}/flirc_configs
+  ${CMAKE_SOURCE_DIR}/scripts
+  ${CMAKE_SOURCE_DIR}/jobs
+  ${CMAKE_SOURCE_DIR}/svg
+  ${CMAKE_SOURCE_DIR}/videos
+  DESTINATION .
+)
