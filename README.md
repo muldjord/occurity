@@ -19,7 +19,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 In order to install a system running Occurity you need the following hardware:
 
 **Required**
-* A Raspberry Pi (3 or 4)
+* A Raspberry Pi (3 or 4, 4 required for attention video support)
 * At least a 2 GB SD flash card
 * A monitor with at least 300 cd/m² brightness (preferably 350 cd/m²)
 
@@ -34,15 +34,12 @@ Occurity displays correctly on any monitor using any resolution provided the fol
 * The physical length of the ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 * The physical distance from the patients eyes to the monitor must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 
-To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler in the [Preferences dialog](docs/PREFERENCES.md), temporarily set the patient distance to 600 cm and measure the width of any of the Sloan optotype symbols on the screen at chart size 0.1 and 0.25. At 0.1 the width must be 87 mm and at 0.25 the width must be 35 mm. If this is correct your monitor will work with Occurity.
+To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler in the [Preferences dialog](docs/PREFERENCES.md), temporarily set the patient distance to 600 cm and measure the width of any of the Sloan optotype symbols on the screen at chart size 0.1 and 0.25. At 0.1 the width of a symbol must be 87 mm and at 0.25 the width of a symbol must be 35 mm. If this is correct your monitor will work with Occurity.
 
 To test if your monitor scales the distance correctly, you should also check the sizes at 400 cm patient distance. Here the width of a Sloan optotype symbol must be 58 mm at 0.1 and 23 mm at 0.25.
 
 ##### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
-
-##### Tested working with the following monitors
-* Asus VG248QE
 
 #### Remote controls
 
@@ -63,7 +60,7 @@ If you require no customization of the image this is the easiest way to get up a
 ## Option 2: Building a custom Occurity SDCard image
 The step-by-step procedure for building an Occurity image that can be flashed to an SDCard for the Raspberry Pi hardware platform is described in detail below. The build is currently based on the `scarthgap` release of the very popular [Yocto embedded platform](https://www.yoctoproject.org).
 
-The only pre-requisite is a working Ubuntu 22.04 installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
+The only pre-requisite is a recent working Ubuntu installation with at least 150 GB available harddrive space. The final SDCard image will be about 1 GB. You might also be able to make this work on any previous or later Ubuntu LTS release. The main difference will probably be the package pre-requisites. Refer to the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) for further information.
 
 ### Package pre-requisites
 Install the required packages by running the following two commands:
@@ -71,6 +68,8 @@ Install the required packages by running the following two commands:
 $ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 python3-subunit zstd liblz4-tool file locales libacl1
 $ sudo locale-gen en_US.UTF-8
 ```
+
+If some or more of these packages do not exist on your system they might be different for your specific version of Ubuntu. Please read the [official Yocto documentation](https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html) if that is the case.
 
 ### Setting up Yocto
 Run the following commands to clone Yocto and the required layers. The `source` command sets up the environment required for building the image. If you wish to rebuilt the image later you need to re-run this `source` command in order for the `bitbake` related tools to be available and configured:
@@ -99,8 +98,6 @@ WKS_FILE = "sdimage-raspberrypi.wks"
 IMAGE_FSTYPES += "wic.gz wic.bmap"
 DISABLE_OVERSCAN = "1"
 MACHINE ?= "raspberrypi4-64"
-DISTRO_FEATURES:append = " opengl"
-PACKAGECONFIG:append:pn-gstreamer1.0-plugins-base = " opengl"
 ```
 NOTE!!! If you are building for a Raspberry Pi 3 change the MACHINE to `raspberrypi3-64`.
 
@@ -111,7 +108,15 @@ $ bitbake core-image-sato
 ```
 Bitbake is Yocto's build system. It pulls in all required source code and compiles and configures everything needed for an embedded Linux system running Occurity on a Raspberry Pi.
 
-NOTE!!! During the bitbake procedure you might get warnings about `TMPDIR` references. These can be ignored.
+#### Troubleshooting
+If you get an error when running the `bitbake core-image-sato` command your system might have a strict App-Armor setup that disallows Bitbake to run well in user-space (this has been observed on a clean Ubuntu 24.40 installation). You need to create a special rule for it before it will work. To fix this, you can create the file `/etc/apparmor.dk/bitbake` with the following contents:
+```
+abi <abi/4.0>,
+include <tunables/global>
+profile bitbake /**/bitbake/bin/bitbake flags=(unconfined) {
+        userns,
+}
+```
 
 ### Flash the final image to an SDCard
 If everything went well you will now have a working Occurity image that can be flashed onto an SDCard. Start by decompressing the image. You should run this command from the `poky/build` directory:
@@ -120,35 +125,36 @@ $ qzip -d --force tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4
 ```
 Now insert your SDCard and flash it with the decompressed image using your favorite SDCard flashing tool (`dd` or similar). Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Be sure to check the rest of the documentation on how to use Occurity.
 
-## Building Occurity on Ubuntu
-NOTE!!! If you've already built the Raspberry Pi image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
+## Building Occurity on Ubuntu 24.04
+NOTE!!! If you've already downloaded or built the Raspberry Pi image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
 
 ### Software prerequisites
 Run the following commands in a terminal on Ubuntu to install the prerequisites needed for Occurity to function correctly.
 ```
 $ sudo apt update
-$ sudo apt install qtbase5-dev libqt5svg5-dev qtmultimedia5-dev libqt5multimedia5-plugins
-$ sudo apt remove gstreamer1.0-plugins-bad
+$ sudo apt install build-essential git cmake qt6-base-dev qt6-svg-dev qt6-multimedia-dev qt6-tools-dev
 ```
-The `gstreamer1.0-plugins-bad` package might not be installed already. But try removing it to be sure. Having it installed is known to break h.264 video playback needed by the Occurity attention video player.
 
 ### Download and compile
-Open a terminal on Ubuntu and run the following commands. Be sure to substitute `LATEST` with the version number of the latest Occurity release (eg. `1.2.0`). Check [here](https://github.com/muldjord/occurity/releases) for the latest version.
+Open a terminal on Ubuntu and run the following commands:
 ```
 $ cd
-$ mkdir occurity
+$ git clone https://github.com/muldjord/occurity.git
 $ cd occurity
-$ wget -N https://github.com/muldjord/occurity/archive/LATEST.tar.gz
-$ tar xvzf LATEST.tar.gz --strip-components 1 --overwrite
-$ qmake
+$ mkdir build
+$ cd build
+$ cmake ..
 $ make
+$ make install
 ```
 
 ### Running Occurity
-You should now have a `/home/USER/occurity/Occurity` executable ready to run. Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
+You should now have a `/home/USER/occurity/release/Occurity` executable ready to run. The `make install` command also installed all of the necessary data files into the folder.
+
+Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
 
 ## Optotypes
-Occurity comes with an optotype that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
+Occurity comes with an optotype (SVG's) that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
 
 ## Keyboard controls
 The following keyboard keys are in use when running Occurity.
@@ -189,11 +195,16 @@ Occurity comes with a number of default charts. All charts can easily be customi
 
 #### Version x.x.x (unimplemented)
 
-#### Version 1.3.0 (27aug2025)
-* MAJOR: Migrated Occurity project to cmake and Qt6 for future-proofing
+#### Version 1.3.1 (29aug2025)
+* MAJOR: Migrated Occurity from Qt5 to Qt6
+* MAJOR: Migrated Occurity from qmake to cmake
 * Switched to ffmpeg for video playback backend
 * Video playback no longer supported on RPi3 due to RPi3 and Qt6 video backend limitations
 * Fixed text in about box concerning video playback
+* Removed documentation for the `aptinstall` and `aptremove` jobrunner commands as they are no longer supported
+* Updated procedures for both the Yocto image and the Ubuntu build
+
+This version has functionality parity with version 1.2.5. The change mainly lies in updated build procedure documentation and the switch to the Qt6 framework. An update to this version is not considered necessary unless you absolutely want to.
 
 #### Version 1.2.5 (21aug2024)
 * Now sets default size reset to 5 minutes instead of 240
