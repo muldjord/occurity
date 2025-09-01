@@ -60,7 +60,7 @@ qt_add_executable(Occurity
   ${APP_ICON_RESOURCE}
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 # Add LUA debug defines. I'm not sure what LUA_COMPAT_MODULE is used for but it's always been there so...
   target_compile_definitions(Occurity PRIVATE LUA_COMPAT_MODULE USE_DEBUG)
 # target_compile_options(Occurity PRIVATE -g) <-- This is auto-added by cmake for a 'Debug' release
@@ -69,7 +69,11 @@ endif()
 target_link_libraries(Occurity PRIVATE Qt6::Widgets Qt6::Xml Qt6::SvgWidgets Qt6::MultimediaWidgets Qt6::Multimedia Qt6::Network)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release CACHE PATH "Install path prefix" FORCE)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/debug CACHE PATH "Install path prefix" FORCE)
+  else()
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release CACHE PATH "Install path prefix" FORCE)
+  endif()
 endif()
 
 install(TARGETS Occurity
