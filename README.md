@@ -125,7 +125,7 @@ profile bitbake /**/bitbake/bin/bitbake flags=(unconfined) {
 ### Flash the final image to an SDCard
 If everything went well you will now have a working Occurity image that can be flashed onto an SDCard. Start by decompressing the image. You should run this command from the `poky/build` directory:
 ```
-$ qzip -d --force tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic.gz
+$ gunzip tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic.gz
 ```
 Now insert your SDCard and flash it with the decompressed image using your favorite SDCard flashing tool (`dd` or similar). Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Be sure to check the rest of the documentation on how to use Occurity.
 
