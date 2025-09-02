@@ -34,7 +34,7 @@ Occurity displays correctly on any monitor using any resolution provided the fol
 * The physical length of the ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 * The physical distance from the patients eyes to the monitor must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 
-To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler in the [Preferences dialog](docs/PREFERENCES.md). Then temporarily set the patient distance to 400 and 600 and make sure the width of the optotype symbols match with the table below. If they do your monitor will work correctly with Occyurity.
+To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the width of the ruler in the [Preferences dialog](docs/PREFERENCES.md). Then temporarily set the patient distance to 400 and 600 and make sure the width of the optotype symbols match with the table below. If they do your monitor will work correctly with Occurity.
 |Patient distance|Chart size|Expected symbol width|
 |----------------|----------|---------------------|
 |600             |0.1       |87 mm                |
