@@ -31,7 +31,7 @@ In order to install a system running Occurity you need the following hardware:
 
 ##### Resolution
 Occurity displays correctly on any monitor using any resolution provided the following two requirements are met:
-* The physical length of the ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
+* The physical length of the blue ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 * The physical distance from the patients eyes to the monitor must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
 
 To test if the monitor you are using reports its resolution correctly to the Occurity software, please set the physical width of the blue ruler in the [Preferences dialog](docs/PREFERENCES.md). Then temporarily set the patient distance to 400 cm and 600 cm respectively and make sure the width of the optotype symbols match with the table below. If they do your monitor will work correctly with Occurity.
