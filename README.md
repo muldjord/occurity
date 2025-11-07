@@ -121,14 +121,18 @@ profile bitbake /**/bitbake/bin/bitbake flags=(unconfined) {
         userns,
 }
 ```
+Then restart the apparmor service and you should be able to built the image.
+```
+$ sudo systemctl restart apparmor
+```
 
 ### Flash the final image to an SDCard
 If everything went well you will now have a working Occurity image at `poky/build/tmp/deploy/images/raspberrypi4-64/core-image-sato-raspberrypi4-64.rootfs.wic.gz`. Be aware that this is a symbolic link - the actual file is placed in the same directory but has a timestamp in the filename.
 
-Decompress the gzipped image and flash it to an SDCard using your favorite SDCard flashing tool (`dd` or similar). Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Be sure to check the rest of the documentation on how to use Occurity.
+Decompress the gzipped image and flash it to an SDCard using your favorite SDCard flashing tool (the Raspberry Pi Imager works well for this task, just choose `Use custom` image and set it to show `All files` to choose the image). Insert the card into your Raspberry Pi and boot it up. After a little while Occurity will be automatically launched. Be sure to check the rest of the documentation on how to use Occurity.
 
 ## Building Occurity on Ubuntu 24.04
-NOTE!!! If you've already downloaded or built the Raspberry Pi image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
+NOTE!!! If you've already downloaded or built the Raspberry Pi Yocto image as documented above you do not need to continue with these instructions. The following describes how to compile and run Occurity on Ubuntu for anyone who wishes to do so.
 
 ### Software prerequisites
 Run the following commands in a terminal on Ubuntu to install the prerequisites needed for Occurity to function correctly.
