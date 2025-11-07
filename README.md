@@ -113,7 +113,7 @@ $ bitbake core-image-sato
 Bitbake is Yocto's build system. It pulls in all required source code and compiles and configures everything needed for an embedded Linux system running Occurity on a Raspberry Pi.
 
 #### Troubleshooting
-If you get an error when running the `bitbake core-image-sato` command your system might have a strict App-Armor setup that disallows Bitbake to run well in user-space (this has been observed on a clean Ubuntu 24.40 installation). You need to create a special rule for it before it will work. To fix this, you can create the file `/etc/apparmor.dk/bitbake` with the following contents:
+If you get an error when running the `bitbake core-image-sato` command your system might have a strict App-Armor setup that disallows Bitbake to run well in user-space (this has been observed on a clean Ubuntu 24.40 installation). You need to create a special rule for it before it will work. To fix this, you can create the file `/etc/apparmor.d/bitbake` with the following contents:
 ```
 abi <abi/4.0>,
 include <tunables/global>
