@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Occurity VERSION 1.3.0 LANGUAGES CXX)
+project(Occurity VERSION 1.3.1 LANGUAGES CXX)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
