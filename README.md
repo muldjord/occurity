@@ -160,7 +160,7 @@ You should now have a `/home/USER/occurity/release/Occurity` executable ready to
 Note that the first time Occurity runs it has no `config.ini`. It will therefore try to open up the Preferences dialog. The default pin-code is `4242`.
 
 ## Optotypes
-Occurity comes with an optotype (SVG's) that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. Licenses are designated in the `optotypes` subdirectories.
+Occurity comes with an optotype (SVG's) that was created from the ground up to adhere to the design characteristics of the original Sloan optotype created by Louise Sloan in 1959. Landolt C and tumbling E optotypes are also available. They are licensed with the Occurity software under the GPLv3.
 
 ## Keyboard controls
 The following keyboard keys are in use when running Occurity.
