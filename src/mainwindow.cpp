@@ -448,6 +448,8 @@ void MainWindow::updateFromConfig()
   mainSettings.chartsXml = config.value("main/chartsXml").toString();
   mainSettings.startingChart = config.value("main/startingChart").toString();
 
+  mainSettings.randomize = config.value("main/randomize").toBool();
+
   printf("  Pixels per mm: %f\n", mainSettings.pxPerMm);
   printf("  Pixels per arc minute: %f\n", mainSettings.pxPerArcMin);
   printf("\n");
