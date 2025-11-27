@@ -148,15 +148,7 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   } else if(event->key() == Qt::Key_M) {
     mainSettings.single = !mainSettings.single;
   } else if(event->key() == Qt::Key_R) {
-    QList<QPointF> availableCoords;
-    for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
-      availableCoords.append(child->pos());
-    }
-    for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
-      int chosen = QRandomGenerator::global()->bounded(availableCoords.length());
-      child->setPos(availableCoords.at(chosen));
-      availableCoords.removeAt(chosen);
-    }
+    randomize();
   } else if(event->key() == Qt::Key_A && animItem != nullptr) {
     if(animItem->isVisible()) {
       animItem->hide();
@@ -166,6 +158,19 @@ void OptotypeChart::keyPressEvent(QKeyEvent *event)
   }
 
   updateAll();
+}
+
+void OptotypeChart::randomize()
+{
+  QList<QPointF> availableCoords;
+  for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
+    availableCoords.append(child->pos());
+  }
+  for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
+    int chosen = QRandomGenerator::global()->bounded(availableCoords.length());
+    child->setPos(availableCoords.at(chosen));
+    availableCoords.removeAt(chosen);
+  }
 }
 
 void OptotypeChart::setOptotype(const QString &optotype)

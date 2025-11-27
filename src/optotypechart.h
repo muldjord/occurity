@@ -43,6 +43,7 @@ public:
   ~OptotypeChart();
   void init() override;
   void makeIdle() override;
+  void randomize();
   void setOptotype(const QString &optotype);
   QString getOptotype();
   void setCrowdingSpan(const double &crowdingSpan);
