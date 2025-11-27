@@ -391,9 +391,13 @@ QString OptotypeChart::getSize()
 
 void OptotypeChart::positionReset()
 {
-  // Reset positions for all optotype symbols in row in case they've been randomized
-  for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
-    child->setPos(child->data(0).toPointF());
+  if(mainSettings.randomize) {
+    randomize();
+  } else {
+    // Reset positions for all optotype symbols in row in case they've been randomized
+    for(const auto &child: rows.at(currentRowIdx)->getLetters()->childItems()) {
+      child->setPos(child->data(0).toPointF());
+    }
   }
 }
 
