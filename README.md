@@ -43,7 +43,10 @@ To test if the monitor you are using reports its resolution correctly to the Occ
 |400             |0.25      |23 mm                |
 
 ##### Brightness calibration
-DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 277 lux. Hence the need for a monitor that is capable of a high brightness level.
+DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 260 lux. Hence the need for a monitor that is capable of a high brightness level.
+
+##### Tested working with the following monitor
+* 24" AOC Basic-line 24B3CF2
 
 #### Remote controls
 
