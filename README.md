@@ -28,7 +28,6 @@ In order to install a system running Occurity you need the following hardware:
   * A remote control that works with flirc. Most do.
 
 #### Monitor
-
 ##### Resolution
 Occurity displays correctly on any monitor using any resolution provided the following two requirements are met:
 * The physical length of the blue ruler must be set correctly in the Occurity [Preferences](docs/PREFERENCES.md) dialog.
@@ -44,6 +43,9 @@ To test if the monitor you are using reports its resolution correctly to the Occ
 
 ##### Brightness calibration
 DISCLAIMER!!! This is only a guideline: Using a lux meter pushed up against the monitor surface, you should have a readout of about 260 lux. Hence the need for a monitor that is capable of a high brightness level.
+
+##### Power delivery
+A useful feature to look out for when choosing a monitor is the support for USB-C PD (Power Delivery). With this feature there is a good chance you will be able to power the Raspberry Pi directly from the monitor using a USB-C cable. This removes the need for a separate Raspberry Pi power supply making the entire solution more self-contained.
 
 ##### Tested working with the following monitor
 * 24" AOC Basic-line 24B3CF2
