@@ -37,7 +37,7 @@ Note! Setting `pretend:true` does come with caveats. Since all file operations a
 #### message:MESSAGE
 Add a message to the debug output of the Occurity Job Runner dialog. The message will be white and is useful for providing status / progress messages while processing a script.
 
-* Example 1: `pretend:This is a message!`
+* Example 1: `message:This is a message!`
 
 #### setvar:VARIABLE;VALUE
 Sets a variable for use in the `.job` script. All variables will have a `%` prepended and appended to it.
