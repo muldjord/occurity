@@ -72,6 +72,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   Slider *rowSkipDelta = new Slider(config, "main", "rowSkipDelta", tr("Skip this many lines when using multiline row skipping:"), 2, 10, 4, 1, this);
 
   CheckBox *useRowCaptions = new CheckBox(config, "main", "useRowCaptions", tr("Use row captions for optotype charts"), false, this);
+  CheckBox *randomize = new CheckBox(config, "main", "randomize", tr("Automatically randomize symbols when changing row"), false, this);
   CheckBox *showMouseCursor = new CheckBox(config, "touch", "showMouse", tr("Show mouse cursor"), false, this);
   CheckBox *showTouchControls = new CheckBox(config, "touch", "touchControls", tr("Show touch controls (requires restart)"), false, this);
   CheckBox *leftHandedOperator = new CheckBox(config, "touch", "leftHandedOperator", tr("Left handed operator"), false, this);
@@ -87,6 +88,7 @@ Preferences::Preferences(QSettings &config, const QList<AbstractChart *> charts,
   configLayout->addWidget(hexGreen);
   configLayout->addWidget(rowSkipDelta);
   configLayout->addWidget(useRowCaptions);
+  configLayout->addWidget(randomize);
   configLayout->addWidget(showMouseCursor);
   configLayout->addWidget(showTouchControls);
   configLayout->addWidget(leftHandedOperator);

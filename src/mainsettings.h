@@ -54,6 +54,7 @@ struct MainSettings {
   QString hexGreen = "#00d200";
   bool touchControls = false;
   bool leftHandedOperator = false;
+  bool randomize = false;
 
   // Global chart configs
   bool crowding = false;
